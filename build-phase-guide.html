@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Phase Master Guide — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 860px; }
+    .page-header { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 10px; }
+    .page-desc { font-size: 0.9em; color: var(--muted); max-width: 580px; line-height: 1.65; }
+
+    .section { margin-bottom: 56px; }
+    .section-title { font-size: 1.25em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .section-desc { font-size: 0.85em; color: var(--muted); margin-bottom: 20px; max-width: 600px; }
+
+    /* Segment blocks */
+    .seg { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 18px; }
+    .seg-head { display: flex; align-items: center; gap: 12px; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+    .seg-time { font-family: 'JetBrains Mono', monospace; font-size: 0.76em; font-weight: 600; color: var(--accent); white-space: nowrap; }
+    .seg-title { font-size: 0.98em; font-weight: 700; flex: 1; }
+    .seg-dur { font-size: 0.7em; color: var(--muted); background: rgba(255,255,255,0.05); padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .seg-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 13px; }
+
+    p { font-size: 0.88em; line-height: 1.7; }
+    ul, ol { margin: 4px 0 0 18px; }
+    li { font-size: 0.86em; line-height: 1.7; margin-bottom: 3px; }
+    strong { color: var(--white); font-weight: 600; }
+    em { color: rgba(255,255,255,0.7); }
+
+    .say { background: rgba(108,99,255,0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.86em; font-style: italic; line-height: 1.65; color: rgba(255,255,255,0.82); }
+    .say-label { font-size: 0.65em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); font-style: normal; margin-bottom: 6px; }
+
+    .callout { border-radius: 8px; padding: 12px 16px; font-size: 0.84em; line-height: 1.65; }
+    .c-green { background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.22); }
+    .c-amber { background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.22); }
+    .c-red   { background: rgba(255,71,87,0.1);  border: 1px solid rgba(255,71,87,0.22); }
+    .c-blue  { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.22); }
+    .c-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .c-label.green { color: var(--green); } .c-label.amber { color: var(--amber); }
+    .c-label.red { color: var(--red); } .c-label.blue { color: var(--blue); }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.79em; line-height: 1.65; color: rgba(255,255,255,0.75); overflow-x: auto; white-space: pre-wrap; }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.83em; }
+    .data-table th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 9px 12px; border-bottom: 1px solid var(--border-mid); }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .badge { display: inline-block; font-size: 0.68em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+    .b-green { background: rgba(0,200,150,0.15); color: var(--green); }
+    .b-amber { background: rgba(255,181,71,0.15); color: var(--amber); }
+    .b-red   { background: rgba(255,71,87,0.15); color: var(--red); }
+    .b-acc   { background: rgba(108,99,255,0.15); color: var(--accent); }
+
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .check-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .check-card-title { font-size: 0.78em; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .check-item { font-size: 0.78em; color: var(--muted); line-height: 1.7; display: flex; gap: 8px; }
+    .check-item::before { content: '☐'; flex-shrink: 0; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 44px 0; }
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Build Phase Master</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Before you start</div>
+      <a class="nav-item" href="#checklists"><div class="nav-dot" style="background:var(--accent)"></div>What you &amp; students need</a>
+      <a class="nav-item" href="#nova"><div class="nav-dot" style="background:var(--blue)"></div>Meet Nova (the bot)</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">The 2 hours</div>
+      <a class="nav-item" href="#s1"><div class="nav-dot" style="background:var(--green)"></div>0:00 Demo the example</a>
+      <a class="nav-item" href="#s2"><div class="nav-dot" style="background:var(--green)"></div>0:05 Brainstorm</a>
+      <a class="nav-item" href="#s3"><div class="nav-dot" style="background:var(--green)"></div>0:20 Plan on paper</a>
+      <a class="nav-item" href="#s4"><div class="nav-dot" style="background:var(--amber)"></div>0:30 Build sprint 1</a>
+      <a class="nav-item" href="#s5"><div class="nav-dot" style="background:var(--amber)"></div>1:00 Checkpoint</a>
+      <a class="nav-item" href="#s6"><div class="nav-dot" style="background:var(--amber)"></div>1:05 Build sprint 2</a>
+      <a class="nav-item" href="#s7"><div class="nav-dot" style="background:var(--red)"></div>1:40 Demo prep</a>
+      <a class="nav-item" href="#s8"><div class="nav-dot" style="background:var(--red)"></div>1:50 Demos</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Support</div>
+      <a class="nav-item" href="#circulating"><div class="nav-dot" style="background:var(--muted)"></div>Circulating as a non-dev</a>
+      <a class="nav-item" href="#rescue"><div class="nav-dot" style="background:var(--muted)"></div>Rescue playbook</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">The main event · 2 hours · Brainstorm → Build → Demo</div>
+      <div class="page-title">Build Phase Master Guide</div>
+      <div class="page-desc">The complete plan for co-creating a bank feature with Copilot, from blank page to working demo. Written for a non-developer facilitator running solo with Y9–Y13. Everything you need is in this document or linked from it.</div>
+    </div>
+
+    <!-- ═══ CHECKLISTS ═══ -->
+    <div class="section" id="checklists">
+      <div class="section-title">What you need · What students need</div>
+      <div class="check-grid">
+        <div class="check-card">
+          <div class="check-card-title">🧑‍🏫 You (before the 2 hours start)</div>
+          <div class="check-item">brainstorm-screen.html open in a browser tab</div>
+          <div class="check-item">milestone-screen.html open in a second tab</div>
+          <div class="check-item">example-feature.html open in a third tab (your demo)</div>
+          <div class="check-item">This guide on your phone or second device</div>
+          <div class="check-item">Paper and pens on tables for planning sketches</div>
+          <div class="check-item">Nova installed in the repo (see below — 2 min job)</div>
+        </div>
+        <div class="check-card">
+          <div class="check-card-title">🧑‍🎓 Students (they should already have)</div>
+          <div class="check-item">A Codespace open from the morning session</div>
+          <div class="check-item">Copilot Chat working (they used it in the bug hunt)</div>
+          <div class="check-item">Everyone's already done the Feature Tutorial together — built a working Savings Tracker from a blank file</div>
+          <div class="check-item">A pair or small group (2–3 max, mixed ages)</div>
+          <div class="check-item">Paper sketch from the planning step (created at 0:20)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ NOVA ═══ -->
+    <div class="section" id="nova">
+      <div class="section-title">Meet Nova — your virtual developer 🤖</div>
+      <div class="section-desc">Your idea from last night, made real. Nova is a mentor personality installed into Copilot Chat itself — every student gets it automatically, no installation, no separate app.</div>
+
+      <div class="callout c-red" style="margin-bottom:16px">
+        <div class="c-label red">Important — Nova does NOT replace normal Copilot, and doesn't slow down the build</div>
+        There's only one Copilot Chat window — Nova IS that window, just with a mentor personality layered on top. Students never "switch" between Nova and regular Copilot; there's nothing to switch. Inline suggestions (typing a comment, pressing Tab) work completely normally and are untouched by Nova — those come from Copilot's core engine, not the chat instructions. Nova specifically dials its behaviour up or down by phase: restrictive and hint-only during the morning Bug Hunt, but fully generative during the Build phase — meaning it writes complete functions and features on request, exactly like vibe-coding should work. If Nova ever feels like it's holding the build back, that's worth flagging to me — it's designed not to.
+      </div>
+
+      <div class="seg">
+        <div class="seg-head">
+          <span class="seg-title">When students use inline Tab-completion vs. Chat (Nova)</span>
+        </div>
+        <div class="seg-body">
+          <p><strong>Inline suggestions (type a comment, press Tab)</strong> — best for small, fast, single pieces: one function, one CSS rule, one line of logic. This is "typing with the help of a very good autocomplete." Always available, always works the same, Nova has no effect here.</p>
+          <p><strong>Copilot Chat (Nova)</strong> — best for anything needing a conversation: "build me a savings tracker with these three inputs," "why isn't this working," "explain this to me," "what should I try next." This is genuinely vibe-coding — describe the outcome, let it generate, iterate by chatting further.</p>
+          <p>In practice most students will do both constantly, switching naturally. You don't need to instruct them on which to use when — it'll feel obvious once they're in the flow. The only thing worth saying out loud to the room:</p>
+          <div class="say"><div class="say-label">Say this</div>"Small thing you can describe in one line? Type a comment, press Tab. Bigger idea, a question, or 'build me X'? Open the chat and just ask — that's Nova, and in this phase Nova will build with you, not just hint. Use whichever feels natural — they're not separate tools, just two ways of talking to the same one."</div>
+        </div>
+      </div>
+
+      <div class="seg">
+        <div class="seg-head">
+          <span class="seg-title">How it works</span>
+          <span class="badge b-acc">2-minute setup</span>
+        </div>
+        <div class="seg-body">
+          <p>GitHub Copilot has a feature where a file called <code>.github/copilot-instructions.md</code> in a repo changes how Copilot Chat behaves for everyone working in that repo. We've written that file — it turns Copilot into <strong>Nova</strong>, a friendly senior developer at NovaPay who mentors young coders.</p>
+          <p><strong>What Nova does differently from plain Copilot:</strong></p>
+          <ul>
+            <li><strong>Hints before answers</strong> — asks a guiding question before writing code, so students think first</li>
+            <li><strong>Refuses to build the whole feature</strong> — "That's your job — I'm your mentor, not your keyboard! 😄"</li>
+            <li><strong>Explains in plain English</strong> — every technical term gets a one-line translation</li>
+            <li><strong>Keeps students on-task and in-scope</strong> — redirects off-topic questions, keeps everything to HTML/CSS/JS</li>
+            <li><strong>Adapts to age</strong> — smaller steps and more celebration for students who are struggling; harder challenges for students whose code shows they're advanced</li>
+            <li><strong>Always ends with a testing prompt</strong> — "Try it — what do you see?"</li>
+          </ul>
+          <div class="callout c-blue">
+            <div class="c-label blue">To install Nova</div>
+            In your template repo: <strong>Add file → Create new file</strong> → type <code>.github/copilot-instructions.md</code> as the filename (the slash creates the folder) → paste in the contents of the <code>copilot-instructions.md</code> file from your pack → <strong>Commit</strong>. Done. Every new Codespace created from the template gets Nova automatically. Students just use Copilot Chat as normal — Nova is simply how it now behaves.
+          </div>
+          <div class="callout c-amber">
+            <div class="c-label amber">Honest note on "learning"</div>
+            Nova won't learn <em>during</em> the session — Copilot doesn't retain memory between chats. But you can edit the instructions file between sessions based on what you observe ("students kept asking about X, add a rule for it"), which achieves the same thing over time. Think of it as Nova levelling up between workshops rather than during them.
+          </div>
+          <div class="callout c-green">
+            <div class="c-label green">Existing Codespaces note</div>
+            If students created their Codespace before you added Nova, the file will appear after they do a pull — simplest fix is asking them to delete and recreate their Codespace (their repo files are safe), or just add Nova to the repo before the session so it's there from the start.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ═══ THE 2 HOURS ═══ -->
+    <div class="section">
+      <div class="section-title">The 2 hours, minute by minute</div>
+      <div class="section-desc">Times shown as offsets from the start of the build block. If you're running the full 4-hour day, this block starts at 2:00 total elapsed — but it works standalone too.</div>
+
+      <!-- S1: DEMO -->
+      <div class="seg" id="s1">
+        <div class="seg-head">
+          <span class="seg-time">0:00–0:05</span>
+          <span class="seg-title">Demo the finished example</span>
+          <span class="seg-dur">5 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Open <code>example-feature.html</code> on the projector. Use it live — type in a goal ("PS5", £480 target, £300 saved), click update, watch the progress bar animate. Then break it on purpose: leave the name blank and show the friendly error message. Then complete a goal and show the celebration.</p>
+          <div class="say">
+            <div class="say-label">Say this</div>
+            "This is what 'done' looks like. In two hours, you're going to demo something like this — your own idea, built by you, with Copilot as your co-pilot and Nova as your mentor. Notice three things: it takes inputs, it does a calculation, and it shows a result. Every feature you could build today has those same three parts."
+          </div>
+          <div class="callout c-green"><div class="c-label green">Why demo first</div>Showing the destination before the journey is the single most effective scaffold in the whole session. Students who can picture "done" don't freeze at the blank page.</div>
+        </div>
+      </div>
+
+      <!-- S2: BRAINSTORM -->
+      <div class="seg" id="s2">
+        <div class="seg-head">
+          <span class="seg-time">0:05–0:20</span>
+          <span class="seg-title">Brainstorm — loud, fast, fun</span>
+          <span class="seg-dur">15 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Switch to <code>brainstorm-screen.html</code>, slide 1. Run it in three quick beats:</p>
+          <p><strong>Beat 1 — Popcorn round (5 min).</strong> Go around the room fast. Everyone says one thing that annoys them about money apps or one thing they wish existed. No filtering, no judging. Write them on a whiteboard or shared doc as they come. Weird ideas get celebrated loudest.</p>
+          <p><strong>Beat 2 — Cluster (3 min).</strong> Group the shouts into the three seeded categories on screen: save / understand / plan. Most ideas will map naturally.</p>
+          <p><strong>Beat 3 — Pick (7 min).</strong> Advance to slide 2 — the feature gallery with year-group difficulty labels. Each group picks either something from the board or a back-pocket feature. They must tell you their pick before moving on. Check achievability: <em>"Can you describe it in one sentence? Does it have inputs, a calculation, and an output?"</em> If yes, approved.</p>
+          <div class="callout c-amber"><div class="c-label amber">If ideas run dry</div>The back-pocket gallery on slide 2 has 7 pre-vetted features with difficulty labels. Point at it and say "steal freely — making it yours is the fun part." The Savings Goal Tracker is the safest default for any group that can't decide — and it means the example demo doubles as their reference.</div>
+          <div class="callout c-red"><div class="c-label red">Scope traps to veto kindly</div>Anything needing login/accounts, real bank data, a database, or "like the real app but…" — say: "Brilliant idea for version 2. What's the one-screen version of it you could demo today?"</div>
+        </div>
+      </div>
+
+      <!-- S3: PLAN -->
+      <div class="seg" id="s3">
+        <div class="seg-head">
+          <span class="seg-time">0:20–0:30</span>
+          <span class="seg-title">Plan on paper — no keyboards</span>
+          <span class="seg-dur">10 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Advance to slide 3 (the 4 questions), then slide 4 (the 5-minute timer). Groups sketch on paper: What does it do? What does the user see? What are the inputs? What are the outputs?</p>
+          <div class="say"><div class="say-label">Say this</div>"Keyboards down. The next 5 minutes are pen and paper only. Every minute you spend planning saves you five minutes of confused coding. Your paper sketch becomes your instructions to Copilot — literally. You'll type your plan as comments and Copilot will build from them."</div>
+          <p>Circulate. Look at every sketch. The one check that matters: <strong>are the inputs and outputs named?</strong> ("goalName, targetAmount" not "some boxes"). Named inputs become great Copilot prompts.</p>
+        </div>
+      </div>
+
+      <!-- S4: SPRINT 1 -->
+      <div class="seg" id="s4">
+        <div class="seg-head">
+          <span class="seg-time">0:30–1:00</span>
+          <span class="seg-title">Build Sprint 1 — structure &amp; first life</span>
+          <span class="seg-dur">30 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Switch the projector to <code>milestone-screen.html</code> and start its timer. Set milestone 1 to "In Progress". Everyone's already built the Savings Tracker together in the Feature Tutorial — this is their own idea now, so everyone creates a fresh file, regardless of year group:</p>
+          <ul>
+            <li>Right-click in the file panel → <strong>New File</strong> → name it for their idea, e.g. <code>currency-converter.html</code></li>
+            <li>Copy the <code>&lt;style&gt;</code> section and header bar across from <code>practice-feature.html</code> — the file they built in the Feature Tutorial — so it keeps the NovaPay look. This exact step is walked through in <code>how-to-build-your-feature.html</code>'s "Starting your own feature" section, so point anyone unsure back there</li>
+          </ul>
+          <div class="say"><div class="say-label">Say this — the vibe-coding method</div>"Here's the method, and it's the same one professional developers are using right now. One: write a comment describing the next small thing you want — in plain English. Two: let Copilot suggest, press Tab. Three: save, look at Live Server. Four: if it's not right, ask Nova why. Five: repeat. Small steps. Comment, code, check. Never write more than one piece before testing it."</div>
+          <p><strong>Milestone 1 target by 1:00:</strong> page has a heading, all inputs exist, a button exists, opens in Live Server without errors. Looks ugly — that's fine.</p>
+          <div class="callout c-blue"><div class="c-label blue">The blank-page prompt, if anyone freezes</div>Put this on a side screen or tell groups who freeze: type this comment at the top of the new file and Tab through what Copilot offers:<br><br><code>&lt;!-- a single-page banking feature called [NAME] with inputs for [X, Y], a button, and a result area, styled with a clean card layout --&gt;</code></div>
+        </div>
+      </div>
+
+      <!-- S5: CHECKPOINT -->
+      <div class="seg" id="s5">
+        <div class="seg-head">
+          <span class="seg-time">1:00–1:05</span>
+          <span class="seg-title">Checkpoint — one sentence per group</span>
+          <span class="seg-dur">5 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Pause the room. Every group says exactly one sentence: what's working, what's next. Advance milestone 1 to "Done" on screen (or be honest if the room isn't there). This is your early-warning system — any group that says "nothing's working" gets your next 10 minutes.</p>
+          <div class="callout c-green"><div class="c-label green">Energy move</div>Ask for a show of hands: "Who's had Copilot write something that worked first time?" then "Who's had it write something completely wrong?" Both hands go up. "Both of those are the job. Keep going."</div>
+        </div>
+      </div>
+
+      <!-- S6: SPRINT 2 -->
+      <div class="seg" id="s6">
+        <div class="seg-head">
+          <span class="seg-time">1:05–1:40</span>
+          <span class="seg-title">Build Sprint 2 — make it work, make it nice</span>
+          <span class="seg-dur">35 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Set milestone 2 to "In Progress". This sprint is about the JavaScript: the button does the calculation, the result appears. Then styling. Then — for fast groups — milestone 3 stretch goals from the milestone screen's right panel (switch its tab to the relevant year group when helping).</p>
+          <p><strong>Milestone 2 target by ~1:35:</strong> real inputs produce a real output on screen, no console errors, tested with actual numbers.</p>
+          <div class="callout c-amber"><div class="c-label amber">The 1:25 scope call</div>At 1:25, make a hard call for any group without a working output: <em>"Strip it back. One input, one button, one number on screen. Get that working, then add back."</em> A tiny working demo beats an ambitious broken one, every time. Say that sentence out loud to the room.</div>
+          <div class="callout c-green"><div class="c-label green">For groups that finish everything</div>Ultimate stretch: "Open a second Codespace tab, and add your feature as a new card inside bank-dashboard.html — the app you debugged this morning. Now it's a real product."</div>
+        </div>
+      </div>
+
+      <!-- S7: DEMO PREP -->
+      <div class="seg" id="s7">
+        <div class="seg-head">
+          <span class="seg-time">1:40–1:50</span>
+          <span class="seg-title">Demo prep — freeze the code</span>
+          <span class="seg-dur">10 min</span>
+        </div>
+        <div class="seg-body">
+          <div class="say"><div class="say-label">Say this</div>"Code freeze in 10 minutes. Stop adding, start rehearsing. Your demo is 2 minutes: show it working, tell us one way Copilot or Nova helped you, and one thing you'd add with more time. Practise it once out loud — the demo that's been said out loud always goes better."</div>
+          <p>Non-negotiable rule: <strong>they must run their demo path once before demoing.</strong> The inputs they'll type, the button they'll press. No live improvisation.</p>
+          <p>Point every group at <code>feature-test-plan.html</code> for these 10 minutes — it seeds edge-case ideas (empty input, negative numbers, huge numbers) and ends with a 5-item "ready to demo" checklist. A group ticking through it is exactly the rehearsal you want happening right now.</p>
+        </div>
+      </div>
+
+      <!-- S8: DEMOS -->
+      <div class="seg" id="s8">
+        <div class="seg-head">
+          <span class="seg-time">1:50–2:00</span>
+          <span class="seg-title">Demos + close</span>
+          <span class="seg-dur">10 min</span>
+        </div>
+        <div class="seg-body">
+          <p>Each group: 2 minutes, from their own screen (or plugged into the projector). After each, the room answers: "What did you like?" Applaud everything. If something breaks live, model the response: <em>"Congratulations — a live demo failure. That's the most authentic developer experience of the whole day."</em> Then let them show it in the editor instead.</p>
+          <div class="say"><div class="say-label">Your closing</div>"Two hours ago these were sketches on paper. You described what you wanted, an AI helped you build it, you tested it, you fixed it, and you shipped a demo. That loop — describe, build, test, fix — is the actual job. The tools will keep changing. The loop won't. You've got it now."</div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ═══ CIRCULATING AS A NON-DEV ═══ -->
+    <div class="section" id="circulating">
+      <div class="section-title">Circulating when you're not a developer</div>
+      <div class="section-desc">Your job is not to know the answers. Your job is to route students to the thing that does. Here's your complete script.</div>
+      <table class="data-table">
+        <thead><tr><th>Student says…</th><th>You say…</th></tr></thead>
+        <tbody>
+          <tr><td>"It's not working"</td><td>"What did you expect it to do, and what's it doing instead?" (Then: "Ask Nova exactly that.")</td></tr>
+          <tr><td>"There's an error"</td><td>"Press F12, click Console, copy the red text, paste it into Nova and ask what it means in plain English."</td></tr>
+          <tr><td>"Copilot wrote something weird"</td><td>"Delete it and try a more specific comment. Say exactly what the inputs and output are."</td></tr>
+          <tr><td>"I don't understand this code"</td><td>"Highlight it, ask Nova to explain it like you're new to this. Never keep code you can't explain."</td></tr>
+          <tr><td>"Can you fix it for me?"</td><td>"I can't — but Nova can walk you through it, and I can sit with you while it does." (Then actually sit with them.)</td></tr>
+          <tr><td>"We're finished"</td><td>"Prove it. Enter -100. Leave a box blank. Enter letters. Does it survive? If yes, go grab a stretch goal off the milestone screen."</td></tr>
+          <tr><td>"This is too hard"</td><td>"What's the smallest piece that could work? Just the button showing 'hello'? Start there. One win changes everything."</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-blue" style="margin-top:14px"><div class="c-label blue">Your secret weapon</div>You debugged the dashboard this morning too. You have the answer keys. And you have Nova on your own machine. When genuinely stuck alongside a student, open your own Copilot Chat, paste their problem in, and work through Nova's answer together. Modelling "I don't know, let's find out" is better teaching than knowing.</div>
+    </div>
+
+    <!-- ═══ RESCUE ═══ -->
+    <div class="section" id="rescue">
+      <div class="section-title">Rescue playbook</div>
+      <table class="data-table">
+        <thead><tr><th>Situation</th><th>Play</th></tr></thead>
+        <tbody>
+          <tr><td>A group's Codespace dies mid-build</td><td>Their file is saved in the Codespace. Recreate the Codespace from their repo; if the file is lost, they rebuild fast from their paper plan — it goes 3× quicker the second time. Reassure them of that.</td></tr>
+          <tr><td>Copilot suggestions stop appearing</td><td>Check they're signed in (account icon, bottom-left of VS Code). Then reload the browser tab. Then use Copilot Chat instead — it can paste code just as well.</td></tr>
+          <tr><td>Whole room is behind at the checkpoint</td><td>Cut milestone 3 entirely. Announce it: "New plan — everyone's goal is a working milestone 2. Stretch goals are for next time." Nobody misses what you cut confidently.</td></tr>
+          <tr><td>One group way ahead, showing off</td><td>Deputise them. "You're now junior mentors — each of you adopts one other group for 15 minutes. Explaining is the final boss of understanding."</td></tr>
+          <tr><td>A group is fighting over the keyboard</td><td>Driver/navigator rule: one types, one directs, swap every 10 minutes. Point at the clock on the milestone screen as the swap timer.</td></tr>
+          <tr><td>Nova/Copilot gives wrong code and a student trusts it</td><td>Best teaching moment of the day: "It's confident and wrong — like the interest bug this morning. What test would prove it right or wrong?"</td></tr>
+          <tr><td>Internet or Codespaces outage (nuclear)</td><td>Your machine + projector becomes the room's shared computer. Groups take turns directing you — you type only what they say. It's genuinely fun and the planning sheets still drive it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

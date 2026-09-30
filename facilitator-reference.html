@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facilitator Reference — NovaPay Bug Hunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0B0F1A;
+      --surface:    #131929;
+      --card:       #1A2235;
+      --border:     rgba(255,255,255,0.08);
+      --border-mid: rgba(255,255,255,0.14);
+      --accent:     #6C63FF;
+      --accent-dim: rgba(108,99,255,0.15);
+      --green:      #00C896;
+      --green-dim:  rgba(0,200,150,0.12);
+      --amber:      #FFB547;
+      --amber-dim:  rgba(255,181,71,0.12);
+      --red:        #FF4757;
+      --red-dim:    rgba(255,71,87,0.12);
+      --blue:       #4FC3F7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --white:      #FFFFFF;
+      --text:       rgba(255,255,255,0.88);
+      --muted:      rgba(255,255,255,0.45);
+      --code-bg:    #0D1117;
+      --del:        rgba(255,71,87,0.2);
+      --ins:        rgba(0,200,150,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .logo-mark {
+      font-size: 1.1em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+    }
+    .logo-mark span { color: var(--white); }
+
+    .logo-sub {
+      font-size: 0.7em;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .nav-section {
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .nav-label {
+      font-size: 0.62em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 8px;
+      margin-bottom: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.82em;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+    }
+
+    .nav-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 48px 56px;
+      max-width: 860px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-eyebrow {
+      font-size: 0.7em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .page-title {
+      font-size: 2.2em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .page-desc {
+      color: var(--muted);
+      font-size: 0.95em;
+      max-width: 560px;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 1.3em;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.88em;
+      margin-bottom: 24px;
+    }
+
+    /* ── STRATEGY SECTION ── */
+    .strategy-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
+
+    .strategy-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .strategy-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3em;
+      flex-shrink: 0;
+    }
+
+    .strategy-title {
+      font-size: 1em;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .strategy-sub {
+      font-size: 0.82em;
+      color: var(--muted);
+    }
+
+    .strategy-body {
+      font-size: 0.9em;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .strategy-body p + p { margin-top: 10px; }
+
+    .callout {
+      background: var(--accent-dim);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 0.88em;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .callout strong {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── BUG CARDS ── */
+    .bug-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .bug-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bug-number {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85em;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .bug-title {
+      font-weight: 700;
+      font-size: 1em;
+      flex: 1;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 0.65em;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .badge-type-html   { background: rgba(255,181,71,0.15); color: var(--amber); }
+    .badge-type-css    { background: rgba(79,195,247,0.15); color: var(--blue);  }
+    .badge-type-js     { background: rgba(108,99,255,0.15); color: var(--accent);}
+    .badge-type-logic  { background: rgba(0,200,150,0.15);  color: var(--green); }
+
+    .badge-easy    { background: var(--green-dim); color: var(--green); }
+    .badge-medium  { background: var(--amber-dim); color: var(--amber); }
+    .badge-hard    { background: var(--red-dim);   color: var(--red);   }
+    .badge-stretch { background: var(--accent-dim);color: var(--accent);}
+
+    .bug-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bug-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .meta-block {}
+
+    .meta-label {
+      font-size: 0.65em;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .meta-text {
+      font-size: 0.85em;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* ── CODE BLOCKS ── */
+    .code-section {}
+
+    .code-label {
+      font-size: 0.65em;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.82em;
+      line-height: 1.65;
+    }
+
+    .line-del {
+      display: block;
+      background: var(--del);
+      color: #FF8A93;
+      margin: 0 -18px;
+      padding: 0 18px;
+    }
+
+    .line-ins {
+      display: block;
+      background: var(--ins);
+      color: #4AE8B2;
+      margin: 0 -18px;
+      padding: 0 18px;
+    }
+
+    .line-comment {
+      color: var(--muted);
+    }
+
+    .line-neutral {
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── SUMMARY TABLE ── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+      margin-top: 8px;
+    }
+
+    .summary-table th {
+      text-align: left;
+      font-size: 0.7em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-mid);
+    }
+
+    .summary-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+
+    .summary-table tr:last-child td { border-bottom: none; }
+
+    /* ── FINAL CODE BLOCK ── */
+    .full-fix {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .full-fix-header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8em;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .full-fix-header::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .full-fix pre {
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    @media print {
+      .sidebar { display: none; }
+      .content { padding: 24px; max-width: 100%; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Facilitator Reference</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Strategy</div>
+      <a class="nav-item" href="#strategy">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Handling "Fix All"
+      </a>
+    </div>
+
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">Easy — just look</div>
+      <a class="nav-item" href="#bug1"><div class="nav-dot" style="background:var(--green)"></div>1 · Missing closing tag</a>
+      <a class="nav-item" href="#bug2"><div class="nav-dot" style="background:var(--green)"></div>2 · Invisible balance</a>
+      <a class="nav-item" href="#bug3"><div class="nav-dot" style="background:var(--green)"></div>3 · Wrong transaction sign</a>
+    </div>
+
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">Medium — use the page</div>
+      <a class="nav-item" href="#bug4"><div class="nav-dot" style="background:var(--amber)"></div>4 · Wrong input type</a>
+      <a class="nav-item" href="#bug5"><div class="nav-dot" style="background:var(--amber)"></div>5 · Button typo</a>
+      <a class="nav-item" href="#bug6"><div class="nav-dot" style="background:var(--amber)"></div>6 · Wrong operator</a>
+    </div>
+
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">Hard — read the code</div>
+      <a class="nav-item" href="#bug7"><div class="nav-dot" style="background:var(--red)"></div>7 · Element ID typo</a>
+      <a class="nav-item" href="#bug8"><div class="nav-dot" style="background:var(--red)"></div>8 · NaN on empty input</a>
+      <a class="nav-item" href="#bug9"><div class="nav-dot" style="background:var(--red)"></div>9 · Wrong interest formula</a>
+    </div>
+
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">Stretch</div>
+      <a class="nav-item" href="#bug10"><div class="nav-dot" style="background:var(--accent)"></div>10 · No overdraft check</a>
+    </div>
+
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">Reference</div>
+      <a class="nav-item" href="#fullfix"><div class="nav-dot" style="background:var(--muted)"></div>Full fixed function</a>
+    </div>
+  </nav>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">NovaPay Workshop · Bug Hunt</div>
+      <div class="page-title">Facilitator Reference</div>
+      <div class="page-desc">All 10 bugs, their fixes, and how to handle the "just ask Copilot to fix everything" move. Keep this open on a second screen or device.</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         STRATEGY SECTION
+    ════════════════════════════════════════ -->
+    <div class="section" id="strategy">
+      <div class="section-title">Handling "Fix All Bugs"</div>
+      <div class="section-desc">What to do when someone asks Copilot to solve the whole thing at once.</div>
+
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-icon" style="background:var(--green-dim)">🛡️</div>
+          <div>
+            <div class="strategy-title">Your first line of defence: Copilot won't get them all</div>
+            <div class="strategy-sub">This is structural, not accidental</div>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p>The bug set is designed so that a blanket "fix all bugs" prompt will always miss at least three. Bugs 8, 9, and 10 are absent logic, not broken code — the code runs fine, it just doesn't do what a real bank would do. Copilot has to infer intent to catch those, and it usually doesn't. Bug 3 (Costa Coffee shown as income) is a content error in HTML data, not a syntax issue — it also slips through.</p>
+          <p>Try it yourself before the session. You'll see it get the obvious ones and confidently miss the rest.</p>
+        </div>
+      </div>
+
+      <div class="strategy-card" style="border-color:rgba(255,71,87,0.3)">
+        <div class="strategy-header">
+          <div class="strategy-icon" style="background:var(--red-dim)">⚠️</div>
+          <div>
+            <div class="strategy-title">Watch for Agent mode specifically — it's more powerful than Chat</div>
+            <div class="strategy-sub">Discovered during facilitator testing, worth knowing before Friday</div>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p>Copilot in VS Code has two modes: <strong>Ask/Chat mode</strong> (converses, suggests, doesn't touch files) and <strong>Agent mode</strong> (reads and edits files directly, autonomously, multi-step). Nova's instructions apply in both — but Agent mode's whole purpose is to act, so a student who switches to it and says "fix this" is far more likely to get changes actually applied than one using regular Chat, even with Nova's restraint instructions present.</p>
+          <p>Nova's file has been updated with an explicit hard rule for this: in Agent mode during the Bug Hunt, it should make one small change, then stop and explain, rather than continuing autonomously. Worth testing yourself before the session — try switching to Agent mode and asking it to "fix the bugs in this file," and see whether it behaves as expected.</p>
+          <div class="callout" style="background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.25)">
+            <strong>If a group discovers Agent mode fixes multiple bugs at once anyway:</strong> this is the same teaching moment as the "fix everything" scenario above, just a more powerful version of it. Stop the room, look at what actually got fixed together, and ask "did switching modes help you understand this any better, or just get it done faster?" That distinction — speed versus understanding — is the whole point of the exercise either way.
+          </div>
+        </div>
+      </div>
+
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-icon" style="background:var(--amber-dim)">📋</div>
+          <div>
+            <div class="strategy-title">The bug log is your real defence</div>
+            <div class="strategy-sub">Accountability built into the format</div>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p>The on-screen brief asks participants to record three things for every bug they find: what was wrong, how they found it, what they changed. Copilot can fix code — it can't fill in that log. And at share-out, they have to explain each bug to the room. If they can't, it doesn't count.</p>
+          <p>Say this explicitly at the start, before anyone even opens the file:</p>
+          <div class="callout">
+            <strong>Say this:</strong> "You could ask Copilot to fix everything in one go. But at the end you'll have to explain each bug to the room — what it was, why it mattered, how you found it. So it's up to you whether that's a useful shortcut."
+          </div>
+          <p style="margin-top:12px">That reframes it socially without sounding like a rule. Most participants self-regulate once they know there's a public explanation at the end.</p>
+        </div>
+      </div>
+
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-icon" style="background:var(--accent-dim)">⚡</div>
+          <div>
+            <div class="strategy-title">If someone does it anyway: use it as the teaching moment</div>
+            <div class="strategy-sub">Don't shut it down — stop the room</div>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p>If a group asks Copilot to fix everything at once, that's actually gold. Stop the room and run it live as a demonstration:</p>
+          <div class="callout">
+            <strong>Say this:</strong> "This group just asked Copilot to fix all the bugs in one go. Let's see what it got. Did it find them all? What did it miss?"
+          </div>
+          <p style="margin-top:12px">Walk through what it caught and what it didn't — together. This is probably the single most powerful demonstration of the session's core message: Copilot speeds up the middle of the debugging loop, but you still have to run the loop. You can't outsource understanding the problem.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════
+         QUICK SUMMARY TABLE
+    ════════════════════════════════════════ -->
+    <div class="section">
+      <div class="section-title">All 10 bugs at a glance</div>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Difficulty</th>
+            <th>One-line fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Missing closing tag</td>
+            <td><span class="badge badge-type-html">HTML</span></td>
+            <td><span class="badge badge-easy">Easy</span></td>
+            <td>Add <code>&lt;/div&gt;</code> after the balance footer</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Invisible balance</td>
+            <td><span class="badge badge-type-css">CSS</span></td>
+            <td><span class="badge badge-easy">Easy</span></td>
+            <td>Change <code>color: #0F1340</code> to <code>color: #FFFFFF</code></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Wrong transaction sign</td>
+            <td><span class="badge badge-type-html">HTML</span></td>
+            <td><span class="badge badge-easy">Easy</span></td>
+            <td>Change Costa Coffee class to <code>debit</code> and amount to <code>−£3.80</code></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Wrong input type</td>
+            <td><span class="badge badge-type-html">HTML</span></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Change <code>type="text"</code> to <code>type="number"</code></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Button typo</td>
+            <td><span class="badge badge-type-html">HTML</span></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Change <code>onlick</code> to <code>onclick</code></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Wrong operator</td>
+            <td><span class="badge badge-type-js">JS</span></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Change <code>balance + amount</code> to <code>balance - amount</code></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Element ID typo</td>
+            <td><span class="badge badge-type-js">JS</span></td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Change <code>"balence-display"</code> to <code>"balance-display"</code></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>NaN on empty input</td>
+            <td><span class="badge badge-type-logic">Logic</span></td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Add <code>isNaN</code> check before the calculation</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Wrong interest formula</td>
+            <td><span class="badge badge-type-js">JS</span></td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Change <code>* rate</code> to <code>* (rate / 100)</code></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>No overdraft check</td>
+            <td><span class="badge badge-type-logic">Logic</span></td>
+            <td><span class="badge badge-stretch">Stretch</span></td>
+            <td>Add <code>if (amount &gt; balance)</code> guard before deducting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════
+         BUG 1
+    ════════════════════════════════════════ -->
+    <div class="section" id="bug1">
+      <div class="section-title">The Bugs in Full</div>
+      <div class="section-desc">Every bug with exact location, what goes wrong, and the fix.</div>
+
+      <div class="bug-card">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--green-dim);color:var(--green)">01</div>
+          <div class="bug-title">Missing closing tag</div>
+          <div class="badges">
+            <span class="badge badge-type-html">HTML</span>
+            <span class="badge badge-easy">Easy</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The page layout collapses. The stats row and cards below appear nested inside the hero card — broken spacing and visual weirdness throughout.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Open the page preview — the layout looks wrong immediately. Or search for <code>balance-hero</code> in the HTML and count opening vs closing div tags.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-neutral">      &lt;div class="balance-footer"&gt;</span>
+<span class="line-neutral">        &lt;div class="account-name"&gt;Alex Chen&lt;/div&gt;</span>
+<span class="line-neutral">        &lt;div class="account-pill"&gt;•••• 4821&lt;/div&gt;</span>
+<span class="line-neutral">      &lt;/div&gt;</span>
+<span class="line-del">-                                ← closing &lt;/div&gt; missing here</span>
+<span class="line-ins">+     &lt;/div&gt;                     ← add this</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">    &lt;div class="stats-row"&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 2 -->
+      <div class="bug-card" id="bug2">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--green-dim);color:var(--green)">02</div>
+          <div class="bug-title">Invisible balance</div>
+          <div class="badges">
+            <span class="badge badge-type-css">CSS</span>
+            <span class="badge badge-easy">Easy</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The balance amount is in the HTML but completely invisible — dark navy text on a dark navy card background.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">The balance section appears blank. Inspect the element or search the CSS for <code>.balance-amount</code> and compare the colour value to the card background.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-neutral">.balance-amount {</span>
+<span class="line-del">-   color: #0F1340;   /* same as the card background */</span>
+<span class="line-ins">+   color: #FFFFFF;   /* white, visible on dark card  */</span>
+<span class="line-neutral">}</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 3 -->
+      <div class="bug-card" id="bug3">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--green-dim);color:var(--green)">03</div>
+          <div class="bug-title">Wrong transaction sign</div>
+          <div class="badges">
+            <span class="badge badge-type-html">HTML</span>
+            <span class="badge badge-easy">Easy</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The Costa Coffee transaction shows as money in (+£3.80, green) instead of money out. A coffee purchase shouldn't add to your balance.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Look at the transactions list — the coffee entry is green with a plus sign. Find the Costa Coffee entry in the HTML and check the class and amount.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-del">- &lt;div class="tx-amount credit"&gt;+£3.80&lt;/div&gt;</span>
+<span class="line-ins">+ &lt;div class="tx-amount debit"&gt;−£3.80&lt;/div&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 4 -->
+      <div class="bug-card" id="bug4">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--amber-dim);color:var(--amber)">04</div>
+          <div class="bug-title">Wrong input type</div>
+          <div class="badges">
+            <span class="badge badge-type-html">HTML</span>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The withdrawal field accepts any text, including letters. Typing "hello" corrupts the balance display with <code>NaN</code>. On mobile, the numeric keypad also won't appear.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Try typing a letter into the withdrawal field — it accepts it. Look at the input element's <code>type</code> attribute in the HTML.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-del">- &lt;input type="text" id="withdraw-amount" placeholder="0.00"&gt;</span>
+<span class="line-ins">+ &lt;input type="number" id="withdraw-amount" placeholder="0.00"&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 5 -->
+      <div class="bug-card" id="bug5">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--amber-dim);color:var(--amber)">05</div>
+          <div class="bug-title">Button typo — does nothing</div>
+          <div class="badges">
+            <span class="badge badge-type-html">HTML</span>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The Withdraw button looks normal but clicking it does absolutely nothing. No error, no response — it silently fails because the event handler name is wrong.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Click the Withdraw button — nothing happens. Find the button in the HTML and read the attribute name very carefully: <code>onlick</code> vs <code>onclick</code>.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-del">- &lt;button class="btn" onlick="makeWithdrawal()"&gt;Withdraw&lt;/button&gt;</span>
+<span class="line-ins">+ &lt;button class="btn" onclick="makeWithdrawal()"&gt;Withdraw&lt;/button&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 6 -->
+      <div class="bug-card" id="bug6">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--amber-dim);color:var(--amber)">06</div>
+          <div class="bug-title">Wrong operator — withdrawal adds money</div>
+          <div class="badges">
+            <span class="badge badge-type-js">JS</span>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">Withdrawing money increases the balance. <code>balance + amount</code> adds the withdrawal instead of deducting it — the more you take out, the richer you get.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">After fixing bugs 4 and 5, enter an amount and click Withdraw — the balance goes up. Read the <code>makeWithdrawal</code> function and find the calculation.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-comment">// Deduct the withdrawal from the current balance</span>
+<span class="line-del">- balance = balance + amount;</span>
+<span class="line-ins">+ balance = balance - amount;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 7 -->
+      <div class="bug-card" id="bug7">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--red-dim);color:var(--red)">07</div>
+          <div class="bug-title">Element ID typo — crashes the update</div>
+          <div class="badges">
+            <span class="badge badge-type-js">JS</span>
+            <span class="badge badge-hard">Hard</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The function tries to find an element that doesn't exist. JavaScript throws a <code>TypeError: Cannot set properties of null</code> in the browser console. The balance on the hero card never updates.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Press <strong>F12</strong> → Console and trigger a withdrawal. A red error appears. Or compare <code>"balence-display"</code> in the JS to the actual id <code>"balance-display"</code> in the HTML.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-comment">// Update the balance shown on the hero card</span>
+<span class="line-del">- document.getElementById("balence-display").textContent = ...</span>
+<span class="line-ins">+ document.getElementById("balance-display").textContent = ...</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 8 -->
+      <div class="bug-card" id="bug8">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--red-dim);color:var(--red)">08</div>
+          <div class="bug-title">NaN on empty input</div>
+          <div class="badges">
+            <span class="badge badge-type-logic">Logic</span>
+            <span class="badge badge-hard">Hard</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">Clicking Withdraw without entering an amount causes <code>parseFloat("")</code> to return <code>NaN</code>. The balance then displays as <code>£NaN</code> and the success message reads <code>Withdrawn £NaN</code>.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Click Withdraw without entering anything. See <code>£NaN</code>. Then read the function — there's no <code>if</code> check before the calculation runs.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix — add this before the calculation</div>
+            <pre><span class="line-neutral">const amount = parseFloat(document.getElementById("withdraw-amount").value);</span>
+<span class="line-ins">
++ if (isNaN(amount) || amount &lt;= 0) {</span>
+<span class="line-ins">+   errorEl.style.display = "block";</span>
+<span class="line-ins">+   errorEl.textContent = "Please enter a valid amount.";</span>
+<span class="line-ins">+   return;</span>
+<span class="line-ins">+ }</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">balance = balance - amount;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 9 -->
+      <div class="bug-card" id="bug9">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--red-dim);color:var(--red)">09</div>
+          <div class="bug-title">Wrong interest formula</div>
+          <div class="badges">
+            <span class="badge badge-type-js">JS</span>
+            <span class="badge badge-hard">Hard</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">The rate is used directly (e.g. <code>5</code> for 5%) rather than converted to a decimal (<code>0.05</code>). £1,000 at 5% should earn £50/year — the buggy formula returns £600.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Enter a principal and rate and check against a phone calculator. The answer will be 100× too high. Then read the <code>calculateInterest</code> function.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix</div>
+            <pre><span class="line-comment">// Annual interest = principal × rate × 12 months</span>
+<span class="line-del">- const interest = principal * rate * 12;</span>
+<span class="line-ins">+ const interest = principal * (rate / 100) * 12;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG 10 -->
+      <div class="bug-card" id="bug10">
+        <div class="bug-header">
+          <div class="bug-number" style="background:var(--accent-dim);color:var(--accent)">10</div>
+          <div class="bug-title">No overdraft check</div>
+          <div class="badges">
+            <span class="badge badge-type-logic">Logic</span>
+            <span class="badge badge-stretch">Stretch</span>
+          </div>
+        </div>
+        <div class="bug-body">
+          <div class="bug-meta">
+            <div class="meta-block">
+              <div class="meta-label">What goes wrong</div>
+              <div class="meta-text">You can withdraw £5,000 from a £1,250 account. The balance goes negative. No real bank allows this without an agreed overdraft facility.</div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">How to find it</div>
+              <div class="meta-text">Withdraw more than the current balance — it goes negative. Read the function: there's no check before the deduction runs.</div>
+            </div>
+          </div>
+          <div class="code-section">
+            <div class="code-label">The fix — add after the NaN check</div>
+            <pre><span class="line-ins">+ if (amount &gt; balance) {</span>
+<span class="line-ins">+   errorEl.style.display = "block";</span>
+<span class="line-ins">+   errorEl.textContent =</span>
+<span class="line-ins">+     "Insufficient funds. Your balance is £" + balance.toFixed(2);</span>
+<span class="line-ins">+   return;</span>
+<span class="line-ins">+ }</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">balance = balance - amount;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════
+         FULL FIXED FUNCTION
+    ════════════════════════════════════════ -->
+    <div class="section" id="fullfix">
+      <div class="section-title">The fully corrected makeWithdrawal()</div>
+      <div class="section-desc">What the function looks like once bugs 6, 7, 8, and 10 are all fixed. Useful if someone gets tangled fixing them in sequence.</div>
+
+      <div class="full-fix">
+        <div class="full-fix-header">makeWithdrawal() — corrected</div>
+        <pre><span class="line-neutral">function makeWithdrawal() {</span>
+<span class="line-neutral">  const successEl = document.getElementById("wd-success");</span>
+<span class="line-neutral">  const errorEl   = document.getElementById("wd-error");</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">  successEl.style.display = "none";</span>
+<span class="line-neutral">  errorEl.style.display   = "none";</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">  const amount = parseFloat(document.getElementById("withdraw-amount").value);</span>
+<span class="line-neutral"></span>
+<span class="line-comment">  // Bug 8 fix: validate input</span>
+<span class="line-ins">  if (isNaN(amount) || amount &lt;= 0) {</span>
+<span class="line-ins">    errorEl.style.display = "block";</span>
+<span class="line-ins">    errorEl.textContent = "Please enter a valid amount.";</span>
+<span class="line-ins">    return;</span>
+<span class="line-ins">  }</span>
+<span class="line-neutral"></span>
+<span class="line-comment">  // Bug 10 fix: overdraft check</span>
+<span class="line-ins">  if (amount &gt; balance) {</span>
+<span class="line-ins">    errorEl.style.display = "block";</span>
+<span class="line-ins">    errorEl.textContent = "Insufficient funds. Balance: £" + balance.toFixed(2);</span>
+<span class="line-ins">    return;</span>
+<span class="line-ins">  }</span>
+<span class="line-neutral"></span>
+<span class="line-comment">  // Bug 6 fix: subtract, not add</span>
+<span class="line-ins">  balance = balance - amount;</span>
+<span class="line-neutral"></span>
+<span class="line-comment">  // Bug 7 fix: correct element ID</span>
+<span class="line-ins">  document.getElementById("balance-display").textContent =</span>
+<span class="line-neutral">    "£" + balance.toFixed(2);</span>
+<span class="line-neutral"></span>
+<span class="line-neutral">  successEl.style.display = "block";</span>
+<span class="line-neutral">  successEl.textContent =</span>
+<span class="line-neutral">    "Withdrawn £" + amount.toFixed(2) + ". New balance: £" + balance.toFixed(2);</span>
+<span class="line-neutral">}</span></pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

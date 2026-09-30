@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brainstorm & Plan — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929; --card2: #1A2235;
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --muted: rgba(255,255,255,0.45); --border: rgba(255,255,255,0.09);
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); display: flex; flex-direction: column; user-select: none; }
+
+    .deck { width: 100%; height: 100vh; position: relative; }
+    .slide { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 80px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .slide.active { opacity: 1; pointer-events: all; }
+
+    /* NAV */
+    .nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; background: rgba(19,25,41,0.95); border: 1px solid var(--border); border-radius: 100px; padding: 10px 20px; z-index: 100; backdrop-filter: blur(8px); }
+    .nav-btn { background: none; border: 1px solid var(--border); color: var(--white); padding: 6px 18px; border-radius: 100px; font-family: inherit; font-size: 0.82em; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .nav-ind { font-size: 0.75em; color: var(--muted); min-width: 50px; text-align: center; font-family: 'JetBrains Mono', monospace; }
+
+    /* SLIDE 1: BIG QUESTION */
+    .big-q { font-size: 3em; font-weight: 900; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 32px; max-width: 800px; }
+    .seed-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .seed { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; font-size: 0.9em; font-weight: 600; color: rgba(255,255,255,0.8); }
+    .seed-icon { font-size: 1.2em; margin-bottom: 4px; }
+    .seed-label { font-size: 0.72em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+
+    /* SLIDE 2: FEATURE IDEAS */
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 960px; width: 100%; margin-top: 20px; }
+    .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: left; }
+    .feat-name { font-size: 0.9em; font-weight: 700; margin-bottom: 6px; color: var(--white); }
+    .feat-desc { font-size: 0.75em; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+    .feat-years { display: flex; gap: 4px; flex-wrap: wrap; }
+    .year-dot { font-size: 0.62em; font-weight: 700; padding: 2px 7px; border-radius: 100px; letter-spacing: 0.05em; }
+    .y9  { background: rgba(0,200,150,0.2); color: var(--green); }
+    .y11 { background: rgba(255,181,71,0.2); color: var(--amber); }
+    .y13 { background: rgba(255,71,87,0.2); color: var(--red); }
+    .star { background: rgba(108,99,255,0.2); color: var(--accent); }
+
+    /* SLIDE 3: PLAN */
+    .plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 800px; width: 100%; margin-top: 20px; }
+    .plan-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; text-align: left; }
+    .plan-q-num { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; font-weight: 700; color: var(--accent); margin-bottom: 6px; letter-spacing: 0.05em; }
+    .plan-q { font-size: 1em; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .plan-hint { font-size: 0.8em; color: var(--muted); line-height: 1.55; }
+    .plan-example { font-size: 0.78em; color: rgba(108,99,255,0.9); font-style: italic; margin-top: 8px; line-height: 1.5; }
+
+    /* SLIDE 4: TIMER */
+    .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 8em; font-weight: 900; letter-spacing: -0.04em; line-height: 1; transition: color 0.3s; }
+    .timer-display.warn { color: var(--amber); }
+    .timer-display.danger { color: var(--red); }
+    .timer-btn { margin-top: 32px; padding: 14px 40px; background: var(--accent); color: white; border: none; border-radius: 100px; font-family: inherit; font-size: 1em; font-weight: 700; cursor: pointer; }
+    .timer-btn.running { background: rgba(255,255,255,0.1); border: 1px solid var(--border); }
+
+    /* SLIDE 5: BUILD */
+    .build-big { font-size: 4em; font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 20px; }
+    .build-checks { display: flex; flex-direction: column; gap: 12px; max-width: 500px; text-align: left; }
+    .build-check { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px 18px; font-size: 0.92em; font-weight: 600; }
+    .check-icon { font-size: 1.2em; flex-shrink: 0; }
+
+    /* SHARED */
+    .eyebrow { font-size: 0.75em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+    .slide-sub { font-size: 1em; color: var(--muted); margin-top: 12px; max-width: 560px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1: BRAINSTORM -->
+  <div class="slide active" data-slide="1">
+    <div class="eyebrow" style="color:var(--accent)">Brainstorm — 15 minutes</div>
+    <div class="big-q">What would make a bank app<br><span style="background:linear-gradient(135deg,#6C63FF,#00C896);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">better for someone your age?</span></div>
+    <div class="seed-row">
+      <div class="seed">
+        <div class="seed-icon">🏦</div>
+        <div>Help you <strong>save</strong></div>
+        <div class="seed-label">goals · round-ups · streaks</div>
+      </div>
+      <div class="seed">
+        <div class="seed-icon">📊</div>
+        <div>Help you <strong>understand</strong></div>
+        <div class="seed-label">spending · categories · history</div>
+      </div>
+      <div class="seed">
+        <div class="seed-icon">📅</div>
+        <div>Help you <strong>plan</strong></div>
+        <div class="seed-label">budgets · targets · timelines</div>
+      </div>
+    </div>
+    <div class="slide-sub" style="margin-top:28px">Shout out ideas — your facilitator will collect them. Every idea is valid. Weird is fine.</div>
+  </div>
+
+  <!-- SLIDE 2: FEATURE IDEAS -->
+  <div class="slide" data-slide="2">
+    <div class="eyebrow" style="color:var(--green)">Pick a feature — or suggest your own</div>
+    <div style="font-size:1.8em;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px">Back-pocket ideas</div>
+    <div style="font-size:0.85em;color:var(--muted);margin-bottom:20px">Coloured labels show which year groups should aim for each feature</div>
+    <div class="features-grid">
+      <div class="feature-card" style="border-color:rgba(0,200,150,0.3)">
+        <div class="feat-name">💰 Savings Goal Tracker</div>
+        <div class="feat-desc">Enter a goal name, target, and current savings. Shows a progress bar and amount left.</div>
+        <div class="feat-years"><span class="year-dot y9">Y9+</span><span class="year-dot star">⭐ Recommended</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(0,200,150,0.3)">
+        <div class="feat-name">🗂️ Spending Category Cards</div>
+        <div class="feat-desc">Visual cards for Food, Transport, Entertainment showing amounts. Mostly HTML &amp; CSS.</div>
+        <div class="feat-years"><span class="year-dot y9">Y9+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(0,200,150,0.3)">
+        <div class="feat-name">💱 Currency Converter</div>
+        <div class="feat-desc">Enter an amount in pounds, pick a currency, get the converted result.</div>
+        <div class="feat-years"><span class="year-dot y9">Y9+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(255,181,71,0.3)">
+        <div class="feat-name">📆 Budget Planner</div>
+        <div class="feat-desc">Enter income and expenses — shows what's left. Good for JS logic practice.</div>
+        <div class="feat-years"><span class="year-dot y11">Y11+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(255,181,71,0.3)">
+        <div class="feat-name">🔄 Round-Up Calculator</div>
+        <div class="feat-desc">Shows how rounding up purchases to the nearest pound accumulates over time.</div>
+        <div class="feat-years"><span class="year-dot y11">Y11+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(255,71,87,0.3)">
+        <div class="feat-name">🏠 Loan Calculator</div>
+        <div class="feat-desc">Monthly repayment calculator using compound interest. Needs solid maths logic.</div>
+        <div class="feat-years"><span class="year-dot y13">Y12+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(255,71,87,0.3)">
+        <div class="feat-name">🚨 Fraud Alert Simulator</div>
+        <div class="feat-desc">Flags suspicious transactions based on rules. Logic and conditionals heavy.</div>
+        <div class="feat-years"><span class="year-dot y13">Y12+</span></div>
+      </div>
+      <div class="feature-card" style="border-color:rgba(108,99,255,0.3)">
+        <div class="feat-name">✨ Your own idea</div>
+        <div class="feat-desc">Something you thought of in the brainstorm. Check with your facilitator that it's achievable in 90 minutes.</div>
+        <div class="feat-years"><span class="year-dot star">All years</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: PLANNING TEMPLATE -->
+  <div class="slide" data-slide="3">
+    <div class="eyebrow" style="color:var(--amber)">Plan it on paper first — 5 minutes</div>
+    <div style="font-size:1.8em;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px">Answer these 4 questions before you write any code</div>
+    <div class="plan-grid">
+      <div class="plan-card">
+        <div class="plan-q-num">Q1</div>
+        <div class="plan-q">What does it do?</div>
+        <div class="plan-hint">One sentence. If you can't describe it in one sentence, it's too complicated.</div>
+        <div class="plan-example">e.g. "It shows how close you are to a savings goal and how much you still need."</div>
+      </div>
+      <div class="plan-card">
+        <div class="plan-q-num">Q2</div>
+        <div class="plan-q">What does the user see?</div>
+        <div class="plan-hint">Draw boxes on paper — don't code yet. A heading, some inputs, a result area.</div>
+        <div class="plan-example">e.g. A text input, a number input, a progress bar, and a label underneath.</div>
+      </div>
+      <div class="plan-card">
+        <div class="plan-q-num">Q3</div>
+        <div class="plan-q">What are the inputs?</div>
+        <div class="plan-hint">What does the user type in or select? List them all — name them clearly.</div>
+        <div class="plan-example">e.g. goalName (text), targetAmount (number), savedSoFar (number)</div>
+      </div>
+      <div class="plan-card">
+        <div class="plan-q-num">Q4</div>
+        <div class="plan-q">What does it output?</div>
+        <div class="plan-hint">What does the user see after they click? A number, a bar, a message, all three?</div>
+        <div class="plan-example">e.g. A progress bar at 60%, "£40 left to save", and a message if the goal is reached.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: PLANNING TIMER -->
+  <div class="slide" data-slide="4">
+    <div style="font-size:0.85em;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px">Planning time</div>
+    <div class="timer-display" id="timer-4">5:00</div>
+    <div style="font-size:1em;color:var(--muted);margin-top:16px">Sketch it on paper. Answer the 4 questions. Don't touch the keyboard yet.</div>
+    <button class="timer-btn" id="btn-4" onclick="toggleTimer(4, 300)">Start Timer</button>
+  </div>
+
+  <!-- SLIDE 5: GO BUILD -->
+  <div class="slide" data-slide="5">
+    <div class="eyebrow" style="color:var(--green)">You're ready</div>
+    <div class="build-big">Open your file.<br><span style="background:linear-gradient(135deg,#6C63FF,#00C896);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Start building.</span></div>
+    <div class="build-checks">
+      <div class="build-check"><span class="check-icon">📄</span>Everyone: create a new file for your idea</div>
+      <div class="build-check"><span class="check-icon">🎨</span>Copy the colours &amp; header from <strong>practice-feature.html</strong> so it keeps the NovaPay look</div>
+      <div class="build-check"><span class="check-icon">🤖</span>Use your plan from the paper sketch to write Copilot comments</div>
+      <div class="build-check"><span class="check-icon">📺</span>Watch the milestone screen for targets and tips</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>← Prev</button>
+  <div class="nav-ind" id="ind">1 / 5</div>
+  <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+  const TOTAL = 5; let cur = 1;
+  const timers = {};
+
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.querySelector(`[data-slide="${n}"]`).classList.add('active');
+    document.getElementById('ind').textContent = `${n} / ${TOTAL}`;
+    document.getElementById('prev-btn').disabled = n === 1;
+    document.getElementById('next-btn').disabled = n === TOTAL;
+    cur = n;
+  }
+  function nextSlide() { if (cur < TOTAL) showSlide(cur + 1); }
+  function prevSlide() { if (cur > 1) showSlide(cur - 1); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevSlide();
+  });
+
+  function toggleTimer(id, total) {
+    const btn = document.getElementById(`btn-${id}`);
+    const disp = document.getElementById(`timer-${id}`);
+    if (timers[id] && timers[id].running) {
+      clearInterval(timers[id].interval); timers[id].running = false;
+      btn.textContent = 'Resume'; btn.className = 'timer-btn'; return;
+    }
+    if (!timers[id]) timers[id] = { remaining: total, running: false, interval: null };
+    timers[id].running = true; btn.textContent = 'Pause'; btn.className = 'timer-btn running';
+    timers[id].interval = setInterval(() => {
+      timers[id].remaining--;
+      const r = timers[id].remaining;
+      const m = Math.floor(r / 60), s = r % 60;
+      disp.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+      disp.className = r <= 30 ? 'timer-display danger' : r <= 60 ? 'timer-display warn' : 'timer-display';
+      if (r <= 0) {
+        clearInterval(timers[id].interval); timers[id].running = false;
+        disp.textContent = "Time's up!"; btn.textContent = 'Done'; btn.className = 'timer-btn';
+      }
+    }, 1000);
+  }
+</script>
+</body>
+</html>

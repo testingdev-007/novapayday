@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Script (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;
+  --accent:#5A50E0;--green:#00875F;--blue:#1D6FA8;--amber:#B45F06;--red:#C0293D;
+  --paper:#FFFFFF;--shade:#F4F5F9;
+  --green-bg:#E9F7F1;--blue-bg:#EAF3FA;--amber-bg:#FEF6E7;--red-bg:#FDECEF;--accent-bg:#EEECFB;
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;line-height:1.45;padding:32px 0 80px}
+.page{max-width:820px;margin:0 auto;background:var(--paper);padding:44px 50px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:820px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+
+.doc-header{text-align:center;padding-bottom:20px;border-bottom:3px solid var(--ink);margin-bottom:6px}
+.doc-logo{font-size:1.15em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.9em;font-weight:900;letter-spacing:-0.03em;margin-top:8px}
+.doc-sub{font-size:0.9em;color:var(--muted);margin-top:4px}
+
+.calm-note{background:var(--shade);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:6px;padding:14px 18px;margin:20px 0 28px;font-size:0.88em;line-height:1.6}
+.calm-note strong{color:var(--accent)}
+
+.toc{background:var(--shade);border:1.5px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:28px;font-size:0.82em;columns:2;column-gap:24px}
+.toc-title{font-weight:800;font-size:0.85em;margin-bottom:8px;column-span:all}
+.toc a{color:var(--ink);text-decoration:none;display:block;padding:2px 0}
+
+.hour{margin:36px 0 6px;page-break-before:always}
+.hour:first-of-type{page-break-before:auto}
+.hour-header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--ink);color:white;border-radius:8px;margin-bottom:14px}
+.hour-tag{font-size:0.72em;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:100px}
+.hour-title{font-size:1.05em;font-weight:800}
+.hour-time{font-family:'JetBrains Mono',monospace;font-size:0.82em;margin-left:auto;color:rgba(255,255,255,0.7)}
+
+.seg{border:1.5px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;page-break-inside:avoid}
+.seg-head{display:flex;align-items:baseline;gap:10px;padding:9px 16px;background:var(--shade);border-bottom:1.5px solid var(--border)}
+.seg-time{font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:800;color:var(--accent)}
+.seg-title{font-size:0.95em;font-weight:800}
+.seg-dur{font-size:0.72em;color:var(--muted);margin-left:auto}
+.seg-body{padding:12px 16px}
+
+.row-label{font-size:0.66em;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 3px}
+.row-label:first-child{margin-top:0}
+p.b{font-size:0.87em;line-height:1.55;margin-bottom:2px}
+ul.b{margin:2px 0 4px 16px}
+ul.b li{font-size:0.87em;line-height:1.6}
+
+.say{background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:8px 12px;font-size:0.87em;font-style:italic;line-height:1.55;margin:4px 0}
+
+.help-box{background:var(--blue-bg);border:1px solid #9CC5E0;border-radius:6px;padding:8px 12px;margin:4px 0;font-size:0.85em;line-height:1.5}
+.help-box .prompt{font-style:italic;display:block;margin-top:2px}
+
+.answer-table{width:100%;border-collapse:collapse;font-size:0.8em;margin:6px 0}
+.answer-table th{text-align:left;font-size:0.65em;font-weight:800;text-transform:uppercase;color:var(--muted);padding:4px 6px;border-bottom:1.5px solid var(--ink)}
+.answer-table td{padding:5px 6px;border-bottom:1px solid var(--border)}
+.answer-table code{font-family:'JetBrains Mono',monospace;font-size:0.85em;background:var(--shade);padding:1px 4px;border-radius:3px}
+
+.if-stuck{background:var(--amber-bg);border:1px solid #E8B347;border-radius:6px;padding:8px 12px;margin:4px 0;font-size:0.85em;line-height:1.5}
+.if-stuck strong{color:var(--amber)}
+
+code.inline{font-family:'JetBrains Mono',monospace;font-size:0.87em;background:var(--shade);border:1px solid var(--border);padding:1px 5px;border-radius:4px}
+
+hr.section-divider{border:none;border-top:2px solid var(--ink);margin:28px 0 20px}
+.footer-note{text-align:center;font-size:0.8em;color:var(--muted);margin-top:28px;padding-top:16px;border-top:2px solid var(--ink);line-height:1.6}
+
+@media print{
+  body{background:white;padding:0;font-size:10.5px}
+  .page{box-shadow:none;padding:18px 12px;max-width:100%}
+  .print-btn{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="print-btn"><button onclick="window.print()">🖨 Print the Master Script</button></div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Master Script</div>
+    <div class="doc-sub">What, when, how, and help — for the entire day, in one document</div>
+  </div>
+
+  <div class="calm-note">
+    <strong>This is the one to hold.</strong> Every segment below follows the same shape: <strong>What</strong> it is, <strong>How</strong> to run it, what to <strong>Say</strong>, where the <strong>Help</strong> (hints/prompts) lives, and — where relevant — the actual <strong>Answers</strong> and what to do <strong>If Stuck</strong>. You shouldn't need a second document today.
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Jump to:</div>
+    <a href="#h1">Hour 1 — Bug Hunt (0:00–1:05)</a>
+    <a href="#h2">Level Up (1:05–1:35)</a>
+    <a href="#hbreak">☕ Comfort Break (1:35–1:50)</a>
+    <a href="#h3">Build, Part 1: Tutorial, Brainstorm &amp; Plan (1:50–2:35)</a>
+    <a href="#hlunch">🍽️ Lunch &amp; Accessibility (2:35–3:10)</a>
+    <a href="#h3b">Build: Feature Creation (3:10–4:35)</a>
+    <a href="#h4">Show &amp; Feedback (4:35–5:00)</a>
+  </div>
+
+  <!-- ══════════════════ HOUR 1 ══════════════════ -->
+  <div class="hour" id="h1">
+    <div class="hour-header">
+      <span class="hour-tag">Hour 1</span>
+      <span class="hour-title">Bug Hunt</span>
+      <span class="hour-time">0:00–1:05</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">0:00</span><span class="seg-title">Welcome</span><span class="seg-dur">15 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Intros, get everyone into their Codespace, ice breaker.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Share the repo URL on screen</li><li>Pair people up — mix ages where you can</li></ul>
+        <div class="row-label">Say</div>
+        <div class="say">"Today you're going to build a real feature for a banking app — from idea to working demo. We'll start by doing what every developer does first: fix what's broken."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">0:15</span><span class="seg-title">Copilot demo</span><span class="seg-dur">15 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Live demo of inline completions and Copilot Chat.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Type a comment, wait for ghost text, press Tab</li><li>Open Chat, ask it to explain a snippet of code</li></ul>
+        <div class="row-label">Say</div>
+        <div class="say">"Copilot is a very fast autocomplete that's read most of the internet. It's not always right. Your job is to understand the problem — Copilot helps you write it faster."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">0:30</span><span class="seg-title">Bug tutorial — everyone together</span><span class="seg-dur">10 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Everyone follows <code class="inline">how-to-find-fix-bugs.html</code> — a worked, made-up example bug, not one of the real 10.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Walk through the fake <code class="inline">sayHi()</code>/<code class="inline">sayHu()</code> example together</li><li>Land the 4-step method: Look → Use → Read → Fix → Test</li></ul>
+        <div class="row-label">If Stuck</div>
+        <div class="if-stuck"><strong>No spoilers here</strong> — this example is deliberately not a real dashboard bug, so it's safe to fully solve on screen.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">0:40</span><span class="seg-title">Independent bug hunt</span><span class="seg-dur">20 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Same method, applied to the real <code class="inline">bank-dashboard.html</code> — 10 planted bugs.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Project <code class="inline">bug-hunt-screen.html</code>, step back</li><li>Remind them to log finds in <code class="inline">bug-test-plan.html</code></li></ul>
+        <div class="row-label">Help — hand out if stuck</div>
+        <div class="help-box">
+          <span class="prompt">"Are there any bugs in this code?"</span>
+          <span class="prompt">"I clicked this button and nothing happened — what could cause that?"</span>
+          <span class="prompt">"Why might a number show up as NaN instead of a value?"</span>
+        </div>
+        <div class="row-label">Answers — all 10 bugs</div>
+        <table class="answer-table">
+          <tr><th>#</th><th>Bug</th><th>Fix</th></tr>
+          <tr><td>1</td><td>Missing closing tag</td><td>Add <code>&lt;/div&gt;</code> after balance footer</td></tr>
+          <tr><td>2</td><td>Invisible balance</td><td><code>color: #0F1340</code> → <code>#FFFFFF</code></td></tr>
+          <tr><td>3</td><td>Wrong transaction sign</td><td>Coffee: <code>credit</code> → <code>debit</code></td></tr>
+          <tr><td>4</td><td>Wrong input type</td><td><code>type="text"</code> → <code>type="number"</code></td></tr>
+          <tr><td>5</td><td>Button typo</td><td><code>onlick</code> → <code>onclick</code></td></tr>
+          <tr><td>6</td><td>Wrong operator</td><td><code>balance + amount</code> → <code>- amount</code></td></tr>
+          <tr><td>7</td><td>Element ID typo</td><td><code>"balence-display"</code> → <code>"balance-display"</code></td></tr>
+          <tr><td>8</td><td>NaN on empty input</td><td>Add <code>isNaN()</code> check before calculating</td></tr>
+          <tr><td>9</td><td>Wrong interest formula</td><td><code>* rate</code> → <code>* (rate/100)</code></td></tr>
+          <tr><td>10</td><td>No overdraft check</td><td>Add <code>if (amount &gt; balance)</code> guard</td></tr>
+        </table>
+        <div class="if-stuck"><strong>If a group asks Copilot to "fix everything at once":</strong> it'll likely miss 8, 9, 10 (missing logic, not broken code) and 3 (a data error, not a syntax one). Use it as a live teaching moment if it happens — stop the room, look at what it missed together.</div>
+        <div class="if-stuck"><strong>If Nova's restraint is genuinely too much for one student:</strong> only affects that one person since each has their own repo. Rename their <code class="inline">.github/copilot-instructions.md</code> on github.com → rebuild their Codespace container → Copilot reverts to normal for them only.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:00</span><span class="seg-title">Share out</span><span class="seg-dur">5 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">How</div><p class="b">Ask 2–3 people: "What did you find? How did Copilot help?"</p>
+        <div class="row-label">Say</div>
+        <div class="say">"That's the debugging loop — notice, investigate, fix, test. Copilot speeds up the middle part, but you're still the one running the loop."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ LEVEL UP ══════════════════ -->
+  <div class="hour" id="h2">
+    <div class="hour-header">
+      <span class="hour-tag">Bridge</span>
+      <span class="hour-title">Level Up ⚡</span>
+      <span class="hour-time">1:05–1:35</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:05</span><span class="seg-title">The reveal + concepts</span><span class="seg-dur">8 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Fast facts about GitHub, Codespaces, and Copilot's scale — then land what a Codespace actually is.</p>
+        <div class="row-label">Say</div>
+        <div class="say">"You just used GitHub Copilot to debug a real banking app. It was trained on over a billion lines of code. And it still gets things wrong sometimes. That matters."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:13</span><span class="seg-title">Round 1 — Fix the Bug</span><span class="seg-dur">7 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b"><code class="inline">challenge.js</code> already has a buggy interest-rate function pre-loaded. Ask Copilot Chat to fix it, then prove it with Node.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Open <code class="inline">challenge.js</code> — it's already there, no typing needed</li><li>Ask Copilot Chat to review and fix it</li><li>Add <code class="inline">console.log(calculateMonthlyPayment(1000, 5, 1));</code>, save</li><li>Terminal: <code class="inline">node challenge.js</code> — see the real number</li></ul>
+        <div class="row-label">Help</div>
+        <div class="help-box"><span class="prompt">"Can you review this function for bugs? Pay attention to how the interest rate is being used."</span></div>
+        <div class="row-label">Answer</div>
+        <p class="b"><code class="inline">monthlyRate = annualRate / 12</code> → should be <code class="inline">annualRate / 100 / 12</code>. 5% treated as 5, not 0.05.</p>
+        <div class="if-stuck"><strong>If Copilot refuses / flags "SQL injection":</strong> shouldn't happen here since the code's already in a real file — but if it does, confirm the function is actually saved in <code class="inline">challenge.js</code> before asking Chat about it.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:20</span><span class="seg-title">Round 1 recap</span><span class="seg-dur">3 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">Say</div>
+        <div class="say">"Copilot wrote that bug. Then Copilot found and fixed it. That's not a contradiction — write fast, review carefully, use it in both directions."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:23</span><span class="seg-title">Round 2 — Comment Race</span><span class="seg-dur">3 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Same <code class="inline">challenge.js</code>. Type a comment, Tab-complete, prove it with Node.</p>
+        <div class="row-label">How</div>
+        <ul class="b"><li>Comment: <code class="inline">// function that converts an amount in pounds to euros, rate 1.17, rounded to 2 decimal places</code></li><li>Tab to accept, add a <code class="inline">console.log</code>, run <code class="inline">node challenge.js</code></li></ul>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:26</span><span class="seg-title">Round 3 — Best Prompt</span><span class="seg-dur">3 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">One Copilot Chat message only. Best result wins, proven via Node.</p>
+        <div class="row-label">Say</div>
+        <div class="say">"The difference between a great result and a mediocre one came down to how specific the prompt was. This is prompt engineering."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:29</span><span class="seg-title">Golden rules + bridge</span><span class="seg-dur">6 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">Say</div>
+        <div class="say">"Three rules before we build: be specific, always test it, ask Nova to explain anything you don't understand. Now — let's build something real."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ COMFORT BREAK ══════════════════ -->
+  <div class="hour" id="hbreak">
+    <div class="hour-header" style="background:rgba(0,200,150,0.12)">
+      <span class="hour-title">☕ Comfort Break</span>
+      <span class="hour-time">1:35–1:50</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:35</span><span class="seg-title">Comfort break</span><span class="seg-dur">15 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Toilets, water, stretch legs. No content — a genuine break. Good moment to reset yourself too before the longer build block ahead.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BUILD, PART 1 ══════════════════ -->
+  <div class="hour" id="h3">
+    <div class="hour-header">
+      <span class="hour-tag">Main event</span>
+      <span class="hour-title">Build, Part 1: Tutorial, Brainstorm &amp; Plan</span>
+      <span class="hour-time">1:50–2:35</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">1:50</span><span class="seg-title">Feature tutorial — everyone together</span><span class="seg-dur">20 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Everyone follows <code class="inline">how-to-build-your-feature.html</code> — builds a Savings Tracker from a genuinely blank file. 10 steps: skeleton, colours, header, form, progress bar, logic, wiring.</p>
+        <div class="row-label">Say</div>
+        <div class="say">"One: write a comment describing the next small thing. Two: let Copilot suggest, press Tab. Three: save, check Live Server. Four: if it's wrong, ask Nova why."</div>
+        <div class="row-label">If Stuck</div>
+        <div class="if-stuck">Y11/Y12–13 have exact comments hidden behind a reveal button on this page — encourage them to try writing their own first.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">2:10</span><span class="seg-title">Brainstorm</span><span class="seg-dur">15 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Popcorn round, then pick an idea — different from the tracker they just built.</p>
+        <div class="row-label">If Stuck</div>
+        <div class="if-stuck">Point at the back-pocket gallery on <code class="inline">brainstorm-screen.html</code> slide 2 — just not the Savings Tracker.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">2:25</span><span class="seg-title">Plan on paper</span><span class="seg-dur">10 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">Say</div>
+        <div class="say">"Keyboards down. Every minute you plan saves five minutes of confused coding."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ LUNCH & ACCESSIBILITY ══════════════════ -->
+  <div class="hour" id="hlunch">
+    <div class="hour-header" style="background:rgba(0,200,150,0.12)">
+      <span class="hour-title">🍽️ Lunch &amp; Accessibility</span>
+      <span class="hour-time">2:35–3:10</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">2:35</span><span class="seg-title">Lunch</span><span class="seg-dur">30 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Accessibility activities happen during this window. No content to run — a genuine break.</p>
+        <div class="if-stuck"><strong>Why lunch sits here:</strong> before any creation starts, not mid-way through it — groups have a plan sketched but nothing built yet, so nobody's mid-flow when they break.</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">3:05</span><span class="seg-title">Accessibility discussion</span><span class="seg-dur">5 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">Say</div><p class="b">"You just spent lunch thinking about accessibility. Before we start building — does anything change how you'd want your feature to work? Would everyone be able to use it?"</p>
+        <div class="row-label">Prompt if quiet</div><p class="b">"Could someone using a screen reader use your feature? Could someone who can't see colour tell your progress bar apart from the background?"</p>
+        <div class="row-label">How</div><p class="b">1–2 quick reactions, keep it tight — this is only 5 minutes. If a group wants to act on something, that's a legitimate stretch goal.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BUILD ══════════════════ -->
+  <div class="hour" id="h3b">
+    <div class="hour-header">
+      <span class="hour-title">Build: Feature Creation</span>
+      <span class="hour-time">3:10–4:35</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">3:10</span><span class="seg-title">Feature creation</span><span class="seg-dur">85 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">What</div><p class="b">Everyone creates a new file, copies colours/header from <code class="inline">practice-feature.html</code> (built in the tutorial). Structure, logic, styling, and testing all happen in this one continuous block — no separate checkpoint or testing slot, so pace it yourself as you circulate.</p>
+        <div class="row-label">Rough guide</div>
+        <ul class="b">
+          <li>~3:35 — structure done: heading, inputs, button, opens in Live Server without errors. Ugly is fine.</li>
+          <li>~4:10 — styled and basic JS working</li>
+          <li>~4:25 — tested: "Code freeze. Try to break your own feature on purpose — empty fields, negative numbers, huge numbers."</li>
+        </ul>
+        <div class="row-label">Help by year group</div>
+        <div class="help-box">
+          <strong>Y9–10:</strong> <span class="prompt">"Why isn't my progress bar changing width?"</span>
+          <strong>Y11:</strong> <span class="prompt">"Review this function for edge cases I might have missed"</span>
+          <strong>Y12–13:</strong> <span class="prompt">"How would you refactor this to be more maintainable?"</span>
+        </div>
+        <div class="if-stuck"><strong>At ~4:00, if any group isn't working yet:</strong> "Strip it back. One input, one button, one number on screen." Say it to the whole room.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ TEST & SHOW ══════════════════ -->
+  <div class="hour" id="h4">
+
+    <div class="hour-header">
+      <span class="hour-tag">Close</span>
+      <span class="hour-title">Show &amp; Feedback</span>
+      <span class="hour-time">4:35–5:00</span>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">4:35</span><span class="seg-title">Show &amp; tell</span><span class="seg-dur">15 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">How</div><p class="b">2 min each. Room answers "what did you like?" after each.</p>
+        <div class="if-stuck"><strong>If a demo breaks live:</strong> "Congratulations — a live demo failure. That's the most authentic developer experience of the day." Show it in the editor instead.</div>
+        <div class="row-label">Your closing</div>
+        <div class="say">"Two hours ago you built one feature together, step by step. Then you described your own idea, Copilot helped you build it, you tested it, you fixed it, you shipped a demo. That loop — describe, build, test, fix — is the actual job. The tools will keep changing. The loop won't."</div>
+      </div>
+    </div>
+
+    <div class="seg">
+      <div class="seg-head"><span class="seg-time">4:50</span><span class="seg-title">Feedback</span><span class="seg-dur">10 min</span></div>
+      <div class="seg-body">
+        <div class="row-label">Say</div>
+        <div class="say">"One word for how today felt" — go round the room fast, no explanations needed.</div>
+        <div class="row-label">How</div><p class="b">Put a feedback form or QR code on screen if you have one. Keep it short — energy is naturally dropping after demos, so a fast light close beats a thorough one nobody engages with.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="footer-note">
+    If something isn't covered here, it's on the Troubleshooting Card or the "If It All Falls Apart" page. If it's still not covered — you already know more about this than you think you do.
+  </div>
+
+</div>
+</body>
+</html>

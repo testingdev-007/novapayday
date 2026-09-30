@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova vs Plain Copilot — The Objective Case</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929; --card2: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.16);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; padding-bottom: 60px; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+
+    .hero { text-align: center; padding: 56px 32px 20px; }
+    .hero-badge { display: inline-flex; gap: 8px; background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3); border-radius: 100px; padding: 6px 16px; font-size: 0.78em; font-weight: 700; color: var(--accent); margin-bottom: 20px; }
+    .hero-title { font-size: 2.2em; font-weight: 900; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 14px; }
+    .hero-desc { font-size: 0.95em; color: var(--muted); max-width: 640px; margin: 0 auto; line-height: 1.65; }
+
+    .back-link { display: inline-block; margin: 24px 0 0; font-size: 0.85em; color: var(--muted); text-decoration: none; }
+    .back-link:hover { color: white; }
+
+    .section { margin: 48px 0; }
+    .section-title { font-size: 1.3em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .section-desc { font-size: 0.87em; color: var(--muted); margin-bottom: 22px; max-width: 640px; line-height: 1.6; }
+
+    /* MECHANISM CARD */
+    .mech-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 16px; }
+    .mech-title { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
+    .mech-body { font-size: 0.88em; color: var(--text); line-height: 1.7; }
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+
+    /* SIDE BY SIDE EVIDENCE */
+    .evidence-block { margin-bottom: 28px; }
+    .evidence-q { background: var(--card2); border-radius: 10px 10px 0 0; padding: 14px 20px; font-size: 0.88em; font-weight: 700; border: 1.5px solid var(--border); border-bottom: none; }
+    .evidence-q-label { font-size: 0.65em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; margin-bottom: 4px; }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--border); border-radius: 0 0 10px 10px; overflow: hidden; }
+    .evidence-side { padding: 18px 20px; }
+    .evidence-side.plain { background: rgba(255,71,87,0.05); border-right: 1px solid var(--border); }
+    .evidence-side.nova { background: rgba(0,200,150,0.05); }
+    .evidence-side-label { font-size: 0.68em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .evidence-side.plain .evidence-side-label { color: var(--red); }
+    .evidence-side.nova .evidence-side-label { color: var(--green); }
+    .evidence-answer { font-size: 0.85em; line-height: 1.65; color: rgba(255,255,255,0.85); font-style: italic; }
+    .evidence-note { font-size: 0.78em; color: var(--muted); margin-top: 10px; font-style: normal; }
+
+    /* COMPARE TABLE */
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+    .compare-table th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--border-mid); }
+    .compare-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .check { color: var(--green); font-weight: 800; }
+    .cross { color: var(--red); font-weight: 800; }
+    .partial { color: var(--amber); font-weight: 800; }
+
+    /* HONEST LIMITS */
+    .limit-card { background: rgba(255,181,71,0.08); border: 1.5px solid rgba(255,181,71,0.3); border-radius: 12px; padding: 18px 22px; margin-bottom: 12px; }
+    .limit-title { font-weight: 700; font-size: 0.9em; color: var(--amber); margin-bottom: 6px; }
+    .limit-body { font-size: 0.86em; color: var(--text); line-height: 1.65; }
+
+    .verdict-box { background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(0,200,150,0.1)); border: 1.5px solid rgba(108,99,255,0.3); border-radius: 16px; padding: 28px 32px; margin-top: 32px; }
+    .verdict-title { font-size: 1.1em; font-weight: 800; margin-bottom: 10px; }
+    .verdict-body { font-size: 0.9em; line-height: 1.7; color: rgba(255,255,255,0.9); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-badge">🔍 Objective comparison, not marketing</div>
+    <div class="hero-title">Nova vs Plain Copilot</div>
+    <div class="hero-desc">Same underlying tool. One extra text file. Here's exactly what changes, why it changes, real evidence of the difference, and where the honest limits are.</div>
+  </div>
+
+  <div class="wrap">
+    <a class="back-link" href="facilitator-training.html">← Back to facilitator training</a>
+
+    <!-- MECHANISM -->
+    <div class="section">
+      <div class="section-title">The mechanism — what's actually different</div>
+      <div class="mech-card">
+        <div class="mech-title">Plain Copilot</div>
+        <div class="mech-body">Copilot Chat with no custom instructions answers from its general training — helpful, broadly competent, but with no idea it's talking to a 13-year-old during a structured bug hunt, and no reason to hold back a complete answer if asked for one.</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-title">Nova</div>
+        <div class="mech-body">The exact same Copilot Chat, in the exact same repo — but with one extra file present: <code>.github/copilot-instructions.md</code>. Copilot reads this automatically on every chat message in this repo and adjusts its behaviour accordingly. It's not a different product, a plugin, or a separate subscription. It's context, applied automatically.</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- EVIDENCE -->
+    <div class="section">
+      <div class="section-title">Real evidence — the same question, both ways</div>
+      <div class="section-desc">These are the actual behavioural rules written into Nova's instructions file, shown against what plain Copilot does with no such instructions.</div>
+
+      <div class="evidence-block">
+        <div class="evidence-q"><div class="evidence-q-label">Student asks, during the Bug Hunt</div>"Are there any bugs in this code?"</div>
+        <div class="evidence-grid">
+          <div class="evidence-side plain">
+            <div class="evidence-side-label">✕ Plain Copilot</div>
+            <div class="evidence-answer">Lists several or all of the bugs directly, because it has no reason not to — it's just being maximally helpful to a direct question.</div>
+            <div class="evidence-note">Outcome: the exercise is largely defeated in one message.</div>
+          </div>
+          <div class="evidence-side nova">
+            <div class="evidence-side-label">✓ Nova</div>
+            <div class="evidence-answer">"Yes, several! Try this: look at the page first — does anything look visually wrong? Then try using it — click things, type things. What breaks?"</div>
+            <div class="evidence-note">Outcome: student is redirected to the actual learning activity.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="evidence-block">
+        <div class="evidence-q"><div class="evidence-q-label">Student asks, during the Build phase</div>"Can you build my whole feature?"</div>
+        <div class="evidence-grid">
+          <div class="evidence-side plain">
+            <div class="evidence-side-label">Plain Copilot</div>
+            <div class="evidence-answer">Will attempt it if the description is clear enough — no particular reason to hold back, similar to the bug hunt case.</div>
+            <div class="evidence-note">Not necessarily wrong here — just not tailored to the moment.</div>
+          </div>
+          <div class="evidence-side nova">
+            <div class="evidence-side-label">✓ Nova</div>
+            <div class="evidence-answer">Explicitly instructed to be <em>generative here</em>, not restrictive — Nova is told this is vibe-coding and should write complete functions freely. The difference from the Bug Hunt case is deliberate phase-awareness, not blanket caution.</div>
+            <div class="evidence-note">Outcome: same as plain Copilot when description is clear, but Nova asks a clarifying question first if it isn't — keeping momentum either way.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="evidence-block">
+        <div class="evidence-q"><div class="evidence-q-label">Student asks, at any point</div>"Explain what a function is"</div>
+        <div class="evidence-grid">
+          <div class="evidence-side plain">
+            <div class="evidence-side-label">Plain Copilot</div>
+            <div class="evidence-answer">Gives a competent, technically accurate explanation — but written the same way for a 13-year-old as for a professional developer.</div>
+            <div class="evidence-note">May use unexplained jargon.</div>
+          </div>
+          <div class="evidence-side nova">
+            <div class="evidence-side-label">✓ Nova</div>
+            <div class="evidence-answer">Instructed to keep answers short, use an everyday analogy, and translate any technical term in one line — "a function — a reusable block of code."</div>
+            <div class="evidence-note">Outcome: same information, calibrated to the actual audience in the room.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="evidence-block">
+        <div class="evidence-q"><div class="evidence-q-label">Student asks, off-topic</div>"Can you help me with something unrelated to the workshop?"</div>
+        <div class="evidence-grid">
+          <div class="evidence-side plain">
+            <div class="evidence-side-label">Plain Copilot</div>
+            <div class="evidence-answer">Will typically just try to help with whatever's asked — it has no concept of "the workshop" or a task to stay inside.</div>
+            <div class="evidence-note">No structural reason to redirect.</div>
+          </div>
+          <div class="evidence-side nova">
+            <div class="evidence-side-label">✓ Nova</div>
+            <div class="evidence-answer">"Let's get back to your feature — what part are you working on right now?" — explicitly instructed to redirect kindly rather than engage.</div>
+            <div class="evidence-note">Outcome: keeps a room of young people on-task without you personally policing every chat window.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- SUMMARY TABLE -->
+    <div class="section">
+      <div class="section-title">Summary comparison</div>
+      <table class="compare-table">
+        <thead><tr><th>Capability</th><th>Plain Copilot</th><th>Nova</th></tr></thead>
+        <tbody>
+          <tr><td>Code completions / Tab-complete</td><td class="check">✓ Identical</td><td class="check">✓ Identical</td></tr>
+          <tr><td>Knows which phase of the day it is</td><td class="cross">✕ No</td><td class="check">✓ Yes</td></tr>
+          <tr><td>Holds back full answers during Bug Hunt</td><td class="cross">✕ No</td><td class="check">✓ Yes</td></tr>
+          <tr><td>Generates freely during Build phase</td><td class="check">✓ Yes</td><td class="check">✓ Yes, deliberately</td></tr>
+          <tr><td>Age-appropriate tone and jargon-free explanations</td><td class="partial">◐ Sometimes</td><td class="check">✓ Every time</td></tr>
+          <tr><td>Redirects off-topic requests</td><td class="cross">✕ No</td><td class="check">✓ Yes</td></tr>
+          <tr><td>Setup cost</td><td class="check">None</td><td class="check">One file, ~2 minutes</td></tr>
+          <tr><td>Extra subscription or cost</td><td class="check">None</td><td class="check">None — same Copilot plan</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <!-- HONEST LIMITS -->
+    <div class="section">
+      <div class="section-title">The honest limits — where Nova isn't magic</div>
+      <div class="limit-card">
+        <div class="limit-title">It's an instruction, not a lock</div>
+        <div class="limit-body">Nova works because the underlying model generally follows the instructions it's given — but a persistent or cleverly-worded student could still get more out of it than intended. This is guidance, not a technical restriction. Treat it as a strong nudge in the right direction, not a guarantee.</div>
+      </div>
+      <div class="limit-card">
+        <div class="limit-title">No memory between conversations</div>
+        <div class="limit-body">Nova doesn't "learn" a specific student over the day — every new chat starts fresh from the same instructions file. Any improvement over time comes from you editing the file between sessions, not from Nova adapting live.</div>
+      </div>
+      <div class="limit-card">
+        <div class="limit-title">Only as good as Copilot itself underneath</div>
+        <div class="limit-body">Nova shapes tone and boundaries — it doesn't make the underlying code suggestions more technically correct. Copilot can still be confidently wrong; Nova doesn't fix that, and nor should it try to.</div>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-title">🎯 The honest verdict</div>
+      <div class="verdict-body">Nova is a genuinely better fit for a room of 13–18 year olds than plain Copilot — not because it's more powerful, but because it's more <em>appropriate</em>: it protects the learning objective during the Bug Hunt, gets out of the way during the Build phase, and talks to students like students. That's a real, evidenced difference. It is not a safety net that makes misuse impossible, and it doesn't need to be — for a supervised one-day workshop, "meaningfully better by default" is exactly the right bar, and Nova clears it.</div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Answer Key — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117; --del: rgba(255,71,87,0.2); --ins: rgba(0,200,150,0.2);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar { width: 230px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 840px; }
+    .page-header { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px; }
+    .page-warn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.3); border-radius: 8px; padding: 8px 14px; font-size: 0.8em; color: var(--amber); font-weight: 600; margin-top: 8px; }
+
+    /* LADDER TABLE */
+    .ladder { width: 100%; border-collapse: collapse; font-size: 0.85em; margin-bottom: 48px; }
+    .ladder th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--border-mid); }
+    .ladder td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .ladder tr:last-child td { border-bottom: none; }
+
+    /* BUG CARDS */
+    .bug-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 18px; }
+    .bug-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .bug-num { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.82em; font-weight: 800; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+    .bug-title { font-weight: 700; font-size: 0.95em; flex: 1; }
+    .badges { display: flex; gap: 6px; }
+    .badge { font-size: 0.65em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+    .badge-html  { background: rgba(255,181,71,0.15); color: var(--amber); }
+    .badge-css   { background: rgba(79,195,247,0.15); color: #4FC3F7; }
+    .badge-js    { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .badge-logic { background: rgba(0,200,150,0.15); color: var(--green); }
+    .badge-easy    { background: rgba(0,200,150,0.12); color: var(--green); }
+    .badge-medium  { background: rgba(255,181,71,0.12); color: var(--amber); }
+    .badge-hard    { background: rgba(255,71,87,0.12); color: var(--red); }
+    .badge-stretch { background: rgba(108,99,255,0.12); color: var(--accent); }
+
+    .bug-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .meta-label { font-size: 0.65em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .meta-text { font-size: 0.85em; line-height: 1.55; }
+
+    .fix-label { font-size: 0.65em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.65; overflow-x: auto; }
+    .del { display: block; background: var(--del); color: #FF8A93; margin: 0 -16px; padding: 0 16px; }
+    .ins { display: block; background: var(--ins); color: #4AE8B2; margin: 0 -16px; padding: 0 16px; }
+    .cmt { color: var(--muted); }
+    .neu { color: rgba(255,255,255,0.7); }
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+
+    .full-fix { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 40px; }
+    .full-fix-header { padding: 13px 20px; border-bottom: 1px solid var(--border); font-size: 0.8em; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .full-fix-header::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .full-fix pre { border: none; border-radius: 0; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    .section-title { font-size: 1.2em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Bug Answer Key</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Easy — just look</div>
+      <a class="nav-item" href="#bug1"><div class="nav-dot" style="background:var(--green)"></div>1 · Missing closing tag</a>
+      <a class="nav-item" href="#bug2"><div class="nav-dot" style="background:var(--green)"></div>2 · Invisible balance</a>
+      <a class="nav-item" href="#bug3"><div class="nav-dot" style="background:var(--green)"></div>3 · Wrong transaction sign</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Medium — use the page</div>
+      <a class="nav-item" href="#bug4"><div class="nav-dot" style="background:var(--amber)"></div>4 · Wrong input type</a>
+      <a class="nav-item" href="#bug5"><div class="nav-dot" style="background:var(--amber)"></div>5 · Button typo</a>
+      <a class="nav-item" href="#bug6"><div class="nav-dot" style="background:var(--amber)"></div>6 · Wrong operator</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Hard — read the code</div>
+      <a class="nav-item" href="#bug7"><div class="nav-dot" style="background:var(--red)"></div>7 · Element ID typo</a>
+      <a class="nav-item" href="#bug8"><div class="nav-dot" style="background:var(--red)"></div>8 · NaN on empty input</a>
+      <a class="nav-item" href="#bug9"><div class="nav-dot" style="background:var(--red)"></div>9 · Wrong interest formula</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Stretch</div>
+      <a class="nav-item" href="#bug10"><div class="nav-dot" style="background:var(--accent)"></div>10 · No overdraft check</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Reference</div>
+      <a class="nav-item" href="#fullfix"><div class="nav-dot" style="background:var(--muted)"></div>Full fixed function</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">NovaPay Workshop — Facilitator</div>
+      <div class="page-title">Bug Answer Key</div>
+      <div class="page-warn">🔒 Do not share with participants</div>
+    </div>
+
+    <div class="section-title">Difficulty ladder</div>
+    <table class="ladder">
+      <thead><tr><th>Level</th><th>Bugs</th><th>How found</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-easy">Easy</span></td><td>1–3</td><td>Visible just by opening the page</td></tr>
+        <tr><td><span class="badge badge-medium">Medium</span></td><td>4–6</td><td>Found by using the page</td></tr>
+        <tr><td><span class="badge badge-hard">Hard</span></td><td>7–9</td><td>Need to read code or open the console</td></tr>
+        <tr><td><span class="badge badge-stretch">Stretch</span></td><td>10</td><td>Logical — need to think about edge cases</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">The 10 Bugs</div>
+
+    <!-- BUG 1 -->
+    <div class="bug-card" id="bug1">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(0,200,150,0.15);color:var(--green)">01</div>
+        <div class="bug-title">Missing closing tag</div>
+        <div class="badges"><span class="badge badge-html">HTML</span><span class="badge badge-easy">Easy</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">The page layout collapses. Stats row and cards below appear nested inside the hero card — broken spacing throughout.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Open the preview — the layout looks wrong immediately. Search for <code>balance-hero</code> and count opening vs closing div tags.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="neu">      &lt;div class="balance-footer"&gt;</span>
+<span class="neu">        &lt;div class="account-name"&gt;Alex Chen&lt;/div&gt;</span>
+<span class="neu">        &lt;div class="account-pill"&gt;•••• 4821&lt;/div&gt;</span>
+<span class="neu">      &lt;/div&gt;</span>
+<span class="del">-                             ← closing &lt;/div&gt; missing</span>
+<span class="ins">+     &lt;/div&gt;                  ← add this line</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 2 -->
+    <div class="bug-card" id="bug2">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(0,200,150,0.15);color:var(--green)">02</div>
+        <div class="bug-title">Invisible balance</div>
+        <div class="badges"><span class="badge badge-css">CSS</span><span class="badge badge-easy">Easy</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">The balance is in the HTML but completely invisible — dark text on a dark background.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Balance section is blank. Search CSS for <code>.balance-amount</code> and compare the colour to the card background.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="neu">.balance-amount {</span>
+<span class="del">-   color: #0F1340;  /* same as card background */</span>
+<span class="ins">+   color: #FFFFFF;  /* white — visible on dark card */</span>
+<span class="neu">}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 3 -->
+    <div class="bug-card" id="bug3">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(0,200,150,0.15);color:var(--green)">03</div>
+        <div class="bug-title">Wrong transaction sign</div>
+        <div class="badges"><span class="badge badge-html">HTML</span><span class="badge badge-easy">Easy</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Costa Coffee shows as income (+£3.80, green). A coffee purchase is money out, not money in.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Look at the transactions list — the coffee entry is green with a plus. Find it in the HTML.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- &lt;div class="tx-amount credit"&gt;+£3.80&lt;/div&gt;</span>
+<span class="ins">+ &lt;div class="tx-amount debit"&gt;−£3.80&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 4 -->
+    <div class="bug-card" id="bug4">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,181,71,0.15);color:var(--amber)">04</div>
+        <div class="bug-title">Wrong input type</div>
+        <div class="badges"><span class="badge badge-html">HTML</span><span class="badge badge-medium">Medium</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Withdrawal field accepts any text including letters. Typing "hello" corrupts the balance with <code>NaN</code>.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Try typing a letter into the field — it accepts it. Look at the input's <code>type</code> attribute.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- &lt;input type="text" id="withdraw-amount" placeholder="0.00"&gt;</span>
+<span class="ins">+ &lt;input type="number" id="withdraw-amount" placeholder="0.00"&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 5 -->
+    <div class="bug-card" id="bug5">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,181,71,0.15);color:var(--amber)">05</div>
+        <div class="bug-title">Button typo — does nothing</div>
+        <div class="badges"><span class="badge badge-html">HTML</span><span class="badge badge-medium">Medium</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Withdraw button looks fine but clicking it does absolutely nothing — silently fails.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Click the button — nothing happens. Read the HTML attribute carefully: <code>onlick</code> vs <code>onclick</code>.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- &lt;button class="btn" onlick="makeWithdrawal()"&gt;Withdraw&lt;/button&gt;</span>
+<span class="ins">+ &lt;button class="btn" onclick="makeWithdrawal()"&gt;Withdraw&lt;/button&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 6 -->
+    <div class="bug-card" id="bug6">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,181,71,0.15);color:var(--amber)">06</div>
+        <div class="bug-title">Wrong operator — withdrawal adds money</div>
+        <div class="badges"><span class="badge badge-js">JS</span><span class="badge badge-medium">Medium</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Balance increases when you withdraw. The more you take out, the richer you get.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">After fixing bug 5, withdraw an amount — balance goes up. Read <code>makeWithdrawal()</code>.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- balance = balance + amount;</span>
+<span class="ins">+ balance = balance - amount;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 7 -->
+    <div class="bug-card" id="bug7">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,71,87,0.15);color:var(--red)">07</div>
+        <div class="bug-title">Element ID typo — crashes the update</div>
+        <div class="badges"><span class="badge badge-js">JS</span><span class="badge badge-hard">Hard</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">JS throws <code>TypeError: Cannot set properties of null</code> in the console. Balance on the card never updates.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Press <strong>F12 → Console</strong> and trigger a withdrawal. Red error appears. Compare the ID in JS to the one in HTML.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- document.getElementById("balence-display").textContent = ...</span>
+<span class="ins">+ document.getElementById("balance-display").textContent = ...</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 8 -->
+    <div class="bug-card" id="bug8">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,71,87,0.15);color:var(--red)">08</div>
+        <div class="bug-title">NaN on empty input</div>
+        <div class="badges"><span class="badge badge-logic">Logic</span><span class="badge badge-hard">Hard</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Click Withdraw with no amount entered — balance shows <code>£NaN</code> and message reads <code>Withdrawn £NaN</code>.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Click Withdraw without entering anything. Then read the function — there's no <code>if</code> check before the calculation.</div></div>
+        </div>
+        <div><div class="fix-label">The fix — add before the calculation</div>
+          <pre><span class="ins">+ if (isNaN(amount) || amount &lt;= 0) {</span>
+<span class="ins">+   errorEl.style.display = "block";</span>
+<span class="ins">+   errorEl.textContent = "Please enter a valid amount.";</span>
+<span class="ins">+   return;</span>
+<span class="ins">+ }</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 9 -->
+    <div class="bug-card" id="bug9">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(255,71,87,0.15);color:var(--red)">09</div>
+        <div class="bug-title">Wrong interest formula</div>
+        <div class="badges"><span class="badge badge-js">JS</span><span class="badge badge-hard">Hard</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">Rate not converted to decimal. £1,000 at 5% should earn £50/year — buggy formula returns £600 (100× too high).</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Enter a principal and rate, check against a phone calculator — massively wrong. Read <code>calculateInterest()</code>.</div></div>
+        </div>
+        <div><div class="fix-label">The fix</div>
+          <pre><span class="del">- const interest = principal * rate * 12;</span>
+<span class="ins">+ const interest = principal * (rate / 100) * 12;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG 10 -->
+    <div class="bug-card" id="bug10">
+      <div class="bug-header">
+        <div class="bug-num" style="background:rgba(108,99,255,0.15);color:var(--accent)">10</div>
+        <div class="bug-title">No overdraft protection</div>
+        <div class="badges"><span class="badge badge-logic">Logic</span><span class="badge badge-stretch">Stretch</span></div>
+      </div>
+      <div class="bug-body">
+        <div class="meta-grid">
+          <div><div class="meta-label">What goes wrong</div><div class="meta-text">You can withdraw more than your balance. No real bank allows this without an agreed overdraft.</div></div>
+          <div><div class="meta-label">How to find it</div><div class="meta-text">Withdraw more than £1,250 — balance goes negative. Read the function: there's no <code>if (amount > balance)</code> check.</div></div>
+        </div>
+        <div><div class="fix-label">The fix — add after the NaN check</div>
+          <pre><span class="ins">+ if (amount &gt; balance) {</span>
+<span class="ins">+   errorEl.style.display = "block";</span>
+<span class="ins">+   errorEl.textContent =</span>
+<span class="ins">+     "Insufficient funds. Balance: £" + balance.toFixed(2);</span>
+<span class="ins">+   return;</span>
+<span class="ins">+ }</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- FULL FIX -->
+    <div class="section-title" id="fullfix">Fully corrected makeWithdrawal()</div>
+    <p style="font-size:0.88em;color:var(--muted);margin-bottom:16px">What the function looks like once bugs 6, 7, 8 and 10 are all fixed.</p>
+    <div class="full-fix">
+      <div class="full-fix-header">makeWithdrawal() — corrected</div>
+      <pre><span class="neu">function makeWithdrawal() {</span>
+<span class="neu">  const successEl = document.getElementById("wd-success");</span>
+<span class="neu">  const errorEl   = document.getElementById("wd-error");</span>
+<span class="neu">  successEl.style.display = "none";</span>
+<span class="neu">  errorEl.style.display   = "none";</span>
+<span class="neu">  const amount = parseFloat(document.getElementById("withdraw-amount").value);</span>
+<span class="neu"></span>
+<span class="cmt">  // Bug 8 fix: validate input</span>
+<span class="ins">  if (isNaN(amount) || amount &lt;= 0) {</span>
+<span class="ins">    errorEl.style.display = "block";</span>
+<span class="ins">    errorEl.textContent = "Please enter a valid amount.";</span>
+<span class="ins">    return;</span>
+<span class="ins">  }</span>
+<span class="neu"></span>
+<span class="cmt">  // Bug 10 fix: overdraft check</span>
+<span class="ins">  if (amount &gt; balance) {</span>
+<span class="ins">    errorEl.style.display = "block";</span>
+<span class="ins">    errorEl.textContent = "Insufficient funds. Balance: £" + balance.toFixed(2);</span>
+<span class="ins">    return;</span>
+<span class="ins">  }</span>
+<span class="neu"></span>
+<span class="cmt">  // Bug 6 fix: subtract, not add</span>
+<span class="ins">  balance = balance - amount;</span>
+<span class="neu"></span>
+<span class="cmt">  // Bug 7 fix: correct element ID</span>
+<span class="ins">  document.getElementById("balance-display").textContent =</span>
+<span class="neu">    "£" + balance.toFixed(2);</span>
+<span class="neu"></span>
+<span class="neu">  successEl.style.display = "block";</span>
+<span class="neu">  successEl.textContent =</span>
+<span class="neu">    "Withdrawn £" + amount.toFixed(2) + ". New balance: £" + balance.toFixed(2);</span>
+<span class="neu">}</span></pre>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

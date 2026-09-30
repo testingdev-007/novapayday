@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaPay — Savings Goal Tracker (Finished Example)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════
+       FINISHED EXAMPLE — Savings Goal Tracker
+       This is what "done" looks like. Demo this to the
+       room at the start of the build phase so everyone
+       can see the target. Built exactly the way a
+       participant would build it: HTML + CSS + vanilla JS.
+       ═══════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F0F2F8;
+      --card:    #FFFFFF;
+      --accent:  #6C63FF;
+      --green:   #00C896;
+      --red:     #FF4757;
+      --border:  #E8ECF2;
+      --text:    #0D0F1C;
+      --muted:   #8B92A5;
+      --shadow:  0 2px 12px rgba(13,15,28,0.08);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 48px;
+    }
+
+    .app-header {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-size: 1.2em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--text); }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: white; font-size: 0.75em; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    .main { max-width: 600px; margin: 0 auto; padding: 28px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+    .card-title { font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+
+    .field { margin-bottom: 14px; }
+    .field-label { display: block; font-size: 0.72em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .prefix-wrap { position: relative; }
+    .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--muted); font-size: 0.9em; pointer-events: none; }
+    input {
+      width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+      border-radius: 10px; font-size: 0.95em; font-family: inherit;
+      color: var(--text); background: var(--bg); outline: none; transition: border-color 0.15s;
+    }
+    input:focus { border-color: var(--accent); background: white; }
+    .with-prefix { padding-left: 30px; }
+
+    .btn {
+      display: block; width: 100%; padding: 13px;
+      border: none; border-radius: 10px;
+      font-size: 0.95em; font-family: inherit; font-weight: 700;
+      background: var(--accent); color: white; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    .error-msg {
+      margin-top: 12px; padding: 11px 15px; border-radius: 8px;
+      background: #FFF0F1; color: #BF1030; border: 1px solid #FFB8C1;
+      font-size: 0.85em; display: none;
+    }
+
+    /* Progress section */
+    .progress-section { display: none; }
+    .goal-heading { font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .goal-sub { font-size: 0.82em; color: var(--muted); margin-bottom: 16px; }
+
+    .progress-track {
+      width: 100%; height: 22px; background: var(--bg);
+      border-radius: 100px; overflow: hidden; margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), #8B7FFF);
+      border-radius: 100px;
+      transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: 10px;
+    }
+    .progress-fill.complete { background: linear-gradient(90deg, var(--green), #4AE8B2); }
+    .progress-pct { font-size: 0.7em; font-weight: 800; color: white; white-space: nowrap; }
+
+    .progress-stats { display: flex; justify-content: space-between; font-size: 0.8em; color: var(--muted); }
+    .progress-stats strong { color: var(--text); }
+
+    /* Result */
+    .result-box {
+      margin-top: 16px; border-radius: 10px; padding: 16px 18px;
+      background: #EEEEFF; display: none;
+    }
+    .result-box.success { background: #E6FAF3; }
+    .result-eyebrow { font-size: 0.68em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
+    .result-box.success .result-eyebrow { color: #00804E; }
+    .result-figure { font-size: 1.6em; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; }
+    .result-box.success .result-figure { color: #00804E; }
+    .result-note { font-size: 0.8em; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="avatar">AC</div>
+  </header>
+
+  <main class="main">
+
+    <div class="card">
+      <div class="card-title">Savings Goal Tracker</div>
+      <p style="font-size:0.88em;color:var(--muted);line-height:1.6">
+        Enter your savings goal to see how close you are and how much you still need.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Your Goal</div>
+
+      <div class="field">
+        <label class="field-label" for="goal-name">What are you saving for?</label>
+        <input type="text" id="goal-name" placeholder="e.g. New trainers, holiday, laptop">
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="target-amount">Target amount</label>
+        <div class="prefix-wrap">
+          <span class="prefix">£</span>
+          <input type="number" id="target-amount" class="with-prefix" placeholder="0.00" min="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="saved-amount">Amount saved so far</label>
+        <div class="prefix-wrap">
+          <span class="prefix">£</span>
+          <input type="number" id="saved-amount" class="with-prefix" placeholder="0.00" min="0">
+        </div>
+      </div>
+
+      <button class="btn" onclick="updateGoal()">Update my goal</button>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
+
+    <!-- Progress card — hidden until first update -->
+    <div class="card progress-section" id="progress-section">
+      <div class="card-title">Progress</div>
+      <div class="goal-heading" id="goal-heading">Your goal</div>
+      <div class="goal-sub" id="goal-sub"></div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill">
+          <span class="progress-pct" id="progress-pct">0%</span>
+        </div>
+      </div>
+      <div class="progress-stats">
+        <span>Saved: <strong id="stat-saved">£0</strong></span>
+        <span>Target: <strong id="stat-target">£0</strong></span>
+      </div>
+
+      <div class="result-box" id="result-box">
+        <div class="result-eyebrow" id="result-eyebrow">Still to save</div>
+        <div class="result-figure" id="result-figure">£0.00</div>
+        <div class="result-note" id="result-note"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ── Calculate what percentage of the target has been saved ──
+    // Capped at 100 so the bar never overflows
+    function calculateProgress(savedAmount, targetAmount) {
+      const percentage = (savedAmount / targetAmount) * 100;
+      return Math.min(percentage, 100).toFixed(1);
+    }
+
+    // ── Update everything on screen ──
+    function updateDisplay(goalName, targetAmount, savedAmount, percentage) {
+      // Show the progress section
+      document.getElementById("progress-section").style.display = "block";
+
+      // Headings
+      document.getElementById("goal-heading").textContent = goalName;
+      document.getElementById("goal-sub").textContent =
+        "You're " + percentage + "% of the way there";
+
+      // Progress bar
+      const fill = document.getElementById("progress-fill");
+      fill.style.width = percentage + "%";
+      document.getElementById("progress-pct").textContent = percentage + "%";
+
+      // Stats
+      document.getElementById("stat-saved").textContent  = "£" + savedAmount.toFixed(2);
+      document.getElementById("stat-target").textContent = "£" + targetAmount.toFixed(2);
+
+      // Result box
+      const resultBox    = document.getElementById("result-box");
+      const resultFigure = document.getElementById("result-figure");
+      const resultNote   = document.getElementById("result-note");
+      const eyebrow      = document.getElementById("result-eyebrow");
+      resultBox.style.display = "block";
+
+      const remaining = targetAmount - savedAmount;
+
+      if (remaining <= 0) {
+        // Goal reached! 🎉
+        resultBox.classList.add("success");
+        fill.classList.add("complete");
+        eyebrow.textContent = "Goal reached!";
+        resultFigure.textContent = "🎉 You did it!";
+        resultNote.textContent = "You've saved everything you need for " + goalName + ".";
+      } else {
+        resultBox.classList.remove("success");
+        fill.classList.remove("complete");
+        eyebrow.textContent = "Still to save";
+        resultFigure.textContent = "£" + remaining.toFixed(2);
+        resultNote.textContent = "Keep going — you're closer than you think.";
+      }
+    }
+
+    // ── Main function: runs when the button is clicked ──
+    function updateGoal() {
+      const errorMsg = document.getElementById("error-msg");
+      errorMsg.style.display = "none";
+
+      // 1. Read the inputs
+      const goalName     = document.getElementById("goal-name").value.trim();
+      const targetAmount = parseFloat(document.getElementById("target-amount").value);
+      const savedAmount  = parseFloat(document.getElementById("saved-amount").value);
+
+      // 2. Validate them
+      if (goalName === "") {
+        errorMsg.textContent = "Give your goal a name — what are you saving for?";
+        errorMsg.style.display = "block";
+        return;
+      }
+      if (isNaN(targetAmount) || targetAmount <= 0) {
+        errorMsg.textContent = "Enter a target amount greater than £0.";
+        errorMsg.style.display = "block";
+        return;
+      }
+      if (isNaN(savedAmount) || savedAmount < 0) {
+        errorMsg.textContent = "Enter how much you've saved (0 is fine).";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      // 3. Calculate progress
+      const percentage = calculateProgress(savedAmount, targetAmount);
+
+      // 4. Update the display
+      updateDisplay(goalName, targetAmount, savedAmount, parseFloat(percentage));
+    }
+  </script>
+
+</body>
+</html>

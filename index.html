@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929;
+      --border: rgba(255,255,255,0.08);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547;
+      --white: #FFFFFF; --muted: rgba(255,255,255,0.5);
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white);
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .wrap { max-width: 640px; width: 100%; text-align: center; }
+
+    .logo { font-size: 1.3em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 28px; }
+    .logo span { color: var(--white); }
+
+    .title { font-size: 1.9em; font-weight: 900; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
+    .subtitle { font-size: 0.95em; color: var(--muted); line-height: 1.6; max-width: 460px; margin: 0 auto 40px; }
+
+    .doors { display: flex; flex-direction: column; gap: 14px; }
+
+    .door {
+      display: flex; align-items: center; gap: 18px;
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 22px 26px; text-decoration: none; color: white;
+      transition: border-color 0.18s, transform 0.15s, background 0.18s;
+      text-align: left;
+    }
+    .door:hover { transform: translateY(-2px); }
+
+    .door-1:hover { border-color: rgba(0,200,150,0.5); background: #16241F; }
+    .door-2:hover { border-color: rgba(108,99,255,0.5); background: #1A1B33; }
+    .door-3:hover { border-color: rgba(255,181,71,0.5); background: #26200F; }
+    .door-4:hover { border-color: rgba(255,71,87,0.5); background: #2A1A1E; }
+
+    .door-icon { font-size: 2em; flex-shrink: 0; width: 56px; text-align: center; }
+    .door-body { flex: 1; }
+    .door-title { font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; }
+    .door-desc { font-size: 0.84em; color: var(--muted); line-height: 1.5; }
+    .door-arrow { font-size: 1.3em; color: var(--muted); flex-shrink: 0; }
+
+    .footer-note { margin-top: 36px; font-size: 0.8em; color: var(--muted); line-height: 1.6; }
+    .footer-note a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="title">Where do you need to start?</div>
+    <div class="subtitle">Pick one. That's the only decision on this page — everything you actually need is behind it, in order.</div>
+
+    <div class="doors">
+      <a class="door door-1" href="student-index.html">
+        <div class="door-icon">🎓</div>
+        <div class="door-body">
+          <div class="door-title">I'm a student</div>
+          <div class="door-desc">Today's agenda and everything you need for the session.</div>
+        </div>
+        <div class="door-arrow">→</div>
+      </a>
+
+      <a class="door door-2" href="run-the-session.html">
+        <div class="door-icon">🧑‍🏫</div>
+        <div class="door-body">
+          <div class="door-title">I'm running today's session</div>
+          <div class="door-desc">The script, the screens, and the "if this breaks, do this" card.</div>
+        </div>
+        <div class="door-arrow">→</div>
+      </a>
+
+      <a class="door door-3" href="admin-setup.html">
+        <div class="door-icon">🛠️</div>
+        <div class="door-body">
+          <div class="door-title">I'm setting this up</div>
+          <div class="door-desc">GitHub org, Copilot seats, Nova install — before the day itself.</div>
+        </div>
+        <div class="door-arrow">→</div>
+      </a>
+
+      <a class="door door-4" href="novapay-developer-briefing.html">
+        <div class="door-icon">🧑‍💻</div>
+        <div class="door-body">
+          <div class="door-title">I'm a developer running a table</div>
+          <div class="door-desc">Your kit, Nova, the 10 bugs, and how to guide brainstorm through build.</div>
+        </div>
+        <div class="door-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="footer-note">Not sure? Start with <strong>"I'm setting this up"</strong> if the session hasn't happened yet. Want the full event context instead of a specific role? <a href="novapay-briefing-interactive.html">Open the full briefing</a>.</div>
+  </div>
+
+</body>
+</html>

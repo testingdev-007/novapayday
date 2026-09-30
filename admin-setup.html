@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setting Up — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929;
+      --border: rgba(255,255,255,0.08);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547;
+      --white: #FFFFFF; --muted: rgba(255,255,255,0.5); --text: rgba(255,255,255,0.88);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; padding: 40px 20px 80px; }
+    .wrap { max-width: 640px; margin: 0 auto; }
+
+    .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 28px; }
+    .back:hover { color: var(--white); }
+
+    .logo { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 10px; }
+    .logo span { color: var(--white); }
+    .title { font-size: 1.8em; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .subtitle { font-size: 0.9em; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+
+    .calm-note { background: var(--card); border: 1.5px solid rgba(108,99,255,0.25); border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0 36px; font-size: 0.87em; line-height: 1.65; }
+    .calm-note strong { color: var(--accent); }
+
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .step-link {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 18px 22px; text-decoration: none; color: white;
+      transition: border-color 0.18s, transform 0.15s;
+    }
+    .step-link:hover { transform: translateY(-2px); border-color: rgba(108,99,255,0.4); }
+
+    .step-badge { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9em; flex-shrink: 0; }
+    .step-badge.optional { background: rgba(255,255,255,0.1); color: var(--muted); }
+    .step-content { flex: 1; }
+    .step-title { font-size: 0.98em; font-weight: 700; margin-bottom: 2px; }
+    .step-desc { font-size: 0.8em; color: var(--muted); line-height: 1.5; }
+    .step-arrow { font-size: 1.2em; color: var(--muted); flex-shrink: 0; }
+
+    .divider-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin: 32px 0 14px; }
+
+    .print-note { text-align: center; font-size: 0.82em; color: var(--muted); margin-top: 36px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Back</a>
+    <div class="logo">nova<span>pay</span></div>
+    <div class="title">Setting this up</div>
+    <div class="subtitle">Four things, done once, in order. Everything below is written for someone who's never done this before.</div>
+
+    <div class="calm-note">
+      <strong>You don't need to understand GitHub or Copilot to finish this.</strong> Click what each page tells you to click, in the order they're listed here. Nothing here can be permanently broken.
+    </div>
+
+    <div class="divider-label">Choose your path first</div>
+
+    <a class="step-link" href="setup-guide-v2.html" style="border-color:rgba(0,200,150,0.4)">
+      <div class="step-badge" style="background:var(--green)">✓</div>
+      <div class="step-content">
+        <div class="step-title">Personal accounts — recommended right now</div>
+        <div class="step-desc">No organisation, no Copilot Business, no waiting. $0–$10/month. Works today. Prefer paper? <a href="printable-setup-guide-v2.html" style="color:var(--green);font-weight:700" onclick="event.stopPropagation()">Printable version →</a></div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link" href="facilitator-setup-guide.html" style="opacity:0.75">
+      <div class="step-badge optional">org</div>
+      <div class="step-content">
+        <div class="step-title">Organisation + Copilot Business</div>
+        <div class="step-desc">Centralised billing and seats — currently paused for self-serve sign-up. Only use if your school already has Business/Enterprise access.</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <div class="divider-label">Everything else, either way</div>
+
+    <div class="step-list">
+
+      <a class="step-link" href="READY-summary.html">
+        <div class="step-badge">1</div>
+        <div class="step-content">
+          <div class="step-title">Am I actually ready?</div>
+          <div class="step-desc">A honest status check — what's done, what's left, nothing to guess at.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+      <a class="step-link" href="launch-timeline.html">
+        <div class="step-badge">2</div>
+        <div class="step-content">
+          <div class="step-title">Your two dates</div>
+          <div class="step-desc">What needs doing by when — org and seats, then a full run-through.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+      <a class="step-link" href="printable-setup-guide.html">
+        <div class="step-badge">3</div>
+        <div class="step-content">
+          <div class="step-title">The actual steps — print this one</div>
+          <div class="step-desc">Tick-box paper version. This is the one to have open while you click.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+      <a class="step-link" href="facilitator-setup-guide.html">
+        <div class="step-badge optional">?</div>
+        <div class="step-content">
+          <div class="step-title">More detail on any step</div>
+          <div class="step-desc">Same steps, longer explanations — only open this if something's unclear.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+      <a class="step-link" href="bank-dashboard.html" style="opacity:0.7">
+        <div class="step-badge optional">👁</div>
+        <div class="step-content">
+          <div class="step-title">Preview the exercise file</div>
+          <div class="step-desc">See the buggy dashboard before you upload it — this is the file students debug in Hour 1.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+      <a class="step-link" href="challenge.js" style="opacity:0.7">
+        <div class="step-badge optional">👁</div>
+        <div class="step-content">
+          <div class="step-title">Preview the Level Up file</div>
+          <div class="step-desc"><code>challenge.js</code> — also gets uploaded to the repo, third file alongside the two above. Pre-loaded with a buggy function for Round 1.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </a>
+
+    </div>
+
+    <div class="print-note">Once these four are done, come back to the home page and open "I'm running today's session."</div>
+  </div>
+</body>
+</html>

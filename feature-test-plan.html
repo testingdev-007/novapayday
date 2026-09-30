@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Test Plan — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929; --card2: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.16);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; padding-bottom: 60px; }
+
+    .app-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .logo { font-size: 1.15em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--white); }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .print-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: white; padding: 7px 16px; border-radius: 100px; font-family: inherit; font-size: 0.78em; font-weight: 600; cursor: pointer; }
+    .reset-btn { background: none; border: 1px solid rgba(255,71,87,0.4); color: var(--red); padding: 7px 16px; border-radius: 100px; font-family: inherit; font-size: 0.78em; font-weight: 600; cursor: pointer; }
+
+    .hero { max-width: 900px; margin: 0 auto; padding: 28px 20px 8px; text-align: center; }
+    .hero-title { font-size: 1.8em; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.88em; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.6; }
+
+    .main { max-width: 900px; margin: 0 auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* FEATURE NAME CARD */
+    .name-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 22px; }
+    .name-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .name-input { width: 100%; background: var(--card2); border: 1.5px solid var(--border-mid); border-radius: 8px; color: white; font-family: inherit; font-size: 0.95em; padding: 10px 14px; outline: none; }
+    .name-input:focus { border-color: var(--accent); }
+
+    /* SEED IDEAS */
+    .seed-card { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); border-radius: 12px; padding: 16px 20px; }
+    .seed-title { font-size: 0.8em; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+    .seed-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .seed-chip { background: var(--card2); border: 1px solid var(--border-mid); border-radius: 100px; padding: 6px 14px; font-size: 0.78em; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .seed-chip:hover { border-color: var(--accent); background: rgba(108,99,255,0.15); }
+
+    /* TEST CASE CARD */
+    .test-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .test-card.pass { border-color: rgba(0,200,150,0.4); }
+    .test-card.fail { border-color: rgba(255,71,87,0.4); }
+
+    .test-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: var(--card2); }
+    .test-num { width: 30px; height: 30px; border-radius: 9px; background: rgba(108,99,255,0.2); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; font-size: 0.85em; }
+    .test-head-title { flex: 1; font-weight: 700; font-size: 0.9em; }
+    .remove-btn { background: none; border: none; color: var(--muted); font-size: 1.1em; cursor: pointer; padding: 2px 8px; }
+    .remove-btn:hover { color: var(--red); }
+
+    .test-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+    input[type="text"], textarea {
+      background: var(--card2); border: 1.5px solid var(--border-mid); border-radius: 8px;
+      color: white; font-family: inherit; font-size: 0.87em; padding: 9px 12px; outline: none; resize: vertical;
+    }
+    input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .result-row { display: flex; gap: 8px; }
+    .result-btn { flex: 1; padding: 9px; border-radius: 8px; border: 1.5px solid var(--border-mid); background: var(--card2); color: var(--muted); font-family: inherit; font-weight: 700; font-size: 0.82em; cursor: pointer; transition: all 0.15s; }
+    .result-btn.selected-pass { background: rgba(0,200,150,0.2); border-color: var(--green); color: var(--green); }
+    .result-btn.selected-fail { background: rgba(255,71,87,0.2); border-color: var(--red); color: var(--red); }
+
+    .add-test-btn { background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-family: inherit; font-weight: 700; font-size: 0.9em; cursor: pointer; width: 100%; }
+    .add-test-btn:hover { opacity: 0.9; }
+
+    /* READY CHECKLIST */
+    .ready-card { background: var(--card2); border: 1.5px solid rgba(0,200,150,0.3); border-radius: 14px; padding: 20px 22px; }
+    .ready-title { font-size: 0.95em; font-weight: 800; margin-bottom: 12px; }
+    .ready-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 0.87em; }
+    .ready-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .ready-item label { cursor: pointer; }
+
+    .autosave-note { text-align: center; font-size: 0.75em; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="header-right">
+      <button class="print-btn" onclick="window.print()">🖨 Print</button>
+      <button class="reset-btn" onclick="resetAll()">Reset all</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-title">Feature Test Plan</div>
+    <div class="hero-desc">Before you demo, prove your feature actually works. Try to break it on purpose — that's what testing is.</div>
+  </div>
+
+  <main class="main">
+
+    <div class="name-card">
+      <div class="name-label">What feature are you testing?</div>
+      <input type="text" class="name-input" id="feature-name" placeholder="e.g. Savings Goal Tracker" oninput="saveMeta()">
+    </div>
+
+    <div class="seed-card">
+      <div class="seed-title">💡 Test ideas — click one to add it as a test case</div>
+      <div class="seed-list" id="seed-list"></div>
+    </div>
+
+    <div id="test-list"></div>
+
+    <button class="add-test-btn" onclick="addTest()">+ Add a blank test case</button>
+
+    <div class="ready-card">
+      <div class="ready-title">🚀 Ready to demo?</div>
+      <div class="ready-item"><input type="checkbox" id="r1" onchange="saveMeta()"><label for="r1">No red errors in the console (press F12 to check)</label></div>
+      <div class="ready-item"><input type="checkbox" id="r2" onchange="saveMeta()"><label for="r2">Tested with real, sensible numbers — not just placeholders</label></div>
+      <div class="ready-item"><input type="checkbox" id="r3" onchange="saveMeta()"><label for="r3">Tested at least one edge case (empty, negative, or too-large input)</label></div>
+      <div class="ready-item"><input type="checkbox" id="r4" onchange="saveMeta()"><label for="r4">I can explain every line of code I've written</label></div>
+      <div class="ready-item"><input type="checkbox" id="r5" onchange="saveMeta()"><label for="r5">I've run through my demo once, start to finish</label></div>
+    </div>
+
+    <div class="autosave-note">✓ Auto-saves as you type — safe to switch tabs or come back later</div>
+
+  </main>
+
+<script>
+  const STORAGE_KEY = 'novapay-feature-test-plan';
+
+  const SEEDS = [
+    'Leave every field empty and click the button',
+    'Enter a negative number',
+    'Enter a decimal (e.g. 12.999)',
+    'Enter a huge number (e.g. 999999999)',
+    'Enter letters instead of numbers',
+    'Enter a value that means the goal is already met',
+    'Click the button twice in a row',
+    'Use the smallest possible valid number (e.g. 1)'
+  ];
+
+  function loadData() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { meta: {}, tests: [] }; }
+    catch (e) { return { meta: {}, tests: [] }; }
+  }
+  function saveData() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {} }
+
+  let data = loadData();
+  if (!data.tests) data.tests = [];
+  if (!data.meta) data.meta = {};
+
+  function renderSeeds() {
+    const list = document.getElementById('seed-list');
+    list.innerHTML = SEEDS.map(s => `<div class="seed-chip" onclick="addTest('${s.replace(/'/g,"\\'")}')">${s}</div>`).join('');
+  }
+
+  function renderMeta() {
+    document.getElementById('feature-name').value = data.meta.name || '';
+    ['r1','r2','r3','r4','r5'].forEach(id => {
+      document.getElementById(id).checked = !!data.meta[id];
+    });
+  }
+
+  function saveMeta() {
+    data.meta.name = document.getElementById('feature-name').value;
+    ['r1','r2','r3','r4','r5'].forEach(id => {
+      data.meta[id] = document.getElementById(id).checked;
+    });
+    saveData();
+  }
+
+  function addTest(seedText) {
+    data.tests.push({ desc: seedText || '', input: '', expected: '', actual: '', result: '' });
+    saveData();
+    renderTests();
+  }
+
+  function removeTest(i) {
+    data.tests.splice(i, 1);
+    saveData();
+    renderTests();
+  }
+
+  function updateTest(i, field, value) {
+    data.tests[i][field] = value;
+    saveData();
+    // update border colour live without full re-render (preserve focus)
+    const card = document.querySelectorAll('.test-card')[i];
+    if (card) card.className = 'test-card' + (data.tests[i].result === 'pass' ? ' pass' : data.tests[i].result === 'fail' ? ' fail' : '');
+  }
+
+  function setResult(i, result) {
+    data.tests[i].result = result;
+    saveData();
+    renderTests();
+  }
+
+  function renderTests() {
+    const list = document.getElementById('test-list');
+    if (data.tests.length === 0) {
+      list.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:0.85em;padding:20px">No test cases yet — click an idea above, or add a blank one below.</div>`;
+      return;
+    }
+    list.innerHTML = data.tests.map((t, i) => `
+      <div class="test-card ${t.result === 'pass' ? 'pass' : t.result === 'fail' ? 'fail' : ''}" style="margin-bottom:12px">
+        <div class="test-head">
+          <div class="test-num">${i+1}</div>
+          <div class="test-head-title">Test case ${i+1}</div>
+          <button class="remove-btn" onclick="removeTest(${i})" title="Remove">✕</button>
+        </div>
+        <div class="test-body">
+          <div class="field">
+            <div class="field-label">What are you testing?</div>
+            <input type="text" value="${(t.desc||'').replace(/"/g,'&quot;')}" oninput="updateTest(${i}, 'desc', this.value)" placeholder="e.g. What happens if I leave the amount empty?">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <div class="field-label">What you expected to happen</div>
+              <textarea oninput="updateTest(${i}, 'expected', this.value)" placeholder="e.g. A friendly error message asking for an amount">${t.expected||''}</textarea>
+            </div>
+            <div class="field">
+              <div class="field-label">What actually happened</div>
+              <textarea oninput="updateTest(${i}, 'actual', this.value)" placeholder="e.g. It showed £NaN instead">${t.actual||''}</textarea>
+            </div>
+          </div>
+          <div class="result-row">
+            <button class="result-btn ${t.result==='pass' ? 'selected-pass':''}" onclick="setResult(${i}, 'pass')">✓ Works as expected</button>
+            <button class="result-btn ${t.result==='fail' ? 'selected-fail':''}" onclick="setResult(${i}, 'fail')">✕ Found a problem</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function resetAll() {
+    if (confirm('Clear everything on this test plan? This can\\'t be undone.')) {
+      data = { meta: {}, tests: [] };
+      saveData();
+      renderMeta();
+      renderTests();
+    }
+  }
+
+  renderSeeds();
+  renderMeta();
+  renderTests();
+</script>
+
+</body>
+</html>

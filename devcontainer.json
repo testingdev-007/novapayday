@@ -1,0 +1,17 @@
+{
+  "name": "NovaPay Workshop",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ],
+      "settings": {
+        "liveServer.settings.port": 5500,
+        "liveServer.settings.donotShowInfoMsg": true
+      }
+    }
+  },
+  "forwardPorts": [5500]
+}

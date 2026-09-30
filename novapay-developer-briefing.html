@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaPay — Developer Briefing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6; --border-mid: #C3C9D6;
+    --accent: #0F7A5C; --accent-bg: #E4F5EE;
+    --blue: #1D6FA8; --blue-bg: #EAF3FA;
+    --amber: #B45F06; --amber-bg: #FEF6E7;
+    --red: #C0293D; --red-bg: #FDECEF;
+    --paper: #FFFFFF; --shade: #F4F5F9; --card2: #ECEDF3;
+    --code-bg: #101820; --code-text: #D5E8DD;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 15px; line-height: 1.65; }
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 250px; flex-shrink: 0; background: var(--paper); border-right: 1.5px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 26px 0; }
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1.5px solid var(--border); margin-bottom: 18px; }
+  .logo-mark { font-family: 'JetBrains Mono', monospace; font-size: 1.05em; font-weight: 700; letter-spacing: -0.02em; color: var(--accent); }
+  .logo-mark span { color: var(--ink); }
+  .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .nav-group { margin-bottom: 14px; }
+  .nav-group-label { font-size: 0.62em; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0 20px; margin-bottom: 6px; font-weight: 800; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 20px; text-decoration: none; color: var(--muted); font-size: 0.82em; font-weight: 700; transition: all 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { color: var(--ink); background: var(--shade); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-bg); }
+
+  .content { flex: 1; min-width: 0; padding: 52px 60px 100px; max-width: 900px; }
+  section { scroll-margin-top: 24px; margin-bottom: 64px; }
+
+  .hero-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; font-weight: 700; letter-spacing: 0.04em; color: var(--accent); margin-bottom: 12px; }
+  .hero-title { font-size: 2.1em; font-weight: 900; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; color: var(--ink); }
+  .hero-lede { font-size: 1.05em; color: var(--ink); max-width: 66ch; margin-bottom: 20px; }
+  .role-card { background: var(--paper); border: 1.5px solid var(--border-mid); border-radius: 12px; padding: 18px 20px; margin-top: 20px; }
+  .role-card-label { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 800; margin-bottom: 8px; }
+
+  .sect-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+  .sect-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; color: var(--accent); background: var(--accent-bg); padding: 3px 9px; border-radius: 6px; font-weight: 700; }
+  .sect-title { font-size: 1.35em; font-weight: 900; letter-spacing: -0.02em; }
+
+  p.body-text { margin-bottom: 13px; color: var(--ink); max-width: 70ch; }
+  .callout { border-left: 4px solid var(--accent); background: var(--accent-bg); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.9em; }
+  .callout.amber { border-color: var(--amber); background: var(--amber-bg); }
+  .callout.red { border-color: var(--red); background: var(--red-bg); }
+  .callout.blue { border-color: var(--blue); background: var(--blue-bg); }
+  .callout-label { font-size: 0.7em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .callout-label.accent { color: var(--accent); } .callout-label.amber { color: var(--amber); } .callout-label.red { color: var(--red); } .callout-label.blue { color: var(--blue); }
+
+  code { font-family: 'JetBrains Mono', monospace; background: #EFF2F1; border: 1px solid var(--border); padding: 1px 6px; border-radius: 5px; font-size: 0.86em; color: #0F7A5C; }
+  pre { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); color: var(--code-text); border-radius: 10px; padding: 14px 16px; font-size: 0.82em; overflow-x: auto; margin: 14px 0; line-height: 1.5; }
+  pre .c1 { color: #7EE787; }
+
+  /* ARCHITECTURE DIAGRAM (interactive) */
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+  .arch-box { background: var(--paper); border: 1.5px solid var(--border-mid); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: all 0.15s; }
+  .arch-box:hover { border-color: var(--accent); }
+  .arch-box.expanded { border-color: var(--accent); background: var(--accent-bg); }
+  .arch-box-head { display: flex; justify-content: space-between; align-items: center; }
+  .arch-box-title { font-weight: 700; font-size: 0.92em; font-family: 'JetBrains Mono', monospace; color: var(--ink); }
+  .arch-box-chev { color: var(--muted); transition: transform 0.2s; font-size: 0.75em; }
+  .arch-box.expanded .arch-box-chev { transform: rotate(90deg); }
+  .arch-box-detail { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; font-size: 0.85em; color: var(--muted); }
+  .arch-box.expanded .arch-box-detail { max-height: 300px; padding-top: 10px; }
+  .arch-box-detail ul { padding-left: 18px; margin-top: 4px; }
+
+  /* TABS for Nova phase */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1.5px solid var(--border); }
+  .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-weight: 700; font-size: 0.85em; padding: 10px 4px; cursor: pointer; border-bottom: 3px solid transparent; margin-right: 20px; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* FAILURE MODE CARDS */
+  .fail-card { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .fail-head { display: flex; align-items: center; gap: 12px; padding: 15px 18px; cursor: pointer; }
+  .fail-sev { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; font-weight: 800; padding: 3px 9px; border-radius: 6px; text-transform: uppercase; flex-shrink: 0; }
+  .fail-sev.high { background: var(--red-bg); color: var(--red); }
+  .fail-sev.med { background: var(--amber-bg); color: var(--amber); }
+  .fail-sev.low { background: var(--blue-bg); color: var(--blue); }
+  .fail-title { font-weight: 700; font-size: 0.9em; flex: 1; color: var(--ink); }
+  .fail-chev { color: var(--muted); transition: transform 0.2s; }
+  .fail-card.open .fail-chev { transform: rotate(180deg); }
+  .fail-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .fail-card.open .fail-body { max-height: 500px; }
+  .fail-body-inner { padding: 0 18px 16px; font-size: 0.88em; color: var(--muted); }
+  .fail-body-inner .label { color: var(--accent); font-weight: 800; font-size: 0.85em; margin-top: 10px; display: block; }
+  .fail-body-inner .label:first-child { margin-top: 0; }
+
+  /* BUG DIFF TABLE */
+  .diff-table { width: 100%; border-collapse: collapse; font-size: 0.85em; background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .diff-table th { text-align: left; font-size: 0.66em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 8px 10px; border-bottom: 1.5px solid var(--border-mid); background: var(--shade); }
+  .diff-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--ink); }
+  .diff-table tr:last-child td { border-bottom: none; }
+  .diff-old { color: var(--red); text-decoration: line-through; }
+  .diff-new { color: var(--accent); font-weight: 600; }
+
+  /* CHECKLIST */
+  .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--paper); border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+  .check-item:hover { background: var(--shade); }
+  .check-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-mid); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; }
+  .check-item.checked .check-box { background: var(--accent); border-color: var(--accent); }
+  .check-box svg { opacity: 0; width: 12px; height: 12px; }
+  .check-item.checked .check-box svg { opacity: 1; }
+  .check-text { font-size: 0.9em; color: var(--ink); }
+  .check-item.checked .check-text { color: var(--muted); text-decoration: line-through; }
+
+  /* TRIAGE TABLE */
+  .triage-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .triage-row:last-child { border-bottom: none; }
+  .triage-symptom { font-weight: 700; font-size: 0.88em; color: var(--ink); }
+  .triage-fix { font-size: 0.86em; color: var(--muted); }
+  .triage-fix code { font-size: 0.9em; }
+
+  /* PHASE GUIDE (guiding each phase of the day) */
+  .phase-card { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .phase-card.key { border-color: var(--accent); border-width: 2px; }
+  .phase-card-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; cursor: pointer; }
+  .phase-card-time { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; font-weight: 700; color: var(--accent); background: var(--accent-bg); padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+  .phase-card-title { font-weight: 800; font-size: 0.95em; flex: 1; color: var(--ink); }
+  .phase-card-tag { font-size: 0.68em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-bg); padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .phase-card-chev { color: var(--muted); transition: transform 0.2s; }
+  .phase-card.open .phase-card-chev { transform: rotate(180deg); }
+  .phase-card-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .phase-card.open .phase-card-body { max-height: 1400px; }
+  .phase-card-body-inner { padding: 4px 18px 18px; border-top: 1px solid var(--border); margin-top: 2px; }
+  .pg-label { font-size: 0.68em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin: 14px 0 5px; display: block; }
+  .pg-label:first-of-type { margin-top: 14px; }
+  .pg-text { font-size: 0.9em; color: var(--ink); margin-bottom: 4px; }
+  .pg-say { font-size: 0.88em; color: var(--ink); font-style: italic; background: var(--shade); border-radius: 8px; padding: 10px 14px; margin: 4px 0; }
+  .pg-list { font-size: 0.9em; color: var(--ink); margin: 4px 0 4px 18px; }
+  .pg-list li { margin-bottom: 4px; }
+  .pg-warn { background: var(--amber-bg); border-radius: 8px; padding: 10px 14px; font-size: 0.87em; color: var(--ink); margin: 4px 0; }
+
+  /* FILE REFERENCE */
+  .fileref-group { margin-bottom: 22px; }
+  .fileref-group-label { font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 800; margin-bottom: 10px; }
+  .fileref-row { display: grid; grid-template-columns: 220px 1fr 130px; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  .fileref-row:last-child { border-bottom: none; }
+  .fileref-name { font-family: 'JetBrains Mono', monospace; font-size: 0.82em; font-weight: 700; color: var(--accent); }
+  .fileref-desc { font-size: 0.87em; color: var(--ink); }
+  .fileref-when { font-size: 0.78em; color: var(--muted); text-align: right; }
+  @media (max-width: 700px) { .fileref-row { grid-template-columns: 1fr; text-align: left; } .fileref-when { text-align: left; } }
+
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .content { padding: 32px 22px 80px; }
+    .arch-grid { grid-template-columns: 1fr; }
+    .triage-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span>.dev</div>
+      <div class="logo-sub">Developer Briefing</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Context</div>
+      <a class="nav-item" href="#intro">Start Here</a>
+      <a class="nav-item" href="#kit">Your Kit For Today</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Architecture</div>
+      <a class="nav-item" href="#stack">The Stack</a>
+      <a class="nav-item" href="#nova">How Nova Works</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Running The Day</div>
+      <a class="nav-item" href="#guiding">Guiding Each Phase</a>
+      <a class="nav-item" href="#files">Key Files Reference</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Content</div>
+      <a class="nav-item" href="#bugs">The 10 Bugs</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Operations</div>
+      <a class="nav-item" href="#failures">Failure Modes</a>
+      <a class="nav-item" href="#billing">Accounts &amp; Billing</a>
+      <a class="nav-item" href="#triage">Live Triage</a>
+      <a class="nav-item" href="#preflight">Pre-Flight Checklist</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <section id="intro">
+      <div class="hero-eyebrow">// for the developers running a table</div>
+      <h1 class="hero-title">NovaPay — technical facilitator briefing</h1>
+      <p class="hero-lede">NovaPay is a full-day workshop where UK students aged 13–18 debug a fake banking app and then build their own feature, both using GitHub Copilot. This doc skips the pedagogy and goes straight to how the thing actually works, what breaks, and how to fix it fast in front of a table of students.</p>
+      <div class="role-card">
+        <div class="role-card-label">The structure of the day</div>
+        Mark runs the room — the clock, the slide decks, every phase transition. You own <strong>one small table of students for the entire day</strong>. That's the key thing to understand: you're not roaming backup, you're the only guide your table has, from the first bug to the final demo. When Mark moves the whole room from Brainstorm to Plan, it's you who actually gets your table there.
+      </div>
+      <div class="role-card" style="margin-top:10px">
+        <div class="role-card-label">Accounts &amp; setup — not your job</div>
+        Every student account, repo, and Codespace is already set up before you arrive. You won't provision anything. Know enough about the stack to troubleshoot (see below), but if an account is genuinely broken, that's an escalation to Mark, not something to fix from scratch mid-session.
+      </div>
+    </section>
+
+    <section id="kit">
+      <div class="sect-head"><span class="sect-tag">01</span><span class="sect-title">Your Kit For Today</span></div>
+      <p class="body-text">Copy these onto your own laptop before the day starts — you'll be running your table on these, not looking things up live.</p>
+      <div id="kitList"></div>
+      <div class="callout amber" style="margin-top:16px"><div class="callout-label amber">If you're genuinely stuck</div>Flag Mark. He's running the room but is reachable — don't sit on a problem your table can't move past. (Worth confirming the exact signal for this with Mark before the day — a raised hand, a specific phrase, whatever's fastest to spot across a full room.)</div>
+    </section>
+
+    <section id="stack">
+      <div class="sect-head"><span class="sect-tag">02</span><span class="sect-title">The Stack</span></div>
+      <p class="body-text">Context so you can help troubleshoot when something looks broken at your table. Every student: personal GitHub account → repo from a template → GitHub Codespace → VS Code in the browser, with GitHub Copilot and a custom instructions file.</p>
+      <div class="callout blue"><div class="callout-label blue">Not your job</div>Account creation, repo templates, and Codespace provisioning are all set up in advance. If a student's account genuinely isn't working, that's an escalation, not something to debug from scratch on the day.</div>
+      <div class="arch-grid" id="archGrid"></div>
+    </section>
+
+    <section id="nova">
+      <div class="sect-head"><span class="sect-tag">03</span><span class="sect-title">How Nova Works</span></div>
+      <p class="body-text">Nova isn't a separate product — it's Copilot Chat with a repo-level <code>.github/copilot-instructions.md</code> that changes behaviour based on phase. GitHub Copilot reads this automatically for Chat, inline completions, and Agent mode in VS Code.</p>
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="restrictive">Bug Hunt Phase</button>
+        <button class="tab-btn" data-tab="generative">Build Phase</button>
+        <button class="tab-btn" data-tab="verify">Verifying It's Working</button>
+      </div>
+      <div class="tab-panel active" data-panel="restrictive">
+        <p class="body-text">Instructions constrain Nova to <strong>hints only</strong> — it should ask leading questions ("what does this function return when the input's empty?") rather than hand over a fix. This is deliberate friction: the point is the debugging method, not the fixed file.</p>
+        <div class="callout amber"><div class="callout-label amber">Expected, not broken</div>Students getting nudged rather than told the answer is the instructions working as designed. Don't "fix" this if a student complains Nova won't just tell them.</div>
+      </div>
+      <div class="tab-panel" data-panel="generative">
+        <p class="body-text">Instructions switch to generative — Nova builds with the student. <strong>Agent mode specifically</strong> (not Ask/Chat) is action-biased by default, which needed an explicit hard rule in the instructions file:</p>
+        <pre>make ONE real, scoped fix, then <span class="c1">STOP</span>
+and explain what you changed and why —
+never refuse outright, never rewrite
+everything in one pass</pre>
+        <div class="callout red"><div class="callout-label red">History here</div>The first version of this rule said "don't just fix everything" without also saying "but do fix something" — Nova over-corrected and started <em>refusing</em> to make any fix at all. If you're editing this file, test both directions: too eager AND too refusing.</div>
+      </div>
+      <div class="tab-panel" data-panel="verify">
+        <p class="body-text">The reliable check is the <strong>References</strong> list under a Copilot Chat response — expand it and confirm <code>.github/copilot-instructions.md</code> appears. Don't rely on judging tone or "does this feel restrictive" — that's subjective and slower to debug against.</p>
+        <p class="body-text" style="margin-bottom:0">If it's missing: the file may not exist at the exact path, the Codespace may not have pulled the latest commit (see Failure Modes), or the file was added after the Codespace was created and it needs a container rebuild.</p>
+      </div>
+    </section>
+
+    <section id="guiding">
+      <div class="sect-head"><span class="sect-tag">04</span><span class="sect-title">Guiding Each Phase</span></div>
+      <p class="body-text">The bug hunt and Level Up mostly run themselves — Nova and the slide decks do the heavy lifting. From the feature tutorial onward, the whole afternoon runs on how well you facilitate. This is the section that matters most. Click any phase.</p>
+      <div id="phaseGuide"></div>
+    </section>
+
+    <section id="files">
+      <div class="sect-head"><span class="sect-tag">05</span><span class="sect-title">Key Files Reference</span></div>
+      <p class="body-text">Not the full ~46-file pack — just the ones you'll actually open, project, or point students at during a live session.</p>
+      <div id="fileRef"></div>
+    </section>
+
+    <section id="bugs">
+      <div class="sect-head"><span class="sect-tag">06</span><span class="sect-title">The 10 Planted Bugs — Technical Detail</span></div>
+      <p class="body-text">All in <code>bank-dashboard.html</code>. This is the version with the actual diffs, for when you need to point at the exact line fast.</p>
+      <table class="diff-table">
+        <thead><tr><th>#</th><th>Type</th><th>Bug → Fix</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Markup</td><td>Missing <code>&lt;/div&gt;</code> after the balance footer — add it back</td></tr>
+          <tr><td>2</td><td>CSS</td><td><span class="diff-old">color: #0F1340</span> → <span class="diff-new">color: #FFFFFF</span></td></tr>
+          <tr><td>3</td><td>Data</td><td>Coffee transaction: <span class="diff-old">type: "credit"</span> → <span class="diff-new">type: "debit"</span></td></tr>
+          <tr><td>4</td><td>Markup</td><td><span class="diff-old">type="text"</span> → <span class="diff-new">type="number"</span></td></tr>
+          <tr><td>5</td><td>JS/typo</td><td><span class="diff-old">onlick=</span> → <span class="diff-new">onclick=</span></td></tr>
+          <tr><td>6</td><td>Logic</td><td><span class="diff-old">balance + amount</span> → <span class="diff-new">balance - amount</span> on withdrawal</td></tr>
+          <tr><td>7</td><td>JS/typo</td><td><span class="diff-old">"balence-display"</span> → <span class="diff-new">"balance-display"</span> — silent <code>getElementById</code> null</td></tr>
+          <tr><td>8</td><td>Logic</td><td>Add <code>isNaN()</code> guard before calculating — empty input currently produces <code>NaN</code></td></tr>
+          <tr><td>9</td><td>Logic</td><td><span class="diff-old">* rate</span> → <span class="diff-new">* (rate / 100)</span> — interest formula off by 100x</td></tr>
+          <tr><td>10</td><td>Logic</td><td>Add <code>if (amount &gt; balance) return</code> guard — no overdraft check exists</td></tr>
+        </tbody>
+      </table>
+      <div class="callout blue" style="margin-top:16px">
+        <div class="callout-label blue">Bugs 3, 8, 9, 10 are the ones Copilot tends to miss</div>
+        They're logic/data errors, not syntax errors, so "ask Copilot to fix everything" often skips them. If a group tries this, let it play out, then look together at what got missed and why — a live lesson in why understanding beats blind trust.
+      </div>
+    </section>
+
+    <section id="failures">
+      <div class="sect-head"><span class="sect-tag">07</span><span class="sect-title">Failure Modes &amp; Fixes</span></div>
+      <p class="body-text">Everything here came out of real testing, not theory. Ordered roughly by how often you'll hit them.</p>
+      <div id="failureList"></div>
+    </section>
+
+    <section id="billing">
+      <div class="sect-head"><span class="sect-tag">08</span><span class="sect-title">Accounts &amp; Billing</span></div>
+      <p class="body-text">Worth knowing if a student or co-facilitator asks why Copilot "stopped working" mid-session.</p>
+      <div class="callout amber">
+        <div class="callout-label amber">Copilot Free — 50 chat messages/month</div>
+        As of GitHub's June 2026 usage-based billing shift, personal accounts on the Free tier get 2,000 code completions but only <strong>50 chat requests a month</strong>. A day this chat-heavy (bug hints, three Level Up rounds, 85 minutes of iterative building) can burn through that before lunch on a brand-new free account. If students are on <strong>paid Pro/Pro+ seats</strong>, this doesn't apply — but paid tiers now run on an AI Credit allowance too ($10 Pro = $10/month in credits), not literally unlimited, so heavy Agent-mode use across a full day is still worth a mental note.
+      </div>
+      <div class="callout blue">
+        <div class="callout-label blue">GitHub Education Student accounts</div>
+        A different path: unlimited code completions, but chat/agent usage is still capped, and — since June 24, 2026 — Free and Student tiers use <strong>auto model-selection only</strong>, no manual model picker. Don't build a live demo around picking a specific model on these accounts.
+      </div>
+    </section>
+
+    <section id="triage">
+      <div class="sect-head"><span class="sect-tag">09</span><span class="sect-title">Live Triage — Symptom → Likely Cause</span></div>
+      <p class="body-text">For fast diagnosis while circulating. Roughly ordered by which phase of the day you'll see it in.</p>
+      <div id="triageList"></div>
+    </section>
+
+    <section id="preflight">
+      <div class="sect-head"><span class="sect-tag">10</span><span class="sect-title">Pre-Flight Checklist</span></div>
+      <p class="body-text">Run this the night before or morning of, on a throwaway test repo.</p>
+      <div id="checklistItems"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Architecture diagram
+  const archData = [
+    {t:"Personal GitHub account", d:"One per student. No org account — Business self-serve signup was paused, so personal accounts is the deliberate path, not a fallback.", list:["Free/Pro/Pro+ tier affects chat limits — see Accounts & Billing","Each student's Copilot behaviour is fully isolated per-repo"]},
+    {t:"Repo from template", d:"Created via 'Use this template'. Contains only what the student needs.", list:["bank-dashboard.html — the buggy app","starter-template.html — optional reference","challenge.js — pre-loaded buggy function for Level Up",".github/copilot-instructions.md — Nova"]},
+    {t:"GitHub Codespace", d:"Cloud dev environment, works on any device. This is where staleness bugs live.", list:["Pulls from the repo's last-pushed commit at creation time","Won't see files added after creation until rebuilt","120 core-hours/month free on personal accounts — plenty for one day"]},
+    {t:"VS Code + Live Server", d:"Live Server extension renders the HTML for immediate feedback.", list:["Correct extension ID: ritwickdey.LiveServer","A wrong extension ID was an earlier bug — already fixed, but check devcontainer.json if issues resurface"]},
+  ];
+  const archGrid = document.getElementById('archGrid');
+  archData.forEach(a => {
+    const box = document.createElement('div');
+    box.className = 'arch-box';
+    box.innerHTML = `
+      <div class="arch-box-head"><span class="arch-box-title">${a.t}</span><span class="arch-box-chev">▶</span></div>
+      <div class="arch-box-detail"><p style="margin-top:8px">${a.d}</p><ul>${a.list.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    box.addEventListener('click', () => box.classList.toggle('expanded'));
+    archGrid.appendChild(box);
+  });
+
+  // Nova tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  // PHASE GUIDE — guiding each phase of the day
+  const phaseGuide = [
+    {
+      time: "10:00–10:30", title: "Bug Tutorial + Bug Hunt", tag: "Mostly runs itself", key: false,
+      body: `
+        <span class="pg-label">Your role</span>
+        <p class="pg-text">Circulate and watch, don't lecture. Nova is deliberately restrictive here — mirror that yourself. Nudge with questions, don't hand over the fix.</p>
+        <span class="pg-label">Good nudge questions</span>
+        <ul class="pg-list"><li>"What happens if you open the browser console — F12?"</li><li>"Are there any bugs in this code?" (as a prompt for them to give Nova)</li><li>"What does this look like compared to the working parts of the page?"</li></ul>
+        <span class="pg-label">Watch for</span>
+        <p class="pg-text">Groups asking Copilot to "fix everything at once" — it tends to miss bugs 3, 8, 9, and 10, since those are logic/data errors rather than syntax errors. Let it play out, then look together at what got missed. Good live lesson in why understanding beats blind trust.</p>
+        <div class="pg-warn"><strong>Not a bug:</strong> Nova giving hints instead of answers during this phase is the instructions working as intended. Don't try to "fix" that if a student complains.</div>
+      `
+    },
+    {
+      time: "10:35–11:05", title: "Level Up ⚡ (3 challenge rounds)", tag: "Runs itself", key: false,
+      body: `
+        <span class="pg-label">Your role</span>
+        <p class="pg-text">Keep pace tight — timers are built into the slide deck, so mostly you're clicking through and keeping energy up. Fix the Bug (7 min) uses <code>challenge.js</code>, already pre-loaded in every repo — don't let anyone waste time manually creating that file.</p>
+        <span class="pg-label">Rounds</span>
+        <ul class="pg-list"><li><strong>Fix the Bug</strong> — Copilot fixes a buggy function, proved with Node in the terminal</li><li><strong>Comment Race</strong> — write a comment, Tab-complete, first working function wins</li><li><strong>Best Prompt</strong> — one Chat message only, best result wins</li></ul>
+      `
+    },
+    {
+      time: "11:20–11:40", title: "Feature Tutorial — everyone together", tag: "Guided, low-stakes", key: false,
+      body: `
+        <span class="pg-label">What's happening</span>
+        <p class="pg-text">Everyone builds a Savings Tracker from a genuinely blank file, together, following <code>how-to-build-your-feature.html</code> step by step. This is the technique they'll reuse on their own idea straight after — skeleton, colours, header, form, progress bar, logic, wiring.</p>
+        <span class="pg-label">Your role</span>
+        <p class="pg-text">Help stragglers catch up to the group pace rather than letting them fall behind — this is meant to be followed together, not independently. Y11+ have exact comments hidden behind a reveal button; encourage them to try writing their own comment before revealing it.</p>
+      `
+    },
+    {
+      time: "11:40–11:55", title: "Brainstorm", tag: "Facilitation starts mattering", key: true,
+      body: `
+        <span class="pg-label">What's happening</span>
+        <p class="pg-text">Students pick their own feature idea — deliberately different from the Savings Tracker they just built together.</p>
+        <span class="pg-label">Your role — the achievability check</span>
+        <p class="pg-text">For every group's pick, ask: <em>"Can you describe it in one sentence? Does it have inputs, a calculation, and an output?"</em> If yes, approve it. If they're struggling to answer, the idea isn't scoped yet — help them narrow it before they move on.</p>
+        <span class="pg-label">Scope veto phrases — use these often</span>
+        <p class="pg-text">Anything needing a login, real accounts, a database, or "like the real app but…" needs redirecting:</p>
+        <div class="pg-say">"Brilliant idea for version 2. What's the one-screen version of it you could demo today?"</div>
+        <span class="pg-label">If a group is stuck for an idea</span>
+        <p class="pg-text">Point at the back-pocket gallery on <code>brainstorm-screen.html</code> slide 2 — 7 pre-vetted features with difficulty labels. Just not the Savings Tracker, they've already built that one.</p>
+      `
+    },
+    {
+      time: "11:55–12:05pm", title: "Plan on Paper", tag: "One thing to check", key: true,
+      body: `
+        <span class="pg-label">What's happening</span>
+        <p class="pg-text">Keyboards down, paper only. Four questions: what does it do, what does the user see, what are the inputs, what does it output.</p>
+        <span class="pg-label">Your role — the one check that matters</span>
+        <p class="pg-text">Circulate and look at every sketch. The single thing to verify: <strong>are the inputs and outputs named?</strong> ("goalName, targetAmount" — not "some boxes"). Named inputs become good Copilot prompts a few minutes later. Vague ones lead to vague, unproductive prompting.</p>
+      `
+    },
+    {
+      time: "12:40–2:05pm", title: "Feature Creation — 85 minutes", tag: "The big one", key: true,
+      body: `
+        <span class="pg-label">Why this phase carries the day</span>
+        <p class="pg-text">This is the single largest block and the one with no built-in scaffolding — no slide deck driving it, no timer telling students what to do next. It runs on how well you facilitate. Everything else in the day exists to prepare students for these 85 minutes.</p>
+
+        <span class="pg-label">The method to reinforce (say this early, refer back to it constantly)</span>
+        <div class="pg-say">"One: write a comment describing the next small thing. Two: let Copilot suggest, press Tab. Three: save, check Live Server. Four: if it's wrong, ask Nova why. Small steps — comment, code, check. Never write more than one piece before testing it."</div>
+
+        <span class="pg-label">Rough internal pacing (nothing is announced or enforced — this is just your own sense of where groups should be)</span>
+        <ul class="pg-list">
+          <li><strong>~25 min in:</strong> heading exists, inputs exist, a button exists, opens in Live Server without errors. Ugly is fine.</li>
+          <li><strong>~60 min in:</strong> styled, basic JS working — real inputs produce a real output on screen.</li>
+          <li><strong>~75 min in:</strong> should be shifting into testing — see below.</li>
+        </ul>
+
+        <span class="pg-label">Prompting tips to actively reinforce</span>
+        <ul class="pg-list">
+          <li>✅ "Write a function that takes goalAmount and savedAmount and returns the percentage complete"</li>
+          <li>✅ "Add a progress bar that fills based on the percentage variable"</li>
+          <li>❌ "Make a savings tracker" — too vague, will produce something generic and hard to build on</li>
+          <li>❌ "Fix my code" — no context, Copilot can't help without specifics</li>
+        </ul>
+
+        <span class="pg-label">Help style by year group</span>
+        <ul class="pg-list">
+          <li><strong>Y9–10:</strong> concrete debugging questions — "why isn't my progress bar changing width?"</li>
+          <li><strong>Y11:</strong> can handle "review this function for edge cases I might have missed"</li>
+          <li><strong>Y12–13:</strong> can handle "how would you refactor this to be more maintainable?"</li>
+        </ul>
+
+        <span class="pg-label">The hard scope call — use it once, to the whole room</span>
+        <p class="pg-text">If any group has nothing working by roughly the two-thirds mark, don't single them out — say this to everyone, so the stuck group hears it without being called out:</p>
+        <div class="pg-say">"Strip it back. One input, one button, one number on screen. Get that working, then add back."</div>
+
+        <span class="pg-label">Testing is folded into this block — there's no separate slot</span>
+        <p class="pg-text">As groups near the end, proactively nudge rather than waiting for an announcement: <em>"Code freeze soon — try to break your own feature on purpose. Empty fields, negative numbers, huge numbers."</em> <code>feature-test-plan.html</code> has a ready-to-demo checklist if a group wants structure for this.</p>
+
+        <span class="pg-label">Stretch goals for groups that finish early</span>
+        <p class="pg-text"><code>milestone-screen.html</code>'s right panel has stretch goals by year group. Generic ones: save to <code>localStorage</code> so it persists on refresh, support multiple goals, add a date field with a weekly-saving calculation, add a "simulate a transfer" button.</p>
+
+        <span class="pg-label">Debugging their own bugs (different from the planted 10)</span>
+        <p class="pg-text">These are genuinely open-ended — whatever a student introduces. Common patterns worth knowing: a script tag not linked to the HTML file, a mismatched id between HTML and <code>getElementById</code>, a missing quote or bracket breaking everything below it, or a function defined but never called. Teach the "read the error message, don't just reread the code" habit — the console (F12) usually names the exact line.</p>
+      `
+    },
+    {
+      time: "2:05–2:20pm", title: "Show &amp; Tell", tag: "Keep it moving", key: false,
+      body: `
+        <span class="pg-label">Your role</span>
+        <p class="pg-text">2 minutes per group. After each demo, ask the room "what did you like about that?" — keeps energy up and models the tone you want.</p>
+        <span class="pg-label">If a demo breaks live</span>
+        <div class="pg-say">"Congratulations — a live demo failure. That's the most authentic developer experience of the day."</div>
+        <p class="pg-text">Then let them show it working in the editor instead. Never let a broken demo become an awkward silence.</p>
+      `
+    },
+    {
+      time: "2:20–2:30pm", title: "Feedback", tag: "Light touch", key: false,
+      body: `
+        <span class="pg-label">Your role</span>
+        <p class="pg-text">Keep it short — energy is naturally dropping after demos. Help keep the round moving quickly rather than let it drag; this isn't the moment for deep reflection.</p>
+      `
+    },
+  ];
+  const phaseGuideEl = document.getElementById('phaseGuide');
+  phaseGuide.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'phase-card' + (p.key ? ' key' : '');
+    card.innerHTML = `
+      <div class="phase-card-head">
+        <span class="phase-card-time">${p.time}</span>
+        <span class="phase-card-title">${p.title}</span>
+        <span class="phase-card-tag">${p.tag}</span>
+        <span class="phase-card-chev">▾</span>
+      </div>
+      <div class="phase-card-body"><div class="phase-card-body-inner">${p.body}</div></div>`;
+    card.querySelector('.phase-card-head').addEventListener('click', () => card.classList.toggle('open'));
+    phaseGuideEl.appendChild(card);
+  });
+
+  // YOUR KIT FOR TODAY
+  const kitGroups = [
+    { label: "Answers, fast — the ones you'll reach for most", files: [
+      ["bug-answer-key.html", "The private answer key for all 10 planted bugs — for you, not students", "Bug Hunt"],
+      ["facilitator-reference.html", "Bug answers plus strategy notes, including the Agent-mode 'fix all' warning", "Bug Hunt + Build"],
+      ["printable-troubleshooting-card.html", "Fast fixes for the common technical snags (push hangs, stale Codespace, etc.)", "All day"],
+      ["printable-when-it-breaks.html", "Composure-focused guide for total failures — wifi down, projector dies, you're behind schedule", "All day"],
+    ]},
+    { label: "What your table sees — know these cold", files: [
+      ["participant-guide.html", "The student-facing reference doc — know what's in it so you can point to it fast", "All day"],
+      ["how-to-find-fix-bugs.html", "The worked bug-fixing method your table follows before the real hunt", "Bug Hunt"],
+      ["how-to-build-your-feature.html", "The 10-step from-scratch tutorial your table follows together", "Feature Tutorial"],
+    ]},
+    { label: "Working references during the build", files: [
+      ["milestone-screen.html", "Stretch goals by year group, in the right panel — for fast finishers at your table", "Feature Creation"],
+      ["feature-test-plan.html", "The ready-to-demo checklist — hand this to your table as they head into testing", "Feature Creation"],
+      ["brainstorm-screen.html", "The back-pocket idea gallery — your fallback when a group is stuck for an idea", "Brainstorm"],
+    ]},
+    { label: "This document", files: [
+      ["novapay-developer-briefing.html", "Everything else — the phase-by-phase guidance, bug diffs, and failure modes below", "Read before the day"],
+    ]},
+  ];
+  const kitListEl = document.getElementById('kitList');
+  kitGroups.forEach(g => {
+    const group = document.createElement('div');
+    group.className = 'fileref-group';
+    group.innerHTML = `<div class="fileref-group-label">${g.label}</div>` +
+      g.files.map(f => `<div class="fileref-row"><div class="fileref-name">${f[0]}</div><div class="fileref-desc">${f[1]}</div><div class="fileref-when">${f[2]}</div></div>`).join('');
+    kitListEl.appendChild(group);
+  });
+
+  // FILE REFERENCE
+  const fileGroups = [
+    { label: "Bug Hunt phase", files: [
+      ["how-to-find-fix-bugs.html", "The worked, fake-example walkthrough — projected or opened together before the real hunt", "10:00–10:10"],
+      ["bug-hunt-screen.html", "The bug hunt brief and hint prompts — projected, left up the whole hunt", "10:10–10:30"],
+      ["bug-test-plan.html", "Where students log each bug found and how they fixed it", "10:10–10:30"],
+    ]},
+    { label: "Level Up", files: [
+      ["level-up-screen.html", "13-slide deck with built-in round timers — click through, don't narrate the timing yourself", "10:35–11:05"],
+      ["challenge.js", "Pre-loaded buggy function in every student repo — Round 1 works on this, never create it fresh", "10:35–11:05"],
+    ]},
+    { label: "Feature Tutorial", files: [
+      ["how-to-build-your-feature.html", "The 10-step from-scratch Savings Tracker build, followed together", "11:20–11:40"],
+      ["practice-feature.html", "The file students build during the tutorial — later copied from for styling their own feature", "11:20–11:40"],
+    ]},
+    { label: "Brainstorm &amp; Plan", files: [
+      ["brainstorm-screen.html", "Popcorn round, categories, and the back-pocket idea gallery on slide 2", "11:40–11:55"],
+    ]},
+    { label: "Feature Creation", files: [
+      ["milestone-screen.html", "Projector reference during the build — has stretch goals by year group in its right panel", "12:40–2:05pm"],
+      ["feature-test-plan.html", "Ready-to-demo checklist — point groups here as they head into testing near the end", "12:40–2:05pm"],
+      ["participant-guide.html", "Student's own reference doc if they lose track of what they're doing", "All day"],
+    ]},
+    { label: "Nova's brain", files: [
+      ["copilot-instructions.md", "Phase-aware instructions in each student's .github/ folder — restrictive during bugs, generative during build", "All day"],
+    ]},
+  ];
+  const fileRefEl = document.getElementById('fileRef');
+  fileGroups.forEach(g => {
+    const group = document.createElement('div');
+    group.className = 'fileref-group';
+    group.innerHTML = `<div class="fileref-group-label">${g.label}</div>` +
+      g.files.map(f => `<div class="fileref-row"><div class="fileref-name">${f[0]}</div><div class="fileref-desc">${f[1]}</div><div class="fileref-when">${f[2]}</div></div>`).join('');
+    fileRefEl.appendChild(group);
+  });
+
+  // Failure modes
+  const failures = [
+    {sev:"high", title:"Save vs push — the #1 cause of 'my fix disappeared'", body:`<span class="label">Symptom</span>Student swears they fixed something, Codespace still shows the bug, or a new Codespace doesn't have their earlier work.<span class="label">Cause</span>Ctrl+S only saves to the Codespace's own disk. It does NOT push to GitHub. A new Codespace always pulls from the last <em>pushed</em> commit — so unpushed work is invisible to any other Codespace and lost entirely if that Codespace is deleted.<span class="label">Fix</span>Check Source Control panel for uncommitted/unpushed changes. Commit + push. This single distinction accounts for most "Nova still ignores my fix" reports.`},
+    {sev:"high", title:"Codespace staleness", body:`<span class="label">Symptom</span>A file you know is in the repo (e.g. copilot-instructions.md) doesn't seem to affect Copilot's behaviour.<span class="label">Cause</span>If the Codespace was created before that file was pushed, it won't see it until the container rebuilds.<span class="label">Fix</span>Ctrl+Shift+P → "Rebuild Container", or delete and recreate the Codespace (repo files are safe either way).`},
+    {sev:"med", title:"git push hangs or times out", body:`<span class="label">Symptom</span>Push spins indefinitely from inside the Codespace terminal or Source Control panel.<span class="label">Fix</span>Bypass the Codespace's network path entirely — copy the file content, paste into github.com's own web-based file editor, and commit there. Uses the browser's connection, not the Codespace's.<span class="label">If it keeps happening</span>Run <code>git push -v</code> and <code>gh auth status</code> for diagnostics, but the web-editor workaround is faster mid-session than debugging network config live.`},
+    {sev:"med", title:"False-positive 'SQL injection' refusal on pasted code", body:`<span class="label">Symptom</span>Copilot Chat refuses to help with a loan-calculation or similar numeric function, citing security concerns.<span class="label">Cause</span>Cold-pasting a snippet with no file context sometimes trips a false positive.<span class="label">Fix already applied</span>challenge.js is pre-loaded as a real repo file rather than typed fresh into chat — having real file context avoids the false positive. If it recurs elsewhere, the same fix (make it a real file, not a paste) applies.`},
+    {sev:"med", title:"Nova refuses to fix anything in Agent mode", body:`<span class="label">Symptom</span>During the build phase, Agent mode won't make any changes at all, even trivial ones.<span class="label">Cause</span>An overly strict "don't fix everything at once" instruction can overcorrect into "don't fix anything."<span class="label">Fix</span>The instructions file should say: make ONE real fix, then stop and explain. If you're troubleshooting a specific student's repo, check their copilot-instructions.md matches the current version — not an earlier overcorrected draft.`},
+    {sev:"low", title:"One student's Nova is oddly restrictive during the build phase", body:`<span class="label">Symptom</span>A single student's Copilot Chat behaves like bug-hunt-phase Nova during feature building.<span class="label">Cause</span>Per-repo instructions, so this is isolated to that one student — not a systemic issue.<span class="label">Fix</span>Rename their .github/copilot-instructions.md on github.com (removes it from consideration), rebuild their Codespace. Copilot reverts to normal default behaviour for them only.`},
+  ];
+  const failList = document.getElementById('failureList');
+  failures.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'fail-card';
+    card.innerHTML = `
+      <div class="fail-head"><span class="fail-sev ${f.sev}">${f.sev}</span><span class="fail-title">${f.title}</span><span class="fail-chev">▾</span></div>
+      <div class="fail-body"><div class="fail-body-inner">${f.body}</div></div>`;
+    card.querySelector('.fail-head').addEventListener('click', () => card.classList.toggle('open'));
+    failList.appendChild(card);
+  });
+
+  // Triage table
+  const triage = [
+    {sym:"Button does nothing when clicked", fix:"Check for onlick vs onclick typo (Bug 5), or check browser console (F12) for a JS error"},
+    {sym:"Balance shows but looks blank", fix:"Check text colour against background — Bug 2, invisible text is a colour match, not missing text"},
+    {sym:"Number shows as NaN", fix:"Missing isNaN() guard on empty input — Bug 8, or check if a similar guard is needed in a student's own feature"},
+    {sym:"'Are there bugs in this code?' gets a vague answer", fix:"Expected — Nova is restrictive by design in this phase. Push toward hint prompts like the ones on bug-hunt-screen.html rather than open questions"},
+    {sym:"Copilot Chat won't help with a pasted function", fix:"Likely a false-positive content flag on cold-pasted code — have them work in a real file instead of pasting into chat directly"},
+    {sym:"Student's fix 'disappeared' after reopening", fix:"They saved but didn't commit+push — see Failure Modes above, this is the most common one"},
+    {sym:"New Codespace doesn't reflect a recent repo change", fix:"Rebuild container, or recreate — it pulled from an earlier pushed state"},
+    {sym:"Feature idea keeps growing scope (login, database, 'like the real app')", fix:"Redirect: 'Brilliant idea for version 2 — what's the one-screen version you could demo today?'"},
+    {sym:"Group has nothing working by the build phase midpoint", fix:"Hard scope call, said to the whole room: 'Strip it back — one input, one button, one number on screen. Get that working, then add back.'"},
+  ];
+  const triageList = document.getElementById('triageList');
+  triage.forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'triage-row';
+    row.innerHTML = `<div class="triage-symptom">${t.sym}</div><div class="triage-fix">${t.fix}</div>`;
+    triageList.appendChild(row);
+  });
+
+  // Checklist
+  const checks = [
+    "Upload the current copilot-instructions.md + challenge.js to a throwaway test repo",
+    "Open a Codespace on it and confirm the References list on a Chat response shows the instructions file",
+    "Deliberately try to break Agent mode both ways: does it refuse everything? Does it rewrite everything in one pass? It should do neither",
+    "Confirm the Live Server extension installs correctly via devcontainer.json (ritwickdey.LiveServer)",
+    "Run the critical path once end to end: create account → Codespace → Live Server → fix one bug → three steps of the feature tutorial",
+    "Check which Copilot tier the student accounts are actually on before relying on heavy chat usage all day",
+    "Confirm build-phase-guide.html's status — it's currently out of step with the rest of the pack, decide fix/retire/ignore",
+  ];
+  const checklistEl = document.getElementById('checklistItems');
+  checks.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'check-item';
+    item.innerHTML = `<div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M4 12l6 6L20 6"/></svg></div><div class="check-text">${c}</div>`;
+    item.addEventListener('click', () => item.classList.toggle('checked'));
+    checklistEl.appendChild(item);
+  });
+
+  // Scroll-spy
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const match = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

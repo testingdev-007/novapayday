@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>If It All Falls Apart (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--amber:#B45F06;--red:#C0293D;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:14px;line-height:1.5;padding:32px 0 80px}
+.page{max-width:700px;margin:0 auto;background:var(--paper);padding:40px 48px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:700px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:20px;border-bottom:3px solid var(--ink);margin-bottom:20px}
+.doc-logo{font-size:1.1em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.6em;font-weight:900;letter-spacing:-0.03em;margin-top:8px}
+.doc-sub{font-size:0.88em;color:var(--muted);margin-top:4px}
+.calm-note{background:var(--shade);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:6px;padding:16px 20px;margin-bottom:24px;font-size:0.9em;line-height:1.65}
+.calm-note strong{color:var(--accent)}
+.scenario{border:2px solid var(--ink);border-radius:10px;padding:18px 22px;margin-bottom:14px;page-break-inside:avoid}
+.scenario-title{font-weight:800;font-size:1em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.scenario-body{font-size:0.88em;line-height:1.6}
+.scenario-say{background:var(--shade);border-left:3px solid var(--accent);padding:8px 12px;margin-top:8px;font-style:italic;font-size:0.88em}
+.footer-note{text-align:center;font-size:0.82em;color:var(--muted);margin-top:24px;padding-top:16px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:12px}.page{box-shadow:none;padding:16px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this page</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">If It All Falls Apart</div>
+    <div class="doc-sub">Total-failure scenarios only. Everything smaller is on the Troubleshooting Card.</div>
+  </div>
+
+  <div class="calm-note">
+    <strong>None of these have happened yet, and probably won't.</strong> This page exists so that if one does, you have a plan already written down instead of having to invent one live, in front of a room, while stressed. That's the whole point of it.
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">🌐 Wifi or internet dies completely</div>
+    <div class="scenario-body">Nobody's Codespace will load or save. This is genuinely rare, but total.</div>
+    <div class="scenario-say">"Right — the internet's had other ideas. Grab a pen and paper. We're doing this the old way for a bit: sketch your fix or your feature idea on paper, in as much detail as you can, and we'll type it in the moment we're back online."</div>
+    <div class="scenario-body" style="margin-top:8px">Use the downtime for something that doesn't need a connection: the brainstorm, the planning questions, or just talking through what a bug or feature should do in plain English.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">☁️ GitHub or Codespaces itself is down</div>
+    <div class="scenario-body">Rare, but does happen occasionally — check <strong>githubstatus.com</strong> on your phone if you suspect this (it'll load even if Codespaces won't).</div>
+    <div class="scenario-say">"This one isn't us — GitHub's having a moment. Let's not fight it. While we wait, let's do [brainstorm / planning / a walkthrough on my screen] instead."</div>
+    <div class="scenario-body" style="margin-top:8px">Your own screen, shared on the projector, becomes the whole room's workspace. Take suggestions verbally, type them yourself. Slower, but it still works, and it's actually a fun format for a short stretch.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">📽️ Projector or your laptop dies</div>
+    <div class="scenario-body">Nobody can see what you're demonstrating.</div>
+    <div class="scenario-say">"Screen's down — gather round for a minute." Physically bring students closer to whatever screen still works, or narrate what you'd be showing them and let them follow along on their own screens instead.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">⏰ You're badly behind schedule</div>
+    <div class="scenario-body">More than 15 minutes lost somewhere and it's compounding.</div>
+    <div class="scenario-say">"New plan, and it's a good one: everyone's target is now [the next milestone only]. Stretch goals are for another day." Cut scope out loud, with confidence — never apologise for cutting, just announce the new target plainly.</div>
+    <div class="scenario-body" style="margin-top:8px">The single easiest cut: shorten Feature Creation, keep Show &amp; Tell no matter what. Ending with demos matters more than finishing every feature.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">😟 You genuinely don't know what to do next</div>
+    <div class="scenario-body">The moment every facilitator has at some point.</div>
+    <div class="scenario-say">"Give me one second." Look at this page, or the Troubleshooting Card, or just ask the room: "What does everyone think we should do here?" Teenagers often have a perfectly good answer, and asking them is a completely legitimate move, not a failure.</div>
+  </div>
+
+  <div class="footer-note">
+    Whatever happens, the day doesn't need to be perfect to work. It needs Show &amp; Tell to happen at the end. Protect that above everything else.
+  </div>
+</div>
+</body>
+</html>

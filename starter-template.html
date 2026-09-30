@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  NovaPay Workshop — Savings Goal Tracker Starter        ║
+  ║  For Y9–Y10. Y11–Y13 should start from a blank file.   ║
+  ║                                                          ║
+  ║  HOW TO USE THIS FILE:                                  ║
+  ║  1. Read each TODO comment                              ║
+  ║  2. Use the COPILOT HINT as your comment to type        ║
+  ║  3. Press Tab to accept Copilot's suggestion            ║
+  ║  4. Test it — does it do what you expected?             ║
+  ║  5. Ask Copilot Chat to explain anything you don't      ║
+  ║     understand before moving on                         ║
+  ╚══════════════════════════════════════════════════════════╝
+  -->
+
+  <!-- TODO: Give your feature a title -->
+  <title>NovaPay — Savings Goal Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── BASE STYLES — already done for you ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F0F2F8;
+      --card:    #FFFFFF;
+      --accent:  #6C63FF;
+      --green:   #00C896;
+      --border:  #E8ECF2;
+      --text:    #0D0F1C;
+      --muted:   #8B92A5;
+      --shadow:  0 2px 12px rgba(13,15,28,0.08);
+      --radius:  16px;
+      --r-sm:    10px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 48px;
+    }
+
+    /* ── HEADER — already done for you ── */
+    .app-header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo { font-size: 1.2em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--text); }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: white; font-size: 0.75em; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    /* ── PAGE LAYOUT — already done for you ── */
+    .main { max-width: 600px; margin: 0 auto; padding: 28px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── CARD — already done for you ── */
+    .card { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+    .card-title { font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+
+    /* ── FORM ELEMENTS — already done for you ── */
+    .field { margin-bottom: 14px; }
+    .field-label { display: block; font-size: 0.72em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .field-prefix-wrap { position: relative; }
+    .field-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--muted); font-size: 0.9em; pointer-events: none; }
+    input[type="text"], input[type="number"] {
+      width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+      border-radius: var(--r-sm); font-size: 0.95em; font-family: inherit;
+      color: var(--text); background: var(--bg); outline: none; transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent); background: white; }
+    .input-with-prefix { padding-left: 30px; }
+
+    /* ── BUTTON — already done for you ── */
+    .btn {
+      display: block; width: 100%; padding: 13px;
+      border: none; border-radius: var(--r-sm);
+      font-size: 0.95em; font-family: inherit; font-weight: 700;
+      background: var(--accent); color: white; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    /*
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 1: Style the progress bar                     │
+    │                                                     │
+    │  COPILOT HINT: type this comment into the CSS       │
+    │  and press Tab:                                     │
+    │                                                     │
+    │  /* progress bar container and fill styles */       │
+    └─────────────────────────────────────────────────────┘
+    */
+
+    /* YOUR PROGRESS BAR STYLES GO HERE */
+
+
+    /*
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 2: Style the result message                   │
+    │                                                     │
+    │  COPILOT HINT:                                      │
+    │  /* styles for a result card showing               │
+    │     a large amount remaining and a status message */│
+    └─────────────────────────────────────────────────────┘
+    */
+
+    /* YOUR RESULT STYLES GO HERE */
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER — already built for you -->
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="avatar">AC</div>
+  </header>
+
+  <main class="main">
+
+    <!-- INTRO CARD — already built for you -->
+    <div class="card">
+      <div class="card-title">Savings Goal Tracker</div>
+      <p style="font-size:0.88em;color:var(--muted);line-height:1.6">
+        Enter your savings goal below to see how close you are and how much you still need.
+      </p>
+    </div>
+
+    <!-- INPUT CARD — already built for you -->
+    <div class="card">
+      <div class="card-title">Your Goal</div>
+
+      <div class="field">
+        <label class="field-label" for="goal-name">What are you saving for?</label>
+        <input type="text" id="goal-name" placeholder="e.g. New trainers, holiday, laptop">
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="target-amount">Target amount</label>
+        <div class="field-prefix-wrap">
+          <span class="field-prefix">£</span>
+          <input type="number" id="target-amount" class="input-with-prefix" placeholder="0.00" min="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="saved-amount">Amount saved so far</label>
+        <div class="field-prefix-wrap">
+          <span class="field-prefix">£</span>
+          <input type="number" id="saved-amount" class="input-with-prefix" placeholder="0.00" min="0">
+        </div>
+      </div>
+
+      <button class="btn" onclick="updateGoal()">Update my goal</button>
+    </div>
+
+    <!--
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 3: Add the progress section                   │
+    │                                                     │
+    │  COPILOT HINT: type this comment into the HTML      │
+    │  and press Tab:                                     │
+    │                                                     │
+    │  <!-- savings goal progress card with a            │
+    │       labelled progress bar and percentage -->      │
+    └─────────────────────────────────────────────────────┘
+    -->
+
+    <!-- YOUR PROGRESS CARD GOES HERE -->
+
+
+    <!--
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 4: Add the result summary section             │
+    │                                                     │
+    │  COPILOT HINT:                                      │
+    │  <!-- result card showing amount left to save       │
+    │       and a congratulations message if goal met --> │
+    └─────────────────────────────────────────────────────┘
+    -->
+
+    <!-- YOUR RESULT CARD GOES HERE -->
+
+  </main>
+
+  <script>
+
+    /*
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 5: Write the calculateProgress function       │
+    │                                                     │
+    │  COPILOT HINT: type this comment and press Tab:     │
+    │                                                     │
+    │  // function calculateProgress(savedAmount,         │
+    │  //   targetAmount) that returns the percentage     │
+    │  //   saved, capped at 100, rounded to 1 decimal    │
+    └─────────────────────────────────────────────────────┘
+    */
+
+    // YOUR calculateProgress FUNCTION GOES HERE
+
+
+    /*
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 6: Write the updateDisplay function           │
+    │                                                     │
+    │  COPILOT HINT:                                      │
+    │  // function updateDisplay(goalName, targetAmount,  │
+    │  //   savedAmount, percentage) that updates the     │
+    │  //   progress bar width, percentage text,          │
+    │  //   amount remaining, and shows a                 │
+    │  //   congratulations message if goal is met        │
+    └─────────────────────────────────────────────────────┘
+    */
+
+    // YOUR updateDisplay FUNCTION GOES HERE
+
+
+    /*
+    ┌─────────────────────────────────────────────────────┐
+    │  TODO 7: Write the updateGoal function              │
+    │                                                     │
+    │  This is the main function called when the button   │
+    │  is clicked. It should:                             │
+    │  1. Read the values from the three input fields     │
+    │  2. Validate that numbers are greater than 0        │
+    │  3. Call calculateProgress                          │
+    │  4. Call updateDisplay                              │
+    │                                                     │
+    │  COPILOT HINT:                                      │
+    │  // function updateGoal that reads goalName,        │
+    │  //   targetAmount and savedAmount from the inputs, │
+    │  //   validates them, calculates progress, and      │
+    │  //   updates the display                           │
+    └─────────────────────────────────────────────────────┘
+    */
+
+    function updateGoal() {
+      // YOUR CODE GOES HERE
+    }
+
+  </script>
+
+</body>
+</html>

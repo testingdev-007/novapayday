@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaPay Workshop — Full Briefing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6; --border-mid: #C3C9D6;
+    --accent: #5A50E0; --accent-bg: #EEECFB;
+    --green: #00875F; --green-bg: #E9F7F1;
+    --amber: #B45F06; --amber-bg: #FEF6E7;
+    --red: #C0293D; --red-bg: #FDECEF;
+    --paper: #FFFFFF; --shade: #F4F5F9; --card2: #ECEDF3;
+    --code-bg: #F6F7FB;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 15px; line-height: 1.65; }
+  .layout { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar { width: 240px; flex-shrink: 0; background: var(--paper); border-right: 1.5px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 26px 0; }
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1.5px solid var(--border); margin-bottom: 18px; }
+  .logo-mark { font-size: 1.15em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+  .logo-mark span { color: var(--ink); }
+  .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 4px; }
+  .progress-track { height: 3px; background: var(--border); border-radius: 3px; margin-top: 14px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.15s; }
+  .nav-list { padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; text-decoration: none; color: var(--muted); font-size: 0.82em; font-weight: 700; transition: all 0.15s; margin-bottom: 2px; }
+  .nav-item:hover { background: var(--shade); color: var(--ink); }
+  .nav-item.active { background: var(--accent-bg); color: var(--accent); }
+  .nav-num { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; opacity: 0.6; width: 16px; flex-shrink: 0; }
+
+  /* CONTENT */
+  .content { flex: 1; min-width: 0; padding: 52px 60px 100px; max-width: 880px; }
+  section { scroll-margin-top: 24px; margin-bottom: 68px; }
+  section:last-of-type { margin-bottom: 20px; }
+
+  .hero-eyebrow { font-size: 0.72em; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .hero-title { font-size: 2.3em; font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 16px; color: var(--ink); }
+  .hero-lede { font-size: 1.08em; color: var(--ink); max-width: 62ch; margin-bottom: 24px; }
+  .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill { background: var(--paper); border: 1.5px solid var(--border-mid); border-radius: 100px; padding: 7px 14px; font-size: 0.8em; font-weight: 700; color: var(--muted); }
+  .pill strong { color: var(--ink); }
+
+  .sect-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+  .sect-num { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 800; font-size: 0.95em; }
+  .sect-title { font-size: 1.4em; font-weight: 900; letter-spacing: -0.03em; }
+
+  p.body-text { margin-bottom: 14px; color: var(--ink); max-width: 68ch; }
+  .callout { border-left: 4px solid var(--accent); background: var(--accent-bg); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.92em; }
+  .callout.green { border-color: var(--green); background: var(--green-bg); }
+  .callout.amber { border-color: var(--amber); background: var(--amber-bg); }
+  .callout-label { font-size: 0.72em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .callout-label.accent { color: var(--accent); } .callout-label.green { color: var(--green); } .callout-label.amber { color: var(--amber); }
+
+  /* QUICK FACTS GRID */
+  .fact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 18px 0; }
+  .fact-card { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .fact-label { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 800; margin-bottom: 6px; }
+  .fact-value { font-size: 0.95em; font-weight: 700; color: var(--ink); }
+
+  /* TIMELINE (interactive) */
+  .timeline { position: relative; }
+  .tl-node { display: flex; gap: 16px; cursor: pointer; }
+  .tl-rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; box-shadow: 0 0 0 4px var(--shade); z-index: 1; }
+  .tl-line { width: 2px; flex: 1; background: var(--border-mid); margin-top: 2px; }
+  .tl-node:last-child .tl-line { display: none; }
+  .tl-node.break .tl-dot { background: var(--green); }
+  .tl-node.accent2 .tl-dot { background: var(--amber); }
+  .tl-body { flex: 1; padding-bottom: 22px; }
+  .tl-head { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+  .tl-time { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; color: var(--accent); font-weight: 800; white-space: nowrap; min-width: 58px; }
+  .tl-title { font-weight: 700; font-size: 0.98em; flex: 1; color: var(--ink); }
+  .tl-dur { font-size: 0.75em; color: var(--muted); background: var(--shade); border: 1px solid var(--border); padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .tl-chevron { color: var(--muted); font-size: 0.7em; transition: transform 0.2s; flex-shrink: 0; }
+  .tl-node.open .tl-chevron { transform: rotate(90deg); }
+  .tl-detail { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; font-size: 0.9em; color: var(--muted); }
+  .tl-node.open .tl-detail { max-height: 240px; padding-top: 8px; }
+  .tl-detail-inner { padding: 4px 0 6px; }
+
+  .timeline-controls { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+  .btn-ghost { background: var(--paper); border: 1.5px solid var(--border-mid); color: var(--ink); font-size: 0.78em; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+  .btn-ghost:hover { background: var(--shade); }
+
+  /* NOVA PHASES */
+  .phase-toggle { display: flex; gap: 8px; margin-bottom: 18px; }
+  .phase-btn { flex: 1; background: var(--paper); border: 1.5px solid var(--border-mid); color: var(--muted); padding: 12px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; transition: all 0.15s; }
+  .phase-btn.active.restrictive { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .phase-btn.active.generative { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .phase-panel { display: none; background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px; }
+  .phase-panel.active { display: block; }
+
+  /* BUG TABLE */
+  .bug-table { width: 100%; border-collapse: collapse; font-size: 0.88em; background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .bug-table th { text-align: left; font-size: 0.68em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 9px 12px; border-bottom: 1.5px solid var(--border-mid); background: var(--shade); }
+  .bug-table td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--ink); }
+  .bug-table tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; font-size: 0.72em; font-weight: 800; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+  .badge.easy { background: var(--green-bg); color: var(--green); }
+  .badge.med { background: var(--amber-bg); color: var(--amber); }
+  .badge.hard { background: var(--red-bg); color: var(--red); }
+
+  /* ACCORDION (gotchas) */
+  .acc-item { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .acc-head { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; cursor: pointer; }
+  .acc-head-title { font-weight: 700; font-size: 0.92em; color: var(--ink); }
+  .acc-chevron { color: var(--accent); transition: transform 0.2s; flex-shrink: 0; margin-left: 12px; }
+  .acc-item.open .acc-chevron { transform: rotate(180deg); }
+  .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .acc-item.open .acc-body { max-height: 400px; }
+  .acc-body-inner { padding: 0 18px 18px; font-size: 0.9em; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; margin: 0 18px; }
+
+  /* FILE MAP */
+  .filemap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .filemap-card { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .filemap-card h4 { font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 10px; }
+  .filemap-card ul { list-style: none; }
+  .filemap-card li { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; color: var(--ink); padding: 3px 0; }
+  .filemap-card li.warn { color: var(--amber); font-weight: 700; }
+
+  /* CHECKLIST */
+  .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--paper); border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: background 0.15s; }
+  .check-item:hover { background: var(--shade); }
+  .check-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-mid); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .check-item.checked .check-box { background: var(--green); border-color: var(--green); }
+  .check-box svg { opacity: 0; transition: opacity 0.1s; width: 12px; height: 12px; }
+  .check-item.checked .check-box svg { opacity: 1; }
+  .check-text { font-size: 0.9em; color: var(--ink); }
+  .check-item.checked .check-text { color: var(--muted); text-decoration: line-through; }
+
+  code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); border: 1px solid var(--border); padding: 1px 6px; border-radius: 5px; font-size: 0.87em; color: #A0270F; }
+
+  /* CREATION GUIDANCE CARDS */
+  .cg-card { background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .cg-card.key { border-color: var(--accent); border-width: 2px; }
+  .cg-head { display: flex; align-items: center; gap: 12px; padding: 15px 18px; cursor: pointer; }
+  .cg-title { font-weight: 700; font-size: 0.92em; flex: 1; color: var(--ink); }
+  .cg-tag { font-size: 0.68em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-bg); padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .cg-chev { color: var(--accent); transition: transform 0.2s; flex-shrink: 0; }
+  .cg-card.open .cg-chev { transform: rotate(180deg); }
+  .cg-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .cg-card.open .cg-body { max-height: 900px; }
+  .cg-body-inner { padding: 4px 18px 16px; border-top: 1px solid var(--border); margin-top: 2px; font-size: 0.9em; color: var(--ink); }
+  .cg-label { font-size: 0.68em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin: 12px 0 5px; display: block; }
+  .cg-label:first-of-type { margin-top: 12px; }
+  .cg-say { font-style: italic; background: var(--shade); border-radius: 8px; padding: 10px 14px; margin: 4px 0; }
+  .cg-list { margin: 4px 0 4px 18px; }
+  .cg-list li { margin-bottom: 4px; }
+
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .content { padding: 32px 22px 80px; }
+    .fact-grid, .filemap-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Full Briefing</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="nav-list" id="navList">
+      <a class="nav-item" href="#overview"><span class="nav-num">1</span>Overview</a>
+      <a class="nav-item" href="#logistics"><span class="nav-num">2</span>Logistics &amp; Setup</a>
+      <a class="nav-item" href="#day"><span class="nav-num">3</span>The Day</a>
+      <a class="nav-item" href="#nova"><span class="nav-num">4</span>How Nova Works</a>
+      <a class="nav-item" href="#guiding"><span class="nav-num">5</span>Guiding Feature Creation</a>
+      <a class="nav-item" href="#bugs"><span class="nav-num">6</span>The 10 Bugs</a>
+      <a class="nav-item" href="#gotchas"><span class="nav-num">7</span>Known Gotchas</a>
+      <a class="nav-item" href="#filemap"><span class="nav-num">8</span>File Map</a>
+      <a class="nav-item" href="#checklist"><span class="nav-num">9</span>Before You Run It</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <section id="overview">
+      <div class="hero-eyebrow">Full-day workshop briefing</div>
+      <h1 class="hero-title">Everything about running NovaPay</h1>
+      <p class="hero-lede">A full-day, in-person workshop teaching UK students to use GitHub Copilot by debugging and extending a fake banking app. Students spend the morning fixing planted bugs, then the afternoon building their own feature from scratch — both guided by <strong>Nova</strong>, a customised Copilot Chat persona.</p>
+      <div class="hero-pills">
+        <div class="pill"><strong>Y9–Y13</strong> · ages 13–18</div>
+        <div class="pill"><strong>9:30am–2:30pm</strong> · 5 hours</div>
+        <div class="pill"><strong>1 dev per table</strong> · Mark MCs the room</div>
+        <div class="pill"><strong>~46 files</strong> in the pack</div>
+      </div>
+      <div class="callout amber" style="margin-top:20px">
+        <div class="callout-label amber">What this briefing doesn't cover yet</div>
+        Still open: who runs the lunchtime accessibility activities, expected student numbers, wifi capacity for the room (Codespaces need a stable connection per device), and any safeguarding/duty-of-care arrangements for the day. Worth nailing these down separately before running this again.
+      </div>
+    </section>
+
+    <section id="logistics">
+      <div class="sect-head"><span class="sect-num">02</span><span class="sect-title">Logistics &amp; Setup</span></div>
+      <p class="body-text">Every student uses their own <strong>personal GitHub account</strong> — not an organisation account, since Business self-serve signup was paused when this was built. Each creates a repo from a template, then opens it in a <strong>GitHub Codespace</strong> — a cloud dev environment that works on any device, including school machines and iPads.</p>
+      <div class="fact-grid">
+        <div class="fact-card"><div class="fact-label">Who runs what</div><div class="fact-value">Mark MCs the whole room — clock, slides, phase transitions. One developer owns each small table of students for the entire day.</div></div>
+        <div class="fact-card"><div class="fact-label">Live preview</div><div class="fact-value">VS Code Live Server — extension ID <code>ritwickdey.LiveServer</code></div></div>
+      </div>
+      <div class="fact-grid">
+        <div class="fact-card"><div class="fact-label">AI mentor</div><div class="fact-value">Nova = Copilot Chat + custom instructions file</div></div>
+        <div class="fact-card"><div class="fact-label">File access</div><div class="fact-value">Each developer works from local copies of the file pack on their own laptop</div></div>
+      </div>
+      <div class="callout accent">
+        <div class="callout-label accent">The two-repo split</div>
+        <strong>Student's personal repo:</strong> only what they need — <code>bank-dashboard.html</code>, <code>starter-template.html</code>, <code>challenge.js</code>, devcontainer config, Nova's instructions.<br><br>
+        <strong>Hub/reference pages:</strong> tutorials, screens, facilitator materials — browsed separately, never uploaded into student repos. Not hosted anywhere yet (open locally on your machine/projector).
+      </div>
+    </section>
+
+    <section id="day">
+      <div class="sect-head"><span class="sect-num">03</span><span class="sect-title">The Day, Start to Finish</span></div>
+      <p class="body-text">9:30am start, 5 hours, ends 2:30pm. Click any segment for the reasoning behind where it sits.</p>
+      <div class="timeline-controls"><button class="btn-ghost" id="toggleAllBtn">Expand all</button></div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section id="nova">
+      <div class="sect-head"><span class="sect-num">04</span><span class="sect-title">How Nova Works</span></div>
+      <p class="body-text">Nova is just GitHub Copilot Chat with a custom <code>.github/copilot-instructions.md</code> file in each student's repo. It behaves differently depending on which phase of the day it is.</p>
+      <div class="phase-toggle">
+        <button class="phase-btn restrictive active" data-phase="restrictive">🐛 Restrictive — Bug Hunt</button>
+        <button class="phase-btn generative" data-phase="generative">🏗️ Generative — Feature Build</button>
+      </div>
+      <div class="phase-panel restrictive active">
+        <p class="body-text" style="margin-bottom:10px">During the bug hunt, Nova gives <strong>hints, not answers</strong>. It won't just fix the bug for a student who pastes in broken code.</p>
+        <p class="body-text" style="margin-bottom:0">Verify it's working: check the <strong>References list</strong> on a Copilot Chat response — click it to confirm the instructions file was actually used. More reliable than judging by tone alone.</p>
+      </div>
+      <div class="phase-panel generative">
+        <p class="body-text" style="margin-bottom:10px">During feature creation, Nova helps build — but <strong>Agent mode</strong> (distinct from Ask/Chat) is action-biased, so it needs a hard rule: make one real fix, then stop and explain.</p>
+        <p class="body-text" style="margin-bottom:0">The first version of that rule caused Nova to <em>refuse</em> fixes outright — overcorrected. It was rewritten to require action, just paced action.</p>
+      </div>
+      <div class="callout green" style="margin-top:16px">
+        <div class="callout-label green">If one student's Nova is too restrictive</div>
+        It only affects that student — each has their own repo. Rename their <code>.github/copilot-instructions.md</code> on github.com, rebuild their Codespace, and Copilot reverts to normal for them only.
+      </div>
+    </section>
+
+    <section id="guiding">
+      <div class="sect-head"><span class="sect-num">05</span><span class="sect-title">Guiding Feature Creation</span></div>
+      <p class="body-text">This is the part earlier drafts of this briefing skated over — and it's the single biggest, most facilitation-dependent chunk of the day. Bug Hunt and Level Up mostly run themselves off the slide decks and Nova's restrictive instructions. Everything from Brainstorm onward runs on how well a developer facilitates it.</p>
+      <div id="creationAccordion"></div>
+    </section>
+
+    <section id="bugs">
+      <div class="sect-head"><span class="sect-num">06</span><span class="sect-title">The 10 Planted Bugs</span></div>
+      <p class="body-text">All in <code>bank-dashboard.html</code>. Bugs 3, 8, 9, 10 are logic/data errors rather than syntax errors — if a group asks Copilot to "fix everything at once," it will likely miss these. Worth using as a live teaching moment if it happens.</p>
+      <table class="bug-table">
+        <thead><tr><th>#</th><th>Level</th><th>Bug</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><span class="badge easy">Easy</span></td><td>Missing closing <code>&lt;/div&gt;</code> tag</td></tr>
+          <tr><td>2</td><td><span class="badge easy">Easy</span></td><td>Balance text colour matches background (invisible)</td></tr>
+          <tr><td>3</td><td><span class="badge easy">Easy</span></td><td>Coffee purchase shows as credit instead of debit</td></tr>
+          <tr><td>4</td><td><span class="badge med">Medium</span></td><td>Input type is <code>text</code> instead of <code>number</code></td></tr>
+          <tr><td>5</td><td><span class="badge med">Medium</span></td><td>Button typo: <code>onlick</code> instead of <code>onclick</code></td></tr>
+          <tr><td>6</td><td><span class="badge med">Medium</span></td><td>Wrong operator — adds instead of subtracts on withdrawal</td></tr>
+          <tr><td>7</td><td><span class="badge hard">Hard</span></td><td>Element ID typo (<code>balence-display</code> vs <code>balance-display</code>)</td></tr>
+          <tr><td>8</td><td><span class="badge hard">Hard</span></td><td><code>NaN</code> shown on empty input — missing <code>isNaN()</code> check</td></tr>
+          <tr><td>9</td><td><span class="badge hard">Hard</span></td><td>Wrong interest formula — missing <code>/100</code></td></tr>
+          <tr><td>10</td><td><span class="badge hard">Hard</span></td><td>No overdraft check</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="gotchas">
+      <div class="sect-head"><span class="sect-num">07</span><span class="sect-title">Known Technical Gotchas</span></div>
+      <p class="body-text">Everything below came out of your own testing. Click to expand.</p>
+      <div id="accordion"></div>
+    </section>
+
+    <section id="filemap">
+      <div class="sect-head"><span class="sect-num">08</span><span class="sect-title">File Map</span></div>
+      <p class="body-text">All in <code>/mnt/user-data/outputs/</code>. Selected highlights — see the pack for the full ~46.</p>
+      <div class="filemap-grid">
+        <div class="filemap-card">
+          <h4>Start here</h4>
+          <ul>
+            <li>index.html</li>
+            <li>run-the-session.html</li>
+            <li>admin-setup.html</li>
+            <li>student-index.html</li>
+          </ul>
+        </div>
+        <div class="filemap-card">
+          <h4>Authoritative timing docs</h4>
+          <ul>
+            <li>session-plan.html</li>
+            <li>printable-master-script.html</li>
+            <li>printable-timed-agenda-clock.html</li>
+            <li>student-day-agenda.html</li>
+          </ul>
+        </div>
+        <div class="filemap-card">
+          <h4>Setup guides</h4>
+          <ul>
+            <li>setup-guide-v2.html</li>
+            <li>printable-setup-guide-v2.html</li>
+            <li>facilitator-setup-guide.html</li>
+          </ul>
+        </div>
+        <div class="filemap-card">
+          <h4>Student tutorials</h4>
+          <ul>
+            <li>how-to-find-fix-bugs.html</li>
+            <li>how-to-build-your-feature.html</li>
+            <li>participant-guide.html</li>
+          </ul>
+        </div>
+        <div class="filemap-card">
+          <h4>Level Up</h4>
+          <ul>
+            <li>level-up-screen.html</li>
+            <li>copilot-bootcamp.html</li>
+          </ul>
+        </div>
+        <div class="filemap-card">
+          <h4>Out of step — needs a decision</h4>
+          <ul>
+            <li class="warn">build-phase-guide.html</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <div class="sect-head"><span class="sect-num">09</span><span class="sect-title">Before You Run This Again</span></div>
+      <div id="checklistItems"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const dayData = [
+    {t:"9:30", d:"15 min", title:"Welcome", cls:"", detail:"Intros, Codespace setup, ice breaker. Longer than a typical warm-up because getting every account and Codespace genuinely working takes real time."},
+    {t:"9:45", d:"15 min", title:"Copilot demo", cls:"", detail:"Live demo of inline completions and Chat — you drive, they watch, before anyone touches Copilot themselves."},
+    {t:"10:00", d:"10 min", title:"Bug tutorial — everyone together", cls:"", detail:"Everyone follows a worked, deliberately fake example bug together, learning the method before touching the real dashboard."},
+    {t:"10:10", d:"20 min", title:"Independent bug hunt", cls:"", detail:"Same method, applied to the real 10 planted bugs in bank-dashboard.html."},
+    {t:"10:30", d:"5 min", title:"Share out", cls:"", detail:"2–3 students share what they found and how Copilot helped."},
+    {t:"10:35", d:"30 min", title:"Level Up ⚡", cls:"accent2", detail:"The reveal, GitHub/Codespaces concepts, and 3 challenge rounds: Fix the Bug → Comment Race → Best Prompt."},
+    {t:"11:05", d:"15 min", title:"☕ Comfort break", cls:"break", detail:"Genuinely just a break. Good moment for you to reset too before the longer build block ahead."},
+    {t:"11:20", d:"20 min", title:"Feature tutorial — everyone together", cls:"", detail:"Everyone builds a Savings Tracker from a blank file, together — teaches the technique before anyone picks their own idea. Guided and low-stakes; help stragglers keep pace rather than fall behind, since it's meant to be followed as a group."},
+    {t:"11:40", d:"15 min", title:"Brainstorm", cls:"", detail:"Their own idea, deliberately different from the tracker they just built together. Facilitator role matters here: check every group's pick against 'can you describe it in one sentence — inputs, calculation, output?', and redirect anything needing logins/databases toward a one-screen version instead."},
+    {t:"11:55", d:"10 min", title:"Plan on paper", cls:"", detail:"Four questions, no keyboards: what it does, what the user sees, inputs, outputs. The one thing worth checking on every sketch: are the inputs and outputs actually named? Vague sketches lead to vague, unproductive Copilot prompts later."},
+    {t:"12:05pm", d:"30 min", title:"🍽️ Lunch", cls:"break", detail:"Accessibility activities happen during this window. Sits before any feature creation starts on purpose — nobody's mid-flow when they break."},
+    {t:"12:35pm", d:"5 min", title:"♿ Accessibility discussion", cls:"accent2", detail:"Quick group chat incorporating what came up at lunch, right before building starts — so any idea has somewhere to go."},
+    {t:"12:40pm", d:"85 min", title:"Feature creation", cls:"", detail:"One continuous block: structure, logic, styling, and testing all folded in. This is the single biggest, most facilitation-dependent phase of the whole day — see the dedicated section below for what good guidance looks like here."},
+    {t:"2:05pm", d:"15 min", title:"Show &amp; tell", cls:"", detail:"2-minute demos each: what it does, how Copilot helped, what they'd add with more time. If a demo breaks live, reframe it as 'the most authentic developer experience of the day' and show it working in the editor instead."},
+    {t:"2:20pm", d:"10 min", title:"Feedback", cls:"", detail:"Quick round before everyone leaves — keep it short, energy is naturally dropping."},
+  ];
+
+  const timeline = document.getElementById('timeline');
+  dayData.forEach((seg, i) => {
+    const node = document.createElement('div');
+    node.className = 'tl-node' + (seg.cls ? ' ' + seg.cls : '');
+    node.innerHTML = `
+      <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <div class="tl-head">
+          <span class="tl-time">${seg.t}</span>
+          <span class="tl-title">${seg.title}</span>
+          <span class="tl-dur">${seg.d}</span>
+          <span class="tl-chevron">▶</span>
+        </div>
+        <div class="tl-detail"><div class="tl-detail-inner">${seg.detail}</div></div>
+      </div>`;
+    node.addEventListener('click', () => node.classList.toggle('open'));
+    timeline.appendChild(node);
+  });
+
+  let allOpen = false;
+  document.getElementById('toggleAllBtn').addEventListener('click', (e) => {
+    allOpen = !allOpen;
+    document.querySelectorAll('.tl-node').forEach(n => n.classList.toggle('open', allOpen));
+    e.target.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  });
+
+  // Phase toggle
+  document.querySelectorAll('.phase-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.phase-panel.' + btn.dataset.phase).classList.add('active');
+    });
+  });
+
+  // Feature creation guidance
+  const creationGuide = [
+    {tag:"Brainstorm", key:true, title:"Landing a workable idea", body:`
+      <span class="cg-label">The achievability check</span>
+      For every group's pick, ask: <em>"Can you describe it in one sentence? Does it have inputs, a calculation, and an output?"</em> If they're struggling to answer, the idea isn't scoped yet — narrow it before they move on.
+      <span class="cg-label">Scope veto phrase</span>
+      <div class="cg-say">"Brilliant idea for version 2. What's the one-screen version of it you could demo today?"</div>
+      Use it on anything needing logins, real accounts, a database, or "like the real app but…"
+      <span class="cg-label">If a group is stuck</span>
+      Point at the back-pocket gallery on brainstorm-screen.html slide 2 — 7 pre-vetted features with difficulty labels. Just not the Savings Tracker, they've already built that one.
+    `},
+    {tag:"Plan", key:true, title:"The one thing worth checking", body:`
+      Circulate and look at every sketch. The single check that matters: <strong>are the inputs and outputs named?</strong> ("goalName, targetAmount" — not "some boxes"). Named inputs become good Copilot prompts a few minutes later; vague ones lead to vague, unproductive prompting during the build.
+    `},
+    {tag:"Feature Creation — 85 min", key:true, title:"The method, pacing, and prompting", body:`
+      <span class="cg-label">The method — say it early, refer back to it constantly</span>
+      <div class="cg-say">"One: write a comment describing the next small thing. Two: let Copilot suggest, press Tab. Three: save, check Live Server. Four: if it's wrong, ask Nova why. Small steps — comment, code, check."</div>
+      <span class="cg-label">Rough internal pacing (not announced or enforced, just a sense of where groups should be)</span>
+      <ul class="cg-list">
+        <li>~25 min in: heading, inputs, and a button exist, opens without errors</li>
+        <li>~60 min in: styled, basic JS working — real output on screen</li>
+        <li>~75 min in: shifting into testing</li>
+      </ul>
+      <span class="cg-label">Prompting — good vs vague</span>
+      <ul class="cg-list">
+        <li>✅ "Write a function that takes goalAmount and savedAmount and returns the percentage complete"</li>
+        <li>❌ "Make a savings tracker" — too vague to build on</li>
+      </ul>
+      <span class="cg-label">The hard scope call — say it to the whole room, not just the stuck group</span>
+      <div class="cg-say">"Strip it back. One input, one button, one number on screen. Get that working, then add back."</div>
+      <span class="cg-label">Testing is folded in, not a separate slot</span>
+      Nudge groups proactively as they near the end: "Code freeze soon — try to break your own feature on purpose." feature-test-plan.html has a ready-to-demo checklist if a group wants structure.
+      <span class="cg-label">Fast finishers</span>
+      milestone-screen.html's right panel has stretch goals by year group — persisting to localStorage, multiple goals, weekly-saving calculations, a simulate-transfer button.
+    `},
+    {tag:"Show & Tell", key:false, title:"Keeping demos moving", body:`
+      2 minutes per group. After each, ask the room "what did you like about that?" If a demo breaks live: <div class="cg-say">"Congratulations — a live demo failure. That's the most authentic developer experience of the day."</div> Then show it working in the editor instead — never let a broken demo become an awkward silence.
+    `},
+  ];
+  const creationEl = document.getElementById('creationAccordion');
+  creationGuide.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'cg-card' + (c.key ? ' key' : '');
+    card.innerHTML = `
+      <div class="cg-head"><span class="cg-tag">${c.tag}</span><span class="cg-title">${c.title}</span><span class="cg-chev">▾</span></div>
+      <div class="cg-body"><div class="cg-body-inner">${c.body}</div></div>`;
+    card.querySelector('.cg-head').addEventListener('click', () => card.classList.toggle('open'));
+    creationEl.appendChild(card);
+  });
+
+  // Gotchas accordion
+  const gotchas = [
+    {q:"Codespace staleness", a:"Creating a Codespace before adding a file to the repo means it won't see that file until rebuilt (Ctrl+Shift+P → Rebuild Container) or recreated."},
+    {q:"Save vs push — the one that causes most confusion", a:"Ctrl+S only saves to the Codespace's own disk — it does NOT push to GitHub. Only commit + push updates the repo. A new Codespace always pulls from GitHub's last-pushed state, so an unpushed fix is lost if that Codespace gets deleted."},
+    {q:"If git push hangs", a:"Bypass the Codespace entirely — paste the file content into github.com's own web editor and commit there instead. It uses the browser's own connection rather than whatever's blocking the Codespace's git path."},
+    {q:"If Nova is too restrictive for one student", a:"Only affects that student — each has their own repo. Rename their .github/copilot-instructions.md on github.com, rebuild their Codespace, and Copilot reverts to normal for them only."},
+    {q:"challenge.js is pre-loaded, not created fresh", a:"Asking Copilot Chat to review a cold-pasted loan-calculation snippet sometimes triggered a false 'SQL injection' refusal. Pre-loading it as a real repo file avoids that entirely."},
+  ];
+  const acc = document.getElementById('accordion');
+  gotchas.forEach(g => {
+    const item = document.createElement('div');
+    item.className = 'acc-item';
+    item.innerHTML = `
+      <div class="acc-head"><span class="acc-head-title">${g.q}</span><span class="acc-chevron">▾</span></div>
+      <div class="acc-body"><div class="acc-body-inner">${g.a}</div></div>`;
+    item.querySelector('.acc-head').addEventListener('click', () => item.classList.toggle('open'));
+    acc.appendChild(item);
+  });
+
+  // Checklist
+  const checks = [
+    "Check the Copilot billing/limits situation for student accounts — the 50 chat-messages/month cap on personal Free accounts is the one that could actually break the day",
+    "Do one fresh click-through of the real Copilot Chat / Agent interface in VS Code — the UI has moved on since this was built",
+    "Re-verify: upload the current copilot-instructions.md + challenge.js to a test repo, confirm the References list shows the instructions file",
+    "Confirm Agent mode makes one fix then stops, rather than refusing or fixing everything at once",
+    "Print or open: Master Script, Timed Agenda (clock version), Troubleshooting Card, Roster, Preflight Checklist",
+    "Decide what to do with build-phase-guide.html — fix, retire, or ignore",
+  ];
+  const checklistEl = document.getElementById('checklistItems');
+  checks.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'check-item';
+    item.innerHTML = `<div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M4 12l6 6L20 6"/></svg></div><div class="check-text">${c}</div>`;
+    item.addEventListener('click', () => item.classList.toggle('checked'));
+    checklistEl.appendChild(item);
+  });
+
+  // Scroll-spy nav
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section');
+  const progressFill = document.getElementById('progressFill');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const match = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progressFill.style.width = pct + '%';
+  });
+</script>
+</body>
+</html>

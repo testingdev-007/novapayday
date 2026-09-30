@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Progress Tracker (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--amber:#B45F06;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;padding:32px 0 80px}
+.page{max-width:900px;margin:0 auto;background:var(--paper);padding:36px 44px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:900px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:16px;border-bottom:3px solid var(--ink);margin-bottom:16px}
+.doc-logo{font-size:1.05em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.5em;font-weight:900;letter-spacing:-0.03em;margin-top:6px}
+.doc-sub{font-size:0.82em;color:var(--muted);margin-top:3px}
+.legend{display:flex;gap:16px;margin:14px 0;font-size:0.8em;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-box{width:14px;height:14px;border:1.5px solid var(--ink);border-radius:3px}
+table{width:100%;border-collapse:collapse;font-size:0.82em;margin-top:8px}
+th{text-align:left;font-size:0.66em;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted);padding:8px 6px;border-bottom:2px solid var(--ink)}
+td{padding:10px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.box{width:16px;height:16px;border:1.5px solid var(--ink);border-radius:3px;display:inline-block}
+.check-col{width:9%;text-align:center}
+.footer-note{text-align:center;font-size:0.78em;color:var(--muted);margin-top:20px;padding-top:14px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:10.5px}.page{box-shadow:none;padding:14px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this tracker</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Build Progress Tracker</div>
+    <div class="doc-sub">Fill in live as you circulate during Feature Creation — one row per group</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-box"></div>Milestone 1 — structure</div>
+    <div class="legend-item"><div class="legend-box"></div>Milestone 2 — working</div>
+    <div class="legend-item"><div class="legend-box"></div>Milestone 3 — polish</div>
+    <div class="legend-item"><div class="legend-box"></div>Tested</div>
+    <div class="legend-item"><div class="legend-box"></div>Demo-ready</div>
+  </div>
+  <table>
+    <thead><tr>
+      <th style="width:18%">Group / Names</th>
+      <th style="width:22%">Feature idea</th>
+      <th class="check-col">M1</th>
+      <th class="check-col">M2</th>
+      <th class="check-col">M3</th>
+      <th class="check-col">Tested</th>
+      <th class="check-col">Ready</th>
+      <th>Notes / needs help with</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="footer-note">A group with nothing ticked by the 2:40 checkpoint is your first stop. A group with everything ticked early is your next junior mentor pair.</div>
+</div>
+<script>
+  let html = '';
+  for (let i = 0; i < 12; i++) {
+    html += `<tr>
+      <td>&nbsp;</td><td>&nbsp;</td>
+      <td style="text-align:center"><div class="box"></div></td>
+      <td style="text-align:center"><div class="box"></div></td>
+      <td style="text-align:center"><div class="box"></div></td>
+      <td style="text-align:center"><div class="box"></div></td>
+      <td style="text-align:center"><div class="box"></div></td>
+      <td>&nbsp;</td>
+    </tr>`;
+  }
+  document.getElementById('rows').innerHTML = html;
+</script>
+</body>
+</html>

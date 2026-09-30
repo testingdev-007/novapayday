@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Test Plan (Printable) — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::as { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 13px; line-height: 1.4; padding: 32px 0 80px; }
+    .page { max-width: 800px; margin: 0 auto; background: var(--paper); padding: 40px 48px; box-shadow: 0 0 0 1px var(--border); }
+    .print-btn { max-width: 800px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    .doc-header { text-align: center; padding-bottom: 16px; border-bottom: 3px solid var(--ink); margin-bottom: 6px; }
+    .doc-logo { font-size: 1.05em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.5em; font-weight: 900; letter-spacing: -0.03em; margin-top: 6px; }
+    .doc-sub { font-size: 0.82em; color: var(--muted); margin-top: 3px; }
+
+    .name-row { display: flex; gap: 20px; margin: 16px 0 20px; font-size: 0.85em; }
+    .name-field { flex: 1; display: flex; align-items: baseline; gap: 8px; }
+    .name-label { font-weight: 700; white-space: nowrap; }
+    .name-line { flex: 1; border-bottom: 1.5px solid var(--ink); min-height: 18px; }
+
+    .target-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .target-chip { flex: 1; text-align: center; border-radius: 6px; padding: 6px; font-size: 0.72em; font-weight: 800; text-transform: uppercase; border: 1.5px solid; }
+    .t-easy { color: var(--green); border-color: var(--green); }
+    .t-med  { color: var(--amber); border-color: var(--amber); }
+    .t-hard { color: var(--red); border-color: var(--red); }
+    .t-str  { color: var(--accent); border-color: var(--accent); }
+
+    /* BUG WORKSHEET ROW */
+    .bug-worksheet { border: 2px solid var(--ink); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; page-break-inside: avoid; }
+    .bw-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bw-num { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85em; flex-shrink: 0; }
+    .bw-checkbox { width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 3px; flex-shrink: 0; }
+    .bw-check-label { font-size: 0.78em; font-weight: 700; color: var(--muted); }
+
+    .bw-meta-row { display: flex; gap: 20px; margin-bottom: 8px; font-size: 0.8em; }
+    .bw-meta-item { display: flex; align-items: center; gap: 6px; }
+    .bw-tiny-box { width: 13px; height: 13px; border: 1.5px solid var(--ink); border-radius: 2px; }
+
+    .bw-field { margin-bottom: 8px; }
+    .bw-field-label { font-size: 0.75em; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+    .bw-lines { border-bottom: 1px solid var(--border); min-height: 16px; }
+    .bw-lines + .bw-lines { margin-top: 10px; }
+
+    .footer-note { text-align: center; font-size: 0.78em; color: var(--muted); margin-top: 24px; padding-top: 14px; border-top: 2px solid var(--ink); line-height: 1.6; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 11px; }
+      .page { box-shadow: none; padding: 14px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+      .bug-worksheet { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print this worksheet</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Bug Test Plan</div>
+      <div class="doc-sub">Fill this in as you find and fix each bug. Bring it to the share-out.</div>
+    </div>
+
+    <div class="name-row">
+      <div class="name-field"><span class="name-label">Name(s):</span><div class="name-line"></div></div>
+      <div class="name-field" style="flex:0.5"><span class="name-label">Date:</span><div class="name-line"></div></div>
+    </div>
+
+    <div class="target-row">
+      <div class="target-chip t-easy">3 Easy</div>
+      <div class="target-chip t-med">3 Medium</div>
+      <div class="target-chip t-hard">3 Hard</div>
+      <div class="target-chip t-str">1 Stretch</div>
+    </div>
+
+    <!-- 10 WORKSHEET ROWS -->
+    <div id="worksheets"></div>
+
+    <div class="footer-note">
+      Stuck on where to look? Ask Nova in Copilot Chat, or check the on-screen bug hunt brief for hints. There are 10 bugs in total, spread across HTML, CSS, and JavaScript.
+    </div>
+
+  </div>
+
+  <script>
+    const container = document.getElementById('worksheets');
+    let html = '';
+    for (let i = 1; i <= 10; i++) {
+      html += `
+        <div class="bug-worksheet">
+          <div class="bw-head">
+            <div class="bw-num">${i}</div>
+            <div class="bw-checkbox"></div>
+            <div class="bw-check-label">Fixed &amp; tested — it works now</div>
+          </div>
+          <div class="bw-meta-row">
+            <div class="bw-meta-item"><div class="bw-tiny-box"></div>HTML</div>
+            <div class="bw-meta-item"><div class="bw-tiny-box"></div>CSS</div>
+            <div class="bw-meta-item"><div class="bw-tiny-box"></div>JavaScript</div>
+            <div style="margin-left:auto;color:var(--muted)">Difficulty: ______________</div>
+          </div>
+          <div class="bw-field">
+            <div class="bw-field-label">What was wrong?</div>
+            <div class="bw-lines"></div>
+            <div class="bw-lines"></div>
+          </div>
+          <div class="bw-field">
+            <div class="bw-field-label">How did you find it?</div>
+            <div class="bw-lines"></div>
+          </div>
+          <div class="bw-field">
+            <div class="bw-field-label">What did you change to fix it?</div>
+            <div class="bw-lines"></div>
+            <div class="bw-lines"></div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  </script>
+
+</body>
+</html>

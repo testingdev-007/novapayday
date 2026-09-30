@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Test Plan (Printable) — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 13px; line-height: 1.4; padding: 32px 0 80px; }
+    .page { max-width: 800px; margin: 0 auto; background: var(--paper); padding: 40px 48px; box-shadow: 0 0 0 1px var(--border); }
+    .print-btn { max-width: 800px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    .doc-header { text-align: center; padding-bottom: 16px; border-bottom: 3px solid var(--ink); margin-bottom: 6px; }
+    .doc-logo { font-size: 1.05em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.5em; font-weight: 900; letter-spacing: -0.03em; margin-top: 6px; }
+    .doc-sub { font-size: 0.82em; color: var(--muted); margin-top: 3px; }
+
+    .name-row { display: flex; gap: 20px; margin: 16px 0 20px; font-size: 0.85em; }
+    .name-field { flex: 1; display: flex; align-items: baseline; gap: 8px; }
+    .name-label { font-weight: 700; white-space: nowrap; }
+    .name-line { flex: 1; border-bottom: 1.5px solid var(--ink); min-height: 18px; }
+
+    .idea-box { background: var(--shade); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 0.82em; line-height: 1.6; }
+    .idea-title { font-weight: 700; margin-bottom: 4px; }
+
+    /* TEST ROW */
+    .test-worksheet { border: 2px solid var(--ink); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; page-break-inside: avoid; }
+    .tw-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tw-num { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85em; flex-shrink: 0; }
+    .tw-result { margin-left: auto; display: flex; gap: 14px; font-size: 0.78em; }
+    .tw-result-item { display: flex; align-items: center; gap: 5px; }
+    .tw-checkbox { width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 3px; }
+
+    .tw-field { margin-bottom: 8px; }
+    .tw-field-label { font-size: 0.75em; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+    .tw-lines { border-bottom: 1px solid var(--border); min-height: 16px; }
+    .tw-field-row { display: flex; gap: 20px; }
+    .tw-field-row > div { flex: 1; }
+
+    /* READY CHECKLIST */
+    .ready-box { border: 2px solid var(--green); border-radius: 8px; padding: 16px 20px; margin-top: 16px; }
+    .ready-title { font-weight: 800; font-size: 0.95em; margin-bottom: 10px; color: var(--green); }
+    .ready-item { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 0.85em; }
+    .ready-box-item { width: 15px; height: 15px; border: 1.5px solid var(--ink); border-radius: 3px; flex-shrink: 0; }
+
+    .footer-note { text-align: center; font-size: 0.78em; color: var(--muted); margin-top: 20px; padding-top: 14px; border-top: 2px solid var(--ink); line-height: 1.6; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 11px; }
+      .page { box-shadow: none; padding: 14px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print this worksheet</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Feature Test Plan</div>
+      <div class="doc-sub">Prove your feature works before you demo it. Try to break it on purpose.</div>
+    </div>
+
+    <div class="name-row">
+      <div class="name-field"><span class="name-label">Feature:</span><div class="name-line"></div></div>
+      <div class="name-field" style="flex:0.6"><span class="name-label">Name(s):</span><div class="name-line"></div></div>
+    </div>
+
+    <div class="idea-box">
+      <div class="idea-title">💡 Test ideas — pick at least 3</div>
+      Leave every field empty and click the button &nbsp;·&nbsp; Enter a negative number &nbsp;·&nbsp; Enter a decimal &nbsp;·&nbsp; Enter a huge number &nbsp;·&nbsp; Enter letters instead of numbers &nbsp;·&nbsp; A value where the goal is already met &nbsp;·&nbsp; Click the button twice
+    </div>
+
+    <div id="worksheets"></div>
+
+    <div class="ready-box">
+      <div class="ready-title">🚀 Ready to demo?</div>
+      <div class="ready-item"><div class="ready-box-item"></div>No red errors in the console (press F12 to check)</div>
+      <div class="ready-item"><div class="ready-box-item"></div>Tested with real, sensible numbers — not just placeholders</div>
+      <div class="ready-item"><div class="ready-box-item"></div>Tested at least one edge case from the ideas above</div>
+      <div class="ready-item"><div class="ready-box-item"></div>I can explain every line of code I've written</div>
+      <div class="ready-item"><div class="ready-box-item"></div>I've run through my demo once, start to finish</div>
+    </div>
+
+    <div class="footer-note">
+      Found a bug in your own feature while testing? That's a good thing — fix it now, before the demo, not during it.
+    </div>
+
+  </div>
+
+  <script>
+    const container = document.getElementById('worksheets');
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      html += `
+        <div class="test-worksheet">
+          <div class="tw-head">
+            <div class="tw-num">${i}</div>
+            <div style="font-weight:700;font-size:0.85em">Test case ${i}</div>
+            <div class="tw-result">
+              <div class="tw-result-item"><div class="tw-checkbox"></div>Works</div>
+              <div class="tw-result-item"><div class="tw-checkbox"></div>Problem found</div>
+            </div>
+          </div>
+          <div class="tw-field">
+            <div class="tw-field-label">What are you testing?</div>
+            <div class="tw-lines"></div>
+          </div>
+          <div class="tw-field-row">
+            <div class="tw-field">
+              <div class="tw-field-label">What you expected</div>
+              <div class="tw-lines"></div>
+            </div>
+            <div class="tw-field">
+              <div class="tw-field-label">What actually happened</div>
+              <div class="tw-lines"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  </script>
+
+</body>
+</html>

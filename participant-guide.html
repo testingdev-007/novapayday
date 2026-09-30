@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F2F4FA;
+      --white:   #FFFFFF;
+      --border:  #E2E6F0;
+      --accent:  #6C63FF;
+      --accent-light: #EEEEFF;
+      --green:   #00A878;
+      --green-light: #E6F7F2;
+      --amber:   #D4830A;
+      --amber-light: #FEF3E2;
+      --text:    #0D0F1C;
+      --muted:   #6B7280;
+      --step-bg: #FAFBFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: white;
+      border-bottom: 2px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo { font-size: 1.15em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--text); }
+
+    .header-badge {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .page-title {
+      font-size: 2.2em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .page-desc {
+      font-size: 1em;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── PHASE BLOCK ── */
+    .phase {
+      margin-bottom: 48px;
+    }
+
+    .phase-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .phase-icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3em;
+      flex-shrink: 0;
+    }
+
+    .phase-title { font-size: 1.15em; font-weight: 800; letter-spacing: -0.03em; }
+    .phase-sub { font-size: 0.82em; color: var(--muted); margin-top: 2px; }
+
+    /* ── STEP CARDS ── */
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+
+    .step {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1em; font-weight: 800;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .step-content { flex: 1; }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 1em;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .step-body {
+      font-size: 0.88em;
+      color: #374151;
+      line-height: 1.65;
+    }
+
+    .step-body p + p { margin-top: 8px; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+
+    .url-box {
+      background: var(--step-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 10px;
+      word-break: break-all;
+    }
+
+    .tip {
+      margin-top: 12px;
+      background: var(--green-light);
+      border: 1px solid #B7E8D8;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.83em;
+      color: #065F46;
+      line-height: 1.55;
+      display: flex;
+      gap: 8px;
+    }
+
+    .tip-icon { flex-shrink: 0; font-size: 1em; }
+
+    .warn {
+      margin-top: 12px;
+      background: var(--amber-light);
+      border: 1px solid #F6D28A;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.83em;
+      color: #78350F;
+      line-height: 1.55;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ── CLICK PATH ── */
+    .click-path {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .click {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-size: 0.83em;
+      font-weight: 600;
+    }
+
+    .arrow { color: var(--muted); font-size: 0.9em; }
+
+    /* ── COPILOT PROMPTS ── */
+    .prompt-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+
+    .prompt {
+      background: #F5F4FF;
+      border: 1px solid #D4D0FF;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85em;
+      color: #3730A3;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .prompt::before { content: '"'; }
+    .prompt::after  { content: '"'; }
+
+    /* ── SUMMARY STRIP ── */
+    .summary-strip {
+      background: var(--accent);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .summary-icon { font-size: 2em; flex-shrink: 0; }
+
+    .summary-title {
+      font-size: 1.05em;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .summary-desc {
+      font-size: 0.85em;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 40px 0 32px;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1.5px;
+      background: var(--border);
+    }
+
+    .section-divider-label {
+      font-size: 0.7em;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="header-badge">🐛 Workshop Guide</div>
+  </header>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-title">Let's get you set up</div>
+      <div class="page-desc">Follow these steps in order and you'll be fixing bugs in about 5 minutes.</div>
+    </div>
+
+    <!-- ── PHASE 1: GITHUB ACCOUNT ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#EEF2FF">👤</div>
+        <div>
+          <div class="phase-title">Step 1 — Create a GitHub account</div>
+          <div class="phase-sub">Skip this if you already have one — just sign in</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#EEF2FF;color:var(--accent)">1</div>
+          <div class="step-content">
+            <div class="step-title">Go to github.com and sign up</div>
+            <div class="step-body">
+              <p>Go to <code>github.com</code> → click <strong>Sign up</strong>. Enter an email address, create a password, choose a username.</p>
+              <p>Check your email — GitHub will send a verification code. Enter it to confirm your account.</p>
+              <div class="tip"><span class="tip-icon">✅</span><span>If you already have a GitHub account, just sign in and go to Step 2.</span></div>
+              <div class="tip" style="margin-top:8px"><span class="tip-icon">🤖</span><span>Copilot usually just switches on automatically once your account exists — nothing else to do. If your facilitator tells you to check your email for an org invite first, accept that before moving on.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Then</div></div>
+
+    <!-- ── PHASE 2: GET THE REPO ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#E6F7F2">📁</div>
+        <div>
+          <div class="phase-title">Step 2 — Get your own copy of the code</div>
+          <div class="phase-sub">You'll have your own workspace to break and fix freely</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#E6F7F2;color:var(--green)">2</div>
+          <div class="step-content">
+            <div class="step-title">Go to the workshop repo</div>
+            <div class="step-body">
+              <p>Type this URL into your browser — or click the link your facilitator puts on screen:</p>
+              <div class="url-box">github.com/[FACILITATOR-USERNAME]/novapay-workshop</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num" style="background:#E6F7F2;color:var(--green)">3</div>
+          <div class="step-content">
+            <div class="step-title">Make your own copy</div>
+            <div class="step-body">
+              <p>On the repo page, click the green <strong>Use this template</strong> button → then <strong>Create a new repository</strong>.</p>
+              <div class="click-path">
+                <span class="click">Use this template</span>
+                <span class="arrow">→</span>
+                <span class="click">Create a new repository</span>
+              </div>
+              <p style="margin-top:10px">Give it any name — something like <code>my-novapay</code> is fine. Make sure it's set to <strong>Public</strong>. Click <strong>Create repository</strong>.</p>
+              <div class="tip"><span class="tip-icon">💡</span><span>This is now your own personal copy. Nobody else can change your code, and you can't break anyone else's.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Then</div></div>
+
+    <!-- ── PHASE 3: OPEN CODESPACE ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#FEF3E2">💻</div>
+        <div>
+          <div class="phase-title">Step 3 — Open your coding environment</div>
+          <div class="phase-sub">This opens VS Code in your browser — no installs needed</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#FEF3E2;color:var(--amber)">4</div>
+          <div class="step-content">
+            <div class="step-title">Open a Codespace</div>
+            <div class="step-body">
+              <p>On your new repo page, click the green <strong>Code</strong> button → click the <strong>Codespaces</strong> tab → click <strong>Create codespace on main</strong>.</p>
+              <div class="click-path">
+                <span class="click">Code ▾</span>
+                <span class="arrow">→</span>
+                <span class="click">Codespaces tab</span>
+                <span class="arrow">→</span>
+                <span class="click">Create codespace on main</span>
+              </div>
+              <p style="margin-top:10px">A new tab will open and start loading. This takes <strong>1–2 minutes</strong> the first time — it's setting everything up for you in the background.</p>
+              <div class="warn"><span>⏳</span><span>Don't close the tab while it's loading. Just wait — it will finish.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num" style="background:#FEF3E2;color:var(--amber)">5</div>
+          <div class="step-content">
+            <div class="step-title">Wait for it to finish setting up</div>
+            <div class="step-body">
+              <p>When it's ready, you'll see a code editor in your browser that looks like this:</p>
+              <ul style="margin: 10px 0 0 16px; font-size:0.87em; color:#374151; line-height:1.8">
+                <li>A file panel on the <strong>left</strong> showing <code>bank-dashboard.html</code></li>
+                <li>A large empty editing area in the <strong>middle</strong></li>
+                <li>A row of icons down the very left edge</li>
+              </ul>
+              <div class="tip"><span class="tip-icon">✅</span><span>If you see "Extensions installing…" at the bottom — that's fine, just wait another 30 seconds and it'll finish.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Then</div></div>
+
+    <!-- ── PHASE 4: PREVIEW ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#EEF2FF">🌐</div>
+        <div>
+          <div class="phase-title">Step 4 — Open the NovaPay dashboard</div>
+          <div class="phase-sub">Preview the page you're about to fix</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#EEF2FF;color:var(--accent)">6</div>
+          <div class="step-content">
+            <div class="step-title">Open the dashboard in Live Server</div>
+            <div class="step-body">
+              <p>In the file panel on the left, <strong>right-click</strong> on <code>bank-dashboard.html</code> → click <strong>Open with Live Server</strong>.</p>
+              <div class="click-path">
+                <span class="click">Right-click bank-dashboard.html</span>
+                <span class="arrow">→</span>
+                <span class="click">Open with Live Server</span>
+              </div>
+              <p style="margin-top:10px">A new browser tab will open showing the NovaPay dashboard. Keep both tabs open — the code editor and the preview.</p>
+              <div class="tip"><span class="tip-icon">💡</span><span>Live Server means the preview updates automatically every time you save a change. You'll see your fixes appear instantly.</span></div>
+              <div class="warn" style="margin-top:8px"><span>👀</span><span>Don't see "Open with Live Server"? Wait 30 seconds — the extension is still installing. Then try right-clicking again.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Then</div></div>
+
+    <!-- ── PHASE 5: COPILOT ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#EEF2FF">🤖</div>
+        <div>
+          <div class="phase-title">Step 5 — Open Copilot Chat</div>
+          <div class="phase-sub">Your AI coding assistant — use it throughout the bug hunt</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#EEF2FF;color:var(--accent)">7</div>
+          <div class="step-content">
+            <div class="step-title">Open the Copilot panel</div>
+            <div class="step-body">
+              <p>Look at the row of icons on the very left edge of the editor. Click the <strong>Copilot icon</strong> — it looks like the GitHub Copilot logo (two diagonal lines forming a shape). The chat panel will open on the right.</p>
+              <p style="margin-top:8px">Alternatively, press <code>Ctrl+Shift+I</code> on Windows or <code>Cmd+Shift+I</code> on Mac.</p>
+              <div class="tip"><span class="tip-icon">✅</span><span>Type "hello" in the chat box and press Enter to confirm it responds. If it does, you're fully set up.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num" style="background:#EEF2FF;color:var(--accent)">8</div>
+          <div class="step-content">
+            <div class="step-title">How to use Copilot during the bug hunt</div>
+            <div class="step-body">
+              <p>You can ask Copilot anything in plain English. Here are some prompts that work well:</p>
+              <div class="prompt-list">
+                <div class="prompt">Are there any bugs in this code?</div>
+                <div class="prompt">I clicked this button and nothing happened — what could cause that?</div>
+                <div class="prompt">What does this function do?</div>
+                <div class="prompt">Why might a number show up as NaN instead of a value?</div>
+                <div class="prompt">How do I check if two IDs used in different places actually match?</div>
+                <div class="prompt">Can you explain this CSS rule to me?</div>
+              </div>
+              <div class="tip" style="margin-top:12px"><span class="tip-icon">💡</span><span>The more specific your question, the better the answer. "Why isn't the balance visible?" gets a much better response than "fix everything".</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Now</div></div>
+
+    <!-- ── PHASE 6: START ── -->
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-icon" style="background:#E6F7F2">🐛</div>
+        <div>
+          <div class="phase-title">Step 6 — Start the bug hunt</div>
+          <div class="phase-sub">You're ready. Here's what to do.</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#E6F7F2;color:var(--green)">9</div>
+          <div class="step-content">
+            <div class="step-title">Find bugs, fix them, write them down</div>
+            <div class="step-body">
+              <p><strong>First, everyone does one together.</strong> Your facilitator will walk through a made-up example bug as a class — this teaches you the exact method before you touch the real dashboard. Follow along at <code>how-to-find-fix-bugs.html</code>.</p>
+              <p style="margin-top:8px"><strong>Then you're on your own.</strong> The NovaPay dashboard has <strong>10 bugs</strong> hidden across the HTML, CSS, and JavaScript. Some you can spot just by looking at the page. Others you'll only find by using it. Some are in the code.</p>
+              <p style="margin-top:8px">For every bug you find, write down three things:</p>
+              <ul style="margin: 10px 0 0 18px; line-height: 2; font-size:0.9em">
+                <li>What was <strong>wrong</strong></li>
+                <li>How you <strong>found it</strong></li>
+                <li>What you <strong>changed</strong> to fix it</li>
+              </ul>
+              <div class="tip" style="margin-top:12px"><span class="tip-icon">📝</span><span>Use the <strong>Bug Test Plan</strong> to log these — open it in a new tab alongside your Codespace. It saves automatically as you type.</span></div>
+              <div class="tip" style="margin-top:8px"><span class="tip-icon">🔍</span><span>Start by just looking at the page preview. Something should look obviously wrong before you even touch the code.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num" style="background:#E6F7F2;color:var(--green)">10</div>
+          <div class="step-content">
+            <div class="step-title">How to make a fix and see it work</div>
+            <div class="step-body">
+              <p>Click on <code>bank-dashboard.html</code> in the file panel to open the code. Find the bug, change it, then save with <code>Ctrl+S</code> (or <code>Cmd+S</code> on Mac).</p>
+              <p style="margin-top:8px">Switch back to the preview tab — because of Live Server, the page will refresh automatically and you'll see if your fix worked.</p>
+              <div class="tip"><span class="tip-icon">🖥️</span><span>Press <strong>F12</strong> to open the browser console. If something's broken in the JavaScript, you'll see a red error message in there — it's a useful clue.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUMMARY ── -->
+    <div class="summary-strip">
+      <div class="summary-icon">🚀</div>
+      <div>
+        <div class="summary-title">You're all set. Good luck.</div>
+        <div class="summary-desc">There are 10 bugs. 3 are easy, 3 are medium, 3 are hard, and 1 is a stretch. At the end you'll explain what you found to the group — so make sure you understand each fix, not just the code.</div>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

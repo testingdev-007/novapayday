@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timed Agenda (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--blue:#1D6FA8;--amber:#B45F06;--red:#C0293D;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;line-height:1.4;padding:32px 0 80px}
+.page{max-width:760px;margin:0 auto;background:var(--paper);padding:40px 48px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:760px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:16px;border-bottom:3px solid var(--ink);margin-bottom:20px}
+.doc-logo{font-size:1.05em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.6em;font-weight:900;letter-spacing:-0.03em;margin-top:6px}
+.doc-sub{font-size:0.85em;color:var(--muted);margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:0.87em}
+th{text-align:left;font-size:0.68em;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--ink)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.time-cell{font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap}
+.hour-divider td{background:var(--ink);color:white;font-weight:800;padding:6px 10px;font-size:0.78em;text-transform:uppercase;letter-spacing:0.05em}
+.footer-note{text-align:center;font-size:0.8em;color:var(--muted);margin-top:20px;padding-top:14px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:11px}.page{box-shadow:none;padding:16px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this agenda</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Timed Agenda</div>
+    <div class="doc-sub">One page, one glance, the whole day. Tape this to your laptop lid if it helps.</div>
+  </div>
+
+  <table>
+    <tr class="hour-divider"><td colspan="2">🐛 Hour 1 — Bug Hunt</td></tr>
+    <tr><td class="time-cell">0:00–0:15</td><td>Welcome, intros, Codespaces open</td></tr>
+    <tr><td class="time-cell">0:15–0:30</td><td>Copilot demo — completions + Chat</td></tr>
+    <tr><td class="time-cell">0:30–0:40</td><td>Bug tutorial — worked example, everyone together</td></tr>
+    <tr><td class="time-cell">0:40–1:00</td><td>Independent bug hunt — the real 10 bugs</td></tr>
+    <tr><td class="time-cell">1:00–1:05</td><td>Share out</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">⚡ Level Up</td></tr>
+    <tr><td class="time-cell">1:05–1:13</td><td>The reveal + GitHub/Codespaces concepts</td></tr>
+    <tr><td class="time-cell">1:13–1:20</td><td>Round 1 — Fix the Bug (challenge.js pre-loaded)</td></tr>
+    <tr><td class="time-cell">1:20–1:23</td><td>Round 1 recap — why it was broken</td></tr>
+    <tr><td class="time-cell">1:23–1:26</td><td>Round 2 — Comment Race</td></tr>
+    <tr><td class="time-cell">1:26–1:29</td><td>Round 3 — Best Prompt</td></tr>
+    <tr><td class="time-cell">1:29–1:35</td><td>Golden rules + bridge to build</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">☕ Comfort Break</td></tr>
+    <tr><td class="time-cell">1:35–1:50</td><td>Comfort break — 15 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">🏗️ Build, Part 1 — Tutorial, Brainstorm &amp; Plan</td></tr>
+    <tr><td class="time-cell">1:50–2:10</td><td>Feature tutorial — everyone builds Savings Tracker together, from scratch</td></tr>
+    <tr><td class="time-cell">2:10–2:25</td><td>Brainstorm — their own idea (not the tracker)</td></tr>
+    <tr><td class="time-cell">2:25–2:35</td><td>Plan on paper — 4 questions</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">🍽️ Lunch &amp; Accessibility</td></tr>
+    <tr><td class="time-cell">2:35–3:05</td><td>Lunch — accessibility activities happen during this time</td></tr>
+    <tr><td class="time-cell">3:05–3:10</td><td>Accessibility discussion — incorporate learnings before building starts</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">🏗️ Build — Feature Creation</td></tr>
+    <tr><td class="time-cell">3:10–4:35</td><td>Feature creation — structure, logic, styling and testing all in one block (85 min)</td></tr>
+
+    <tr class="hour-divider"><td colspan="2">✅ Show &amp; Feedback</td></tr>
+    <tr><td class="time-cell">4:35–4:50</td><td>Show &amp; tell — demos</td></tr>
+    <tr><td class="time-cell">4:50–5:00</td><td>Feedback — quick round, close</td></tr>
+  </table>
+
+  <div class="footer-note">Full detail, scripted lines, and hints for every one of these rows are in the Master Script.</div>
+</div>
+</body>
+</html>

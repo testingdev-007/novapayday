@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Agenda — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D; --blue: #1D6FA8;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+      --green-bg: #E9F7F1; --blue-bg: #EAF3FA; --amber-bg: #FEF6E7; --red-bg: #FDECEF;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 14px; line-height: 1.5; padding: 32px 0 80px; }
+    .page { max-width: 780px; margin: 0 auto; background: var(--paper); padding: 40px 48px; box-shadow: 0 0 0 1px var(--border); }
+    .print-btn { max-width: 780px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    .doc-header { text-align: center; padding-bottom: 20px; border-bottom: 3px solid var(--ink); margin-bottom: 24px; }
+    .doc-logo { font-size: 1.1em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.7em; font-weight: 900; letter-spacing: -0.03em; margin-top: 8px; }
+    .doc-sub { font-size: 0.88em; color: var(--muted); margin-top: 4px; }
+
+    /* AGENDA ROW */
+    .agenda-row { display: flex; gap: 18px; padding: 20px 0; border-bottom: 1.5px solid var(--border); page-break-inside: avoid; }
+    .agenda-row:last-of-type { border-bottom: none; }
+
+    .agenda-time-col { width: 90px; flex-shrink: 0; text-align: right; }
+    .agenda-time { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; font-weight: 800; }
+    .agenda-dur { font-size: 0.72em; color: var(--muted); margin-top: 2px; }
+
+    .agenda-line { width: 4px; border-radius: 2px; flex-shrink: 0; }
+
+    .agenda-content { flex: 1; }
+    .agenda-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .agenda-icon { font-size: 1.3em; }
+    .agenda-title { font-size: 1.1em; font-weight: 800; letter-spacing: -0.02em; }
+    .agenda-desc { font-size: 0.88em; color: #374151; line-height: 1.55; margin-bottom: 8px; }
+
+    .agenda-open { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78em; font-weight: 700; padding: 4px 12px; border-radius: 100px; }
+    .open-green { background: var(--green-bg); color: var(--green); }
+    .open-blue  { background: var(--blue-bg);  color: var(--blue);  }
+    .open-amber { background: var(--amber-bg); color: var(--amber); }
+    .open-red   { background: var(--red-bg);   color: var(--red);   }
+
+    .agenda-note { font-size: 0.8em; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+    /* NOVA REMINDER */
+    .nova-box { background: var(--shade); border: 1.5px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 24px; font-size: 0.86em; line-height: 1.6; }
+    .nova-box strong { color: var(--accent); }
+
+    .footer-note { text-align: center; font-size: 0.82em; color: var(--muted); margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--ink); line-height: 1.6; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 12px; }
+      .page { box-shadow: none; padding: 16px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print today's agenda</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Today's Agenda</div>
+      <div class="doc-sub">Everything that's happening today, and where to find it.</div>
+    </div>
+
+    <!-- WELCOME -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">0:00</div>
+        <div class="agenda-dur">15 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--green)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">👋</span><span class="agenda-title">Welcome</span></div>
+        <div class="agenda-desc">Intros, getting into your Codespace, ice breaker. Grab a seat, get set up.</div>
+      </div>
+    </div>
+
+    <!-- COPILOT DEMO -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">0:15</div>
+        <div class="agenda-dur">15 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--green)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🤖</span><span class="agenda-title">Copilot Demo</span></div>
+        <div class="agenda-desc">A quick live look at what Copilot can do — inline suggestions and chatting with it directly.</div>
+      </div>
+    </div>
+
+    <!-- BUG TUTORIAL -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">0:30</div>
+        <div class="agenda-dur">10 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--green)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">👣</span><span class="agenda-title">Bug Tutorial — everyone together</span></div>
+        <div class="agenda-desc">Before touching the real dashboard, everyone follows the same click-by-click walkthrough — a made-up example bug, so you learn the method without any spoilers.</div>
+        <span class="agenda-open open-green">Open: how-to-find-fix-bugs.html</span>
+      </div>
+    </div>
+
+    <!-- BUG HUNT -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">0:40</div>
+        <div class="agenda-dur">20 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--green)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🐛</span><span class="agenda-title">Bug Hunt — on your own</span></div>
+        <div class="agenda-desc">Now use the exact same method on the real NovaPay dashboard. 10 bugs are hiding in it — some obvious, some tricky. Find them, fix them, and log what you did.</div>
+        <span class="agenda-open open-green">Open: bug-hunt-screen.html + bug-test-plan.html</span>
+      </div>
+    </div>
+
+    <!-- LEVEL UP -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">1:05</div>
+        <div class="agenda-dur">30 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--blue)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">⚡</span><span class="agenda-title">Level Up</span></div>
+        <div class="agenda-desc">Three fast challenge rounds to sharpen your Copilot skills before the main build: fix a broken function, a comment race, and a best-prompt contest.</div>
+        <span class="agenda-open open-blue">Open: level-up-screen.html</span>
+      </div>
+    </div>
+
+    <!-- COMFORT BREAK -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">1:35</div>
+        <div class="agenda-dur">15 min</div>
+      </div>
+      <div class="agenda-line" style="background:#00875F"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">☕</span><span class="agenda-title">Comfort Break</span></div>
+        <div class="agenda-desc">Toilets, water, stretch your legs. Back at it in 15 minutes.</div>
+      </div>
+    </div>
+
+    <!-- FEATURE TUTORIAL -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">1:50</div>
+        <div class="agenda-dur">20 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--amber)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">👣</span><span class="agenda-title">Feature Tutorial — everyone together</span></div>
+        <div class="agenda-desc">Before brainstorming your own idea, everyone builds the same Savings Goal Tracker from an empty file — every technique you'll need for your own feature, demonstrated step by step.</div>
+        <span class="agenda-open open-amber">Open: how-to-build-your-feature.html</span>
+      </div>
+    </div>
+
+    <!-- BRAINSTORM -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">2:10</div>
+        <div class="agenda-dur">15 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--amber)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🧠</span><span class="agenda-title">Brainstorm</span></div>
+        <div class="agenda-desc">Come up with a bank feature idea of your own — a different one from the tutorial.</div>
+        <span class="agenda-open open-amber">Open: brainstorm-screen.html</span>
+        <div class="agenda-note">Stuck for an idea? There's a gallery of back-pocket features to pick from — just not the Savings Tracker, you've already built that one.</div>
+      </div>
+    </div>
+
+    <!-- PLAN -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">2:25</div>
+        <div class="agenda-dur">10 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--amber)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">📝</span><span class="agenda-title">Plan</span></div>
+        <div class="agenda-desc">Sketch it on paper before touching a keyboard — what it does, what it needs, what it shows back.</div>
+      </div>
+    </div>
+
+    <!-- LUNCH -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">2:35</div>
+        <div class="agenda-dur">30 min</div>
+      </div>
+      <div class="agenda-line" style="background:#00875F"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🍽️</span><span class="agenda-title">Lunch</span></div>
+        <div class="agenda-desc">Accessibility activities happen during this time — stick around for those.</div>
+      </div>
+    </div>
+
+    <!-- ACCESSIBILITY DISCUSSION -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">3:05</div>
+        <div class="agenda-dur">5 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--blue)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">♿</span><span class="agenda-title">Accessibility Discussion</span></div>
+        <div class="agenda-desc">Quick group chat — does anything from the lunch activities change how you'd want your feature to work for everyone?</div>
+      </div>
+    </div>
+
+    <!-- FEATURE CREATION -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">3:10</div>
+        <div class="agenda-dur">85 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--red)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🏗️</span><span class="agenda-title">Feature Creation</span></div>
+        <div class="agenda-desc">Turn your plan into a real, working feature using Copilot — comment, generate, test, repeat. Structure, styling, and testing all happen in this one block, so build in your own time and try to break your feature on purpose near the end, before showing anyone.</div>
+        <span class="agenda-open open-red">Open: milestone-screen.html</span>
+      </div>
+    </div>
+
+    <!-- SHOW AND TELL -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">4:35</div>
+        <div class="agenda-dur">15 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--ink)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">🎤</span><span class="agenda-title">Show &amp; Tell</span></div>
+        <div class="agenda-desc">Show your feature to the room. 2 minutes each: what it does, one way Copilot or Nova helped, one thing you'd add with more time.</div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="agenda-row">
+      <div class="agenda-time-col">
+        <div class="agenda-time">4:50</div>
+        <div class="agenda-dur">10 min</div>
+      </div>
+      <div class="agenda-line" style="background:var(--ink)"></div>
+      <div class="agenda-content">
+        <div class="agenda-title-row"><span class="agenda-icon">💬</span><span class="agenda-title">Feedback</span></div>
+        <div class="agenda-desc">A quick round before you head off — what worked, what you'd change.</div>
+      </div>
+    </div>
+
+    <div class="nova-box">
+      <strong>Stuck at any point?</strong> Open Copilot Chat — that's Nova, your AI mentor for the whole day. It'll nudge you with hints during the Bug Hunt, and build things with you properly during the Build phase. If Nova can't help, put your hand up.
+    </div>
+
+    <div class="footer-note">
+      All the files above are linked from the <strong>Student Hub</strong> if you'd rather click than type filenames.
+    </div>
+
+  </div>
+</body>
+</html>

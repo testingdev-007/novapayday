@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timed Agenda — Real Clock Times — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--blue:#1D6FA8;--amber:#B45F06;--red:#C0293D;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;line-height:1.4;padding:32px 0 80px}
+.page{max-width:760px;margin:0 auto;background:var(--paper);padding:40px 48px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:760px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:16px;border-bottom:3px solid var(--ink);margin-bottom:8px}
+.doc-logo{font-size:1.05em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.6em;font-weight:900;letter-spacing:-0.03em;margin-top:6px}
+.doc-sub{font-size:0.85em;color:var(--muted);margin-top:3px}
+.start-banner{background:var(--ink);color:white;text-align:center;padding:10px;border-radius:8px;margin:16px 0 20px;font-size:0.9em;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:0.87em}
+th{text-align:left;font-size:0.68em;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--ink)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.time-cell{font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap;color:var(--accent)}
+.dur-cell{font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--muted);white-space:nowrap}
+.hour-divider td{background:var(--ink);color:white;font-weight:800;padding:6px 10px;font-size:0.78em;text-transform:uppercase;letter-spacing:0.05em}
+.footer-note{text-align:center;font-size:0.8em;color:var(--muted);margin-top:20px;padding-top:14px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:11px}.page{box-shadow:none;padding:16px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this agenda</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Timed Agenda — Real Clock Times</div>
+    <div class="doc-sub">Same as the Timed Agenda, but converted so there's zero mental maths</div>
+  </div>
+
+  <div class="start-banner">Session starts 9:30am — every time below is the actual clock time</div>
+
+  <table>
+    <tr class="hour-divider"><td colspan="3">🐛 Bug Hunt</td></tr>
+    <tr><td class="time-cell">9:30am</td><td>Welcome, intros, Codespaces open</td><td class="dur-cell">15 min</td></tr>
+    <tr><td class="time-cell">9:45am</td><td>Copilot demo — completions + Chat</td><td class="dur-cell">15 min</td></tr>
+    <tr><td class="time-cell">10:00am</td><td>Bug tutorial — worked example, everyone together</td><td class="dur-cell">10 min</td></tr>
+    <tr><td class="time-cell">10:10am</td><td>Independent bug hunt — the real 10 bugs</td><td class="dur-cell">20 min</td></tr>
+    <tr><td class="time-cell">10:30am</td><td>Share out</td><td class="dur-cell">5 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">⚡ Level Up</td></tr>
+    <tr><td class="time-cell">10:35am</td><td>The reveal + GitHub/Codespaces concepts</td><td class="dur-cell">8 min</td></tr>
+    <tr><td class="time-cell">10:43am</td><td>Round 1 — Fix the Bug (challenge.js pre-loaded)</td><td class="dur-cell">7 min</td></tr>
+    <tr><td class="time-cell">10:50am</td><td>Round 1 recap</td><td class="dur-cell">3 min</td></tr>
+    <tr><td class="time-cell">10:53am</td><td>Round 2 — Comment Race</td><td class="dur-cell">3 min</td></tr>
+    <tr><td class="time-cell">10:56am</td><td>Round 3 — Best Prompt</td><td class="dur-cell">3 min</td></tr>
+    <tr><td class="time-cell">10:59am</td><td>Golden rules + bridge to build</td><td class="dur-cell">6 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">☕ Comfort Break</td></tr>
+    <tr><td class="time-cell">11:05am</td><td><strong>Comfort break</strong></td><td class="dur-cell">15 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">🏗️ Build, Part 1 — Tutorial, Brainstorm &amp; Plan</td></tr>
+    <tr><td class="time-cell">11:20am</td><td>Feature tutorial — everyone builds Savings Tracker together, from scratch</td><td class="dur-cell">20 min</td></tr>
+    <tr><td class="time-cell">11:40am</td><td>Brainstorm — their own idea</td><td class="dur-cell">15 min</td></tr>
+    <tr><td class="time-cell">11:55am</td><td>Plan on paper — 4 questions</td><td class="dur-cell">10 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">🍽️ Lunch &amp; Accessibility</td></tr>
+    <tr><td class="time-cell">12:05pm</td><td><strong>Lunch</strong> — accessibility activities happen during this time</td><td class="dur-cell">30 min</td></tr>
+    <tr><td class="time-cell">12:35pm</td><td><strong>Accessibility discussion</strong> — incorporate learnings before building starts</td><td class="dur-cell">5 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">🏗️ Build — Feature Creation</td></tr>
+    <tr><td class="time-cell">12:40pm</td><td>Feature creation — structure, logic, styling and testing all in one block</td><td class="dur-cell">85 min</td></tr>
+
+    <tr class="hour-divider"><td colspan="3">✅ Show &amp; Feedback</td></tr>
+    <tr><td class="time-cell">2:05pm</td><td>Show &amp; tell — demos</td><td class="dur-cell">15 min</td></tr>
+    <tr><td class="time-cell">2:20pm</td><td><strong>Feedback</strong> — quick round, close</td><td class="dur-cell">10 min</td></tr>
+    <tr><td class="time-cell">2:30pm</td><td><strong>Session ends</strong></td><td class="dur-cell">—</td></tr>
+  </table>
+
+  <div class="footer-note">
+    If the session starts even a few minutes late or early, every time above shifts by the same amount — the durations in the right column are what actually matter. Full script detail for every row is in the Master Script.
+  </div>
+</div>
+</body>
+</html>

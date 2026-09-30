@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Plan — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 230px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; transition: background 0.15s; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* CONTENT */
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 840px; }
+    .page-header { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 10px; }
+    .page-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .meta-pill { background: rgba(108,99,255,0.15); color: #A89CFF; border: 1px solid rgba(108,99,255,0.25); border-radius: 100px; padding: 4px 12px; font-size: 0.75em; font-weight: 600; }
+
+    /* GLANCE TABLE */
+    .glance-table { width: 100%; border-collapse: collapse; font-size: 0.85em; margin-bottom: 48px; }
+    .glance-table th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--border-mid); }
+    .glance-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 0.9em; }
+    .glance-table tr:last-child td { border-bottom: none; }
+    .time-cell { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; white-space: nowrap; }
+
+    /* HOUR BLOCKS */
+    .hour-block { margin-bottom: 52px; }
+    .hour-header { background: var(--card); border: 1px solid var(--border); border-radius: 14px 14px 0 0; padding: 18px 24px; display: flex; align-items: center; gap: 14px; }
+    .hour-tag { background: var(--accent); color: white; font-size: 0.7em; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap; }
+    .hour-title { font-size: 1.1em; font-weight: 800; letter-spacing: -0.02em; }
+    .hour-body { background: var(--card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 14px 14px; padding: 0; overflow: hidden; }
+
+    /* SEGMENT */
+    .segment { padding: 22px 24px; border-bottom: 1px solid var(--border); }
+    .segment:last-child { border-bottom: none; }
+    .segment-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+    .segment-time { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; font-weight: 600; color: var(--accent); white-space: nowrap; }
+    .segment-title { font-size: 1em; font-weight: 700; }
+    .segment-dur { font-size: 0.72em; color: var(--muted); }
+
+    /* CONTENT ELEMENTS */
+    p { font-size: 0.88em; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { margin: 8px 0 10px 20px; }
+    li { font-size: 0.87em; line-height: 1.65; color: var(--text); margin-bottom: 4px; }
+    strong { color: var(--white); font-weight: 600; }
+    em { color: rgba(255,255,255,0.7); font-style: italic; }
+
+    .blockquote { background: rgba(108,99,255,0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 10px 0; font-size: 0.87em; font-style: italic; line-height: 1.6; color: rgba(255,255,255,0.8); }
+
+    .callout { border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 0.84em; line-height: 1.6; }
+    .callout-green { background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.25); }
+    .callout-amber { background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.25); }
+    .callout-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .callout-label.green { color: var(--green); }
+    .callout-label.amber { color: var(--amber); }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.65; color: rgba(255,255,255,0.75); overflow-x: auto; white-space: pre; }
+
+    /* TABLES */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.83em; margin: 10px 0; }
+    .data-table th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 9px 12px; border-bottom: 1px solid var(--border-mid); }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .badge { display: inline-block; font-size: 0.7em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; }
+    .badge-green { background: rgba(0,200,150,0.15); color: var(--green); }
+    .badge-amber { background: rgba(255,181,71,0.15); color: var(--amber); }
+    .badge-red   { background: rgba(255,71,87,0.15); color: var(--red); }
+    .badge-acc   { background: rgba(108,99,255,0.15); color: var(--accent); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    .section-title { font-size: 1.2em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; margin-top: 8px; }
+
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Session Plan</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a class="nav-item" href="#glance"><div class="nav-dot" style="background:var(--accent)"></div>At a glance</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Hour 1</div>
+      <a class="nav-item" href="#welcome"><div class="nav-dot" style="background:var(--green)"></div>0:00 Welcome</a>
+      <a class="nav-item" href="#demo"><div class="nav-dot" style="background:var(--green)"></div>0:10 Copilot demo</a>
+      <a class="nav-item" href="#bugs"><div class="nav-dot" style="background:var(--green)"></div>0:25 Bug fixing</a>
+      <a class="nav-item" href="#shareout"><div class="nav-dot" style="background:var(--green)"></div>0:55 Share out</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Hours 2–4</div>
+      <a class="nav-item" href="#brainstorm"><div class="nav-dot" style="background:var(--amber)"></div>1:00 Brainstorm</a>
+      <a class="nav-item" href="#plan"><div class="nav-dot" style="background:var(--amber)"></div>1:20 Plan</a>
+      <a class="nav-item" href="#build"><div class="nav-dot" style="background:var(--amber)"></div>1:35 Build</a>
+      <a class="nav-item" href="#demoprep"><div class="nav-dot" style="background:var(--amber)"></div>3:15 Demo prep</a>
+      <a class="nav-item" href="#demos"><div class="nav-dot" style="background:var(--amber)"></div>3:40 Demos</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Notes</div>
+      <a class="nav-item" href="#solo"><div class="nav-dot" style="background:var(--muted)"></div>Running solo</a>
+      <a class="nav-item" href="#ages"><div class="nav-dot" style="background:var(--muted)"></div>Mixed ages</a>
+      <a class="nav-item" href="#rescue"><div class="nav-dot" style="background:var(--muted)"></div>If things go wrong</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">NovaPay Workshop</div>
+      <div class="page-title">4-Hour Session Plan</div>
+      <div class="page-meta">
+        <span class="meta-pill">Ages 12–18</span>
+        <span class="meta-pill">Solo facilitator</span>
+        <span class="meta-pill">GitHub Codespaces</span>
+        <span class="meta-pill">GitHub Copilot</span>
+      </div>
+    </div>
+
+    <!-- AT A GLANCE -->
+    <div id="glance">
+      <div class="section-title">Session at a glance</div>
+      <table class="glance-table">
+        <thead><tr><th>Time</th><th>Block</th><th>What's happening</th></tr></thead>
+        <tbody>
+          <tr><td class="time-cell">0:00–0:15</td><td><span class="badge badge-green">Hour 1</span></td><td>Welcome — intros, get into Codespaces, ice breaker</td></tr>
+          <tr><td class="time-cell">0:15–0:30</td><td><span class="badge badge-green">Hour 1</span></td><td>Copilot demo — live demo of inline suggestions and Chat</td></tr>
+          <tr><td class="time-cell">0:30–0:40</td><td><span class="badge badge-green">Hour 1</span></td><td><strong>Bug tutorial</strong> — everyone follows <code>how-to-find-fix-bugs.html</code> together</td></tr>
+          <tr><td class="time-cell">0:40–1:00</td><td><span class="badge badge-green">Hour 1</span></td><td>Independent bug hunt — find and fix the real 10 bugs</td></tr>
+          <tr><td class="time-cell">1:00–1:05</td><td><span class="badge badge-green">Hour 1</span></td><td>Share out — 2–3 people share what they found</td></tr>
+          <tr><td class="time-cell">1:05–1:35</td><td><span class="badge" style="background:rgba(79,195,247,0.15);color:#4FC3F7">Level Up ⚡</span></td><td>The reveal, GitHub &amp; Codespaces concepts, 3 challenge rounds, golden rules</td></tr>
+          <tr><td class="time-cell">1:35–1:50</td><td><span class="badge" style="background:rgba(0,200,150,0.15);color:var(--green)">☕ Break</span></td><td><strong>Comfort break</strong> — 15 min</td></tr>
+          <tr><td class="time-cell">1:50–2:10</td><td><span class="badge badge-amber">Hours 2–4</span></td><td><strong>Feature tutorial</strong> — everyone builds the Savings Tracker together, from scratch</td></tr>
+          <tr><td class="time-cell">2:10–2:25</td><td><span class="badge badge-amber">Hours 2–4</span></td><td>Brainstorm — their own idea</td></tr>
+          <tr><td class="time-cell">2:25–2:35</td><td><span class="badge badge-amber">Hours 2–4</span></td><td>Plan — pick a feature, sketch it, define inputs and outputs</td></tr>
+          <tr><td class="time-cell">2:35–3:05</td><td><span class="badge" style="background:rgba(0,200,150,0.15);color:var(--green)">🍽️ Lunch</span></td><td><strong>Lunch</strong> — 30 min, accessibility activities happen during this time</td></tr>
+          <tr><td class="time-cell">3:05–3:10</td><td><span class="badge" style="background:rgba(108,99,255,0.15);color:var(--accent)">♿ Discussion</span></td><td><strong>Accessibility discussion</strong> — incorporate learnings from lunch activities before building</td></tr>
+          <tr><td class="time-cell">3:10–4:35</td><td><span class="badge badge-amber">Hours 2–4</span></td><td>Feature creation — structure, logic, styling, and testing all in one block (85 min)</td></tr>
+          <tr><td class="time-cell">4:35–4:50</td><td><span class="badge badge-amber">Hours 2–4</span></td><td>Show &amp; tell — demos, celebrate</td></tr>
+          <tr><td class="time-cell">4:50–5:00</td><td><span class="badge" style="background:rgba(255,71,87,0.12);color:var(--red)">Feedback</span></td><td><strong>Feedback</strong> — quick round from students, close</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HOUR 1 -->
+    <div class="hour-block" id="hour1">
+      <div class="hour-header">
+        <span class="hour-tag">Hour 1</span>
+        <span class="hour-title">Intro + Bug Fixing</span>
+      </div>
+      <div class="hour-body">
+
+        <div class="segment" id="welcome">
+          <div class="segment-header">
+            <span class="segment-time">0:00–0:15</span>
+            <span class="segment-title">Welcome &amp; Setup</span>
+            <span class="segment-dur">15 min</span>
+          </div>
+          <div class="blockquote">"Today you're going to build a real feature for a banking app — from idea to working demo. We'll start by doing what every developer does before writing new code: fix what's broken."</div>
+          <p><strong>Actions:</strong></p>
+          <ul>
+            <li>Proper introductions — who you are, why you're running this, a sentence on your own background</li>
+            <li>Go round the room — names, and one thing they're hoping to get out of today</li>
+            <li>Share the repo URL on screen — participants follow the participant guide to get into their Codespace</li>
+            <li>While people set up, run the ice breaker out loud: <em>"What's one thing that annoys you about your bank app or a payment app you use?"</em></li>
+            <li>Pair people up — <strong>mix ages where possible.</strong> Older participants naturally mentor younger ones and Copilot levels the playing field significantly</li>
+            <li>Cover the shape of the whole day briefly — bug hunt, Level Up, a short break, feature building, lunch, more building, demos</li>
+          </ul>
+          <div class="callout callout-amber"><div class="callout-label amber">Why more than a typical warm-up</div>Getting everyone's account and Codespace genuinely working takes real time — better to spend it now than chase stragglers all morning.</div>
+        </div>
+
+        <div class="segment" id="demo">
+          <div class="segment-header">
+            <span class="segment-time">0:15–0:30</span>
+            <span class="segment-title">What is GitHub Copilot?</span>
+            <span class="segment-dur">15 min</span>
+          </div>
+          <p><strong>Goal:</strong> Show them the two main interaction modes before they need to use them. Do this yourself on screen — live demo, talking through it.</p>
+          <p><strong>1. Inline suggestions</strong> — Type a comment and let Copilot complete it:</p>
+          <pre>// calculate the interest on a savings account balance</pre>
+          <p>Pause. Watch Copilot suggest. Press Tab to accept. Say: <em>"It read my comment and wrote the code."</em></p>
+          <p><strong>2. Copilot Chat</strong> — Open the chat panel. Ask <em>"What does this function do?"</em> then ask <em>"Can you rewrite this so a 12-year-old could understand it?"</em></p>
+          <div class="blockquote">"Copilot is like a very fast autocomplete that has read most of the internet. It is not always right. Your job is to be the one who understands the problem — Copilot helps you write it faster."</div>
+          <div class="callout callout-amber"><div class="callout-label amber">Timing</div>Keep this to 15 minutes. Don't over-explain — they'll learn by doing.</div>
+        </div>
+
+        <div class="segment" id="bugtutorial">
+          <div class="segment-header">
+            <span class="segment-time">0:30–0:40</span>
+            <span class="segment-title">Bug Tutorial — everyone together</span>
+            <span class="segment-dur">10 min</span>
+          </div>
+          <p>Put <code>how-to-find-fix-bugs.html</code> on screen (or have everyone open it). Walk through the worked example together — a made-up bug, not one of the real 10 — so everyone sees the exact method (Look → Use → Read → Fix → Test) before touching the real dashboard.</p>
+          <div class="callout callout-green"><div class="callout-label green">Why a shared tutorial first</div>This isn't a spoiler — the worked example is deliberately fake. It means every student starts the real hunt already knowing the technique, rather than guessing at a method while also hunting for bugs.</div>
+        </div>
+
+        <div class="segment" id="bugs">
+          <div class="segment-header">
+            <span class="segment-time">0:40–1:00</span>
+            <span class="segment-title">Independent Bug Hunt</span>
+            <span class="segment-dur">20 min</span>
+          </div>
+          <p>Now they apply the same method to the real dashboard. Put the bug hunt brief on the projector (<code>bug-hunt-screen.html</code>) and step back.</p>
+          <div class="callout callout-green"><div class="callout-label green">The brief (on screen)</div>"The NovaPay dashboard has bugs hidden across the HTML, CSS, and JavaScript. Find and fix as many as you can. For each one: write down what was wrong, how you found it, and what you changed."</div>
+          <p><strong>The 10 bugs by difficulty:</strong></p>
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Level</th><th>What's wrong</th></tr></thead>
+            <tbody>
+              <tr><td>1–3</td><td><span class="badge badge-green">Easy</span></td><td>Missing div tag, invisible balance, coffee shop shown as credit</td></tr>
+              <tr><td>4–6</td><td><span class="badge badge-amber">Medium</span></td><td>Wrong input type, button typo (onlick), withdrawal adds money</td></tr>
+              <tr><td>7–9</td><td><span class="badge badge-red">Hard</span></td><td>Element ID typo, NaN on empty input, wrong interest formula</td></tr>
+              <tr><td>10</td><td><span class="badge badge-acc">Stretch</span></td><td>No overdraft protection</td></tr>
+            </tbody>
+          </table>
+          <p>See <code>facilitator-reference.html</code> for the full answer key and exact fixes.</p>
+          <p><strong>Age handling:</strong></p>
+          <ul>
+            <li><strong>12–13s:</strong> Aim for bugs 1–6 with Copilot Chat helping them navigate</li>
+            <li><strong>17–18s:</strong> Push for bugs 7–10 and ask them to write the fix before checking what Copilot suggests</li>
+          </ul>
+        </div>
+
+        <div class="segment" id="shareout">
+          <div class="segment-header">
+            <span class="segment-time">1:00–1:05</span>
+            <span class="segment-title">Share Out</span>
+            <span class="segment-dur">5 min</span>
+          </div>
+          <p>Ask 2–3 people or pairs: <em>"What did you find?"</em> and <em>"How did Copilot help you — or did you find it yourself first?"</em></p>
+          <div class="blockquote">"That's the debugging loop — notice something's wrong, investigate, fix, test. Copilot speeds up the middle part, but you're still the one running the loop."</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LEVEL UP -->
+    <div class="hour-block" id="levelup">
+      <div class="hour-header">
+        <span class="hour-tag" style="background:rgba(79,195,247,0.15);color:#4FC3F7">Bridge</span>
+        <span class="hour-title">Level Up ⚡</span>
+      </div>
+      <div class="hour-body">
+        <div class="segment" id="levelupref">
+          <div class="segment-header">
+            <span class="segment-time">1:05–1:35</span>
+            <span class="segment-title">The reveal, GitHub &amp; Codespaces concepts, 3 challenge rounds, golden rules</span>
+            <span class="segment-dur">30 min</span>
+          </div>
+          <p>Full detailed script for this whole block is in <code>copilot-bootcamp.html</code> — round order is Fix the Bug → Comment Race → Best Prompt.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMFORT BREAK -->
+    <div class="hour-block" id="comfortbreak">
+      <div class="hour-header">
+        <span class="hour-tag" style="background:rgba(0,200,150,0.15);color:var(--green)">☕ Break</span>
+        <span class="hour-title">Comfort Break</span>
+      </div>
+      <div class="hour-body">
+        <div class="segment" id="break1">
+          <div class="segment-header">
+            <span class="segment-time">1:35–1:50</span>
+            <span class="segment-title">Comfort break</span>
+            <span class="segment-dur">15 min</span>
+          </div>
+          <p>Toilets, water, stretch legs. No content here — genuinely just a break. Good moment for you to reset too before the longer build block ahead.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOURS 2–4 -->
+    <div class="hour-block" id="hours24">
+      <div class="hour-header">
+        <span class="hour-tag">Build Block 1</span>
+        <span class="hour-title">Build a Bank Feature — Part 1</span>
+      </div>
+      <div class="hour-body">
+
+        <div class="segment" id="featuretutorial">
+          <div class="segment-header">
+            <span class="segment-time">1:50–2:10</span>
+            <span class="segment-title">Quick Feature Tutorial — everyone together</span>
+            <span class="segment-dur">20 min</span>
+          </div>
+          <p>Before anyone brainstorms their own idea, everyone builds the same thing once: a Savings Goal Tracker, from an empty starter file, following <code>how-to-build-your-feature.html</code> step by step. This teaches the actual fundamentals — comment, Tab, save, test, repeat — on a guided, low-stakes example.</p>
+          <div class="callout callout-green"><div class="callout-label green">Why build something before brainstorming</div>Students who've never done this before freeze on a blank page with an open-ended idea. Doing one guided build first means the brainstorm and creation phases start from confidence and a working method, not from zero.</div>
+        </div>
+
+        <div class="segment" id="brainstorm">
+          <div class="segment-header">
+            <span class="segment-time">2:10–2:25</span>
+            <span class="segment-title">Brainstorm</span>
+            <span class="segment-dur">15 min</span>
+          </div>
+          <div class="blockquote">"You've just seen a pretty basic bank dashboard. You've all used or heard of banking apps. What would actually be useful — especially for someone your age?"</div>
+          <p>Run as an open shout-out or use a shared Google Doc / Jamboard. Give them 5 minutes to add ideas, then group them.</p>
+          <p><strong>Categories to seed if it's quiet:</strong> Things to help you <em>save</em> money · Things to help you <em>understand</em> where it goes · Things to help you <em>plan</em> ahead.</p>
+          <p><strong>Back-pocket feature ideas:</strong></p>
+          <table class="data-table">
+            <thead><tr><th>Feature</th><th>Difficulty</th><th>Good for</th></tr></thead>
+            <tbody>
+              <tr><td>Savings Goal Tracker</td><td>⭐⭐</td><td>Any age — visual, tangible, scales well</td></tr>
+              <tr><td>Spending Category Cards</td><td>⭐⭐</td><td>Any age — mostly HTML/CSS</td></tr>
+              <tr><td>Currency Converter</td><td>⭐⭐</td><td>Any age — clean JS logic</td></tr>
+              <tr><td>Budget Planner</td><td>⭐⭐⭐</td><td>Mixed — income minus expenses</td></tr>
+              <tr><td>Round-Up Savings Calculator</td><td>⭐⭐⭐</td><td>Good for showing compounding</td></tr>
+              <tr><td>Loan Repayment Calculator</td><td>⭐⭐⭐⭐</td><td>Better for 17–18s</td></tr>
+              <tr><td>Fraud Alert Simulator</td><td>⭐⭐⭐</td><td>17–18s — logic heavy</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green"><div class="callout-label green">Recommended default</div>You've just built a Savings Goal Tracker in the tutorial — so that one's off the table for this part, on purpose. If a group is stuck, point them at <strong>Spending Category Cards</strong> or <strong>Currency Converter</strong> instead — similar difficulty, genuinely different idea.</div>
+        </div>
+
+        <div class="segment" id="plan">
+          <div class="segment-header">
+            <span class="segment-time">2:25–2:35</span>
+            <span class="segment-title">Plan</span>
+            <span class="segment-dur">10 min</span>
+          </div>
+          <p>Each group sketches on paper or a shared doc. Four questions to answer:</p>
+          <ol>
+            <li><strong>What does it do?</strong> One sentence.</li>
+            <li><strong>What does the user see?</strong> Boxes on paper — don't code yet.</li>
+            <li><strong>What are the inputs?</strong> e.g. goal name, target amount, current savings.</li>
+            <li><strong>What does it output?</strong> e.g. progress bar, percentage, time to reach goal.</li>
+          </ol>
+          <p><strong>Model it yourself first</strong> — spend 2 minutes doing it out loud for the Savings Goal Tracker, then let groups do their own.</p>
+          <div class="blockquote">"I want to build a savings goal tracker. The user types in: what they're saving for, how much they need, how much they've saved so far. It shows a progress bar and tells them how much is left. That's it — no login, no database, just a page that works."</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LUNCH -->
+    <div class="hour-block" id="lunchblock">
+      <div class="hour-header">
+        <span class="hour-tag" style="background:rgba(0,200,150,0.15);color:var(--green)">🍽️ Lunch</span>
+        <span class="hour-title">Lunch &amp; Accessibility Activities</span>
+      </div>
+      <div class="hour-body">
+        <div class="segment" id="lunch">
+          <div class="segment-header">
+            <span class="segment-time">2:35–3:05</span>
+            <span class="segment-title">Lunch</span>
+            <span class="segment-dur">30 min</span>
+          </div>
+          <p>Accessibility activities happen during this window. No workshop content to run — this is a genuine break.</p>
+          <div class="callout callout-amber"><div class="callout-label amber">Why lunch sits here</div>Lunch comes before any feature creation starts — groups go into the build with a plan already sketched, but nothing built yet, so nobody's mid-flow when they break.</div>
+        </div>
+
+        <div class="segment" id="accessibility">
+          <div class="segment-header">
+            <span class="segment-time">3:05–3:10</span>
+            <span class="segment-title">Accessibility Discussion</span>
+            <span class="segment-dur">5 min</span>
+          </div>
+          <p>Bring the room back together and connect what happened over lunch to the feature they're about to build.</p>
+          <div class="blockquote">"You just spent lunch thinking about accessibility. Before we start building — does anything you did or saw change how you'd want your feature to work? Would everyone be able to use what you're building?"</div>
+          <ul>
+            <li>Ask for 1–2 quick reactions — keep it tight, this is only 5 minutes</li>
+            <li>Prompt if the room's quiet: <em>"Could someone using a screen reader use your feature? Could someone who can't see colour tell your progress bar apart from the background?"</em></li>
+            <li>If a group wants to act on something, that's a legitimate stretch goal for the build — encourage it</li>
+          </ul>
+          <div class="callout callout-green"><div class="callout-label green">Why this sits here</div>Right before building starts, so any idea genuinely has somewhere to go, rather than being raised and then forgotten.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD -->
+    <div class="hour-block" id="hours24">
+      <div class="hour-header">
+        <span class="hour-tag">Build Block</span>
+        <span class="hour-title">Build a Bank Feature</span>
+      </div>
+      <div class="hour-body">
+
+        <div class="segment" id="build">
+          <div class="segment-header">
+            <span class="segment-time">3:10–4:35</span>
+            <span class="segment-title">Feature Creation</span>
+            <span class="segment-dur">85 min</span>
+          </div>
+          <p>Groups build their own idea in Codespaces — this is different from the shared tutorial they already completed. Put <code>milestone-screen.html</code> on the projector and leave it there. Everyone creates a new file for their own idea and copies the colours/header across from <code>practice-feature.html</code> (built in the tutorial) to keep the NovaPay look. Structure, logic, styling, and testing all happen inside this one continuous block — there's no separate checkpoint or testing slot, so pace it yourself as you circulate.</p>
+          <table class="data-table">
+            <thead><tr><th>Rough guide</th><th>Target time</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td>🏗️ HTML structure done</td><td class="time-cell">~3:35</td><td>Page has the right sections and inputs — even if unstyled</td></tr>
+              <tr><td>🎨 Styled + basic JS working</td><td class="time-cell">~4:10</td><td>Looks reasonable and does something when you interact</td></tr>
+              <tr><td>✅ Tested</td><td class="time-cell">~4:25</td><td>Try to break it on purpose — empty fields, negative numbers, huge numbers — before showing anyone</td></tr>
+              <tr><td>✨ Polish / stretch feature</td><td class="time-cell">4:35</td><td>Add one extra if there's time: validation, animation, or a second feature</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Copilot prompting tips to put on screen:</strong></p>
+          <pre>✅ "Write a function that takes goalAmount and savedAmount
+    and returns the percentage complete"
+✅ "Add a progress bar that fills based on the percentage variable"
+✅ "Validate the input so users can't enter a negative number"
+
+❌ "Make a savings tracker"   (too vague)
+❌ "Fix my code"              (no context)</pre>
+          <p><strong>Stretch goals for 17–18s who finish early:</strong></p>
+          <ul>
+            <li>Save the goal to <code>localStorage</code> so it persists on refresh</li>
+            <li>Add multiple goals</li>
+            <li>Add a date field and calculate how much to save per week</li>
+            <li>Add a "simulate a transfer" button that updates the saved amount</li>
+          </ul>
+          <p><strong>Your role:</strong> Circulate, don't hover. Key question to ask any group: <em>"What problem are you trying to solve right now?"</em> Near the end, prompt groups to switch into testing mode: <em>"Code freeze — try to break your own feature before anyone sees it."</em></p>
+          <div class="if-stuck" style="margin-top:12px"><strong>At ~4:00, if any group isn't working yet:</strong> "Strip it back. One input, one button, one number on screen." Say it to the whole room.</div>
+        </div>
+
+        <div class="segment" id="demos">
+          <div class="segment-header">
+            <span class="segment-time">4:35–4:50</span>
+            <span class="segment-title">Show &amp; Tell</span>
+            <span class="segment-dur">15 min</span>
+          </div>
+          <p>Each group demos (2 min each). Prompt them beforehand to prepare a 2-minute walkthrough: what it does, one way Copilot helped, one thing they'd add with more time. No slides needed — browser and voice is fine.</p>
+          <p>After each demo ask: <em>"What did you like about that?"</em> and <em>"What would you add?"</em></p>
+          <p><strong>Your closing (2–3 minutes):</strong></p>
+          <div class="blockquote">"Today you went from a bug-ridden page to a working feature — starting from nothing except an idea. The way you worked today is genuinely how it's done in real development: pick a problem, sketch a solution, build incrementally, test it, demo, get feedback.<br><br>Copilot didn't build it for you. You told it what you needed, you checked whether it was right, and you made the decisions. That skill — knowing what to ask and whether to trust the answer — is exactly what makes a good developer."</div>
+        </div>
+
+        <div class="segment" id="feedback">
+          <div class="segment-header">
+            <span class="segment-time">4:50–5:00</span>
+            <span class="segment-title">Feedback</span>
+            <span class="segment-dur">10 min</span>
+          </div>
+          <p>Quick round before everyone leaves — worth capturing while it's fresh, not as an afterthought.</p>
+          <ul>
+            <li>Verbal: "One word for how today felt" — go round the room fast, no explanations needed</li>
+            <li>If you have a feedback form or QR code, put it on screen now</li>
+            <li>Genuinely useful questions if you're gathering written feedback: "What was the best moment today?" · "What would you change?" · "Would you do something like this again?"</li>
+          </ul>
+          <div class="callout callout-green"><div class="callout-label green">Keep it short</div>This isn't the moment for a long survey — energy is naturally dropping after demos. A fast, light close is better than a thorough one nobody engages with.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- FACILITATOR NOTES -->
+    <div id="facilitatornotes">
+      <div class="section-title">Facilitator Notes</div>
+
+      <div class="hour-block">
+        <div class="hour-header" id="solo">
+          <span class="hour-tag" style="background:var(--muted)">Note</span>
+          <span class="hour-title">Running Solo</span>
+        </div>
+        <div class="hour-body">
+          <div class="segment">
+            <ul>
+              <li><strong>Have group instructions visible at all times</strong> — on screen, in a shared doc, or both. You can't be everywhere at once.</li>
+              <li><strong>Use the milestone board</strong> (whiteboard or shared doc) to keep groups on track without you narrating constantly.</li>
+              <li><strong>Build in one check-in at 2:15</strong> — ask each group to say one sentence about where they are. Helps you spot who's struggling before it becomes a crisis.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="hour-block">
+        <div class="hour-header" id="ages">
+          <span class="hour-tag" style="background:var(--muted)">Note</span>
+          <span class="hour-title">Handling Mixed Ages</span>
+        </div>
+        <div class="hour-body">
+          <div class="segment">
+            <ul>
+              <li>Pair 12–13s with 17–18s where possible. Older students who explain something to a younger one learn it better themselves.</li>
+              <li>Same feature, different depth. Both ages can build a savings tracker — the 13-year-old makes it work, the 18-year-old adds validation and localStorage.</li>
+              <li>Copilot Chat is a great leveller — younger students can ask it to explain code in plain English.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="hour-block">
+        <div class="hour-header" id="rescue">
+          <span class="hour-tag" style="background:var(--red)">Rescue</span>
+          <span class="hour-title">If Things Go Wrong</span>
+        </div>
+        <div class="hour-body">
+          <div class="segment">
+            <table class="data-table">
+              <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+              <tbody>
+                <tr><td>Codespaces won't load</td><td>Have the file as a GitHub Gist as backup. Open in CodePen or any online editor.</td></tr>
+                <tr><td>Group can't think of a feature</td><td>Pull from the back-pocket list. Savings Goal Tracker almost always lands well.</td></tr>
+                <tr><td>Group finishes too fast</td><td>Push to stretch goals. Or: "Can you break it? Try entering -100. What happens?"</td></tr>
+                <tr><td>Group is way behind</td><td>Narrow the scope. "Just get the input and the progress bar working. Forget the rest."</td></tr>
+                <tr><td>Copilot gives wrong code</td><td>Teaching moment: "This is why you test. What did Copilot get wrong?"</td></tr>
+                <tr><td>Someone asks Copilot to fix all bugs</td><td>See the Copilot Strategy section in <code>facilitator-reference.html</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

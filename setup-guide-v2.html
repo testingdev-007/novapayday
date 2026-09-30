@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Guide v2 — Personal Accounts — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .back-link { display: block; padding: 8px 20px 16px; font-size: 0.78em; color: var(--muted); text-decoration: none; }
+    .back-link:hover { color: white; }
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(108,99,255,0.2); color: var(--accent); font-size: 0.7em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 860px; }
+    .page-header { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 10px; }
+    .page-desc { font-size: 0.9em; color: var(--muted); max-width: 580px; line-height: 1.65; }
+
+    .vs-banner { display: flex; gap: 10px; margin: 24px 0 8px; }
+    .vs-chip { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 0.82em; font-weight: 700; border: 1.5px solid; }
+    .vs-chip.this-one { background: rgba(0,200,150,0.12); border-color: var(--green); color: var(--green); }
+    .vs-chip.other-one { background: rgba(255,255,255,0.03); border-color: var(--border-mid); color: var(--muted); }
+
+    .phase { margin: 40px 0 20px; }
+    .phase-header { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--border-mid); margin-bottom: 18px; }
+    .phase-num { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95em; flex-shrink: 0; }
+    .phase-title { font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; }
+    .phase-sub { font-size: 0.8em; color: var(--muted); }
+
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+    .step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; display: flex; gap: 16px; }
+    .step-num { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: 800; flex-shrink: 0; background: rgba(108,99,255,0.2); color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    .step-content { flex: 1; }
+    .step-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; }
+    .step-body { font-size: 0.87em; color: var(--text); line-height: 1.65; }
+    .step-body p + p { margin-top: 8px; }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.65; color: rgba(255,255,255,0.75); overflow-x: auto; }
+
+    .callout { border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.84em; line-height: 1.6; }
+    .c-green { background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.22); }
+    .c-amber { background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.22); }
+    .c-blue  { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.22); }
+    .c-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .c-label.green { color: var(--green); } .c-label.amber { color: var(--amber); } .c-label.blue { color: var(--blue); }
+
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.83em; margin-top: 8px; }
+    .compare-table th { text-align: left; font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 9px 12px; border-bottom: 1px solid var(--border-mid); }
+    .compare-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Setup v2 — Personal Accounts</div>
+    </div>
+    <a class="back-link" href="admin-setup.html">← Back to setup home</a>
+
+    <div class="nav-section">
+      <div class="nav-label">Decide first</div>
+      <a class="nav-item" href="#p0"><div class="nav-num">0</div>Which accounts do I need?</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Accounts</div>
+      <a class="nav-item" href="#p1"><div class="nav-num">1</div>Get an email if you need one</a>
+      <a class="nav-item" href="#p2"><div class="nav-num">2</div>Create your GitHub account(s)</a>
+      <a class="nav-item" href="#p3"><div class="nav-num">3</div>Turn on Copilot per account</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">The repo</div>
+      <a class="nav-item" href="#p4"><div class="nav-num">4</div>Build the workshop repo</a>
+      <a class="nav-item" href="#p5"><div class="nav-num">5</div>Install Nova</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Prove it works</div>
+      <a class="nav-item" href="#p6"><div class="nav-num">6</div>Test end-to-end</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Reference</div>
+      <a class="nav-item" href="#compare"><div class="nav-num">✓</div>vs. the org/Business path</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">No organisation, no Business plan needed</div>
+      <div class="page-title">Setup Guide v2 — Personal Accounts</div>
+      <div class="page-desc">This path skips GitHub organisations and Copilot Business entirely — no seat management, no pause blocking you, no waiting. Everything runs on personal GitHub accounts with either the free Copilot tier or a $10/month Pro upgrade.</div>
+      <div class="vs-banner">
+        <div class="vs-chip this-one">✓ You are here — Personal accounts (v2)</div>
+        <div class="vs-chip other-one">Org + Copilot Business (v1) — see facilitator-setup-guide.html</div>
+      </div>
+    </div>
+
+    <!-- PHASE 0 -->
+    <div class="phase" id="p0">
+      <div class="phase-header">
+        <div class="phase-num">0</div>
+        <div>
+          <div class="phase-title">Which accounts do I actually need?</div>
+          <div class="phase-sub">Read this before clicking anything</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">i</div>
+          <div class="step-content">
+            <div class="step-title">This guide is for YOUR accounts, not the whole class</div>
+            <div class="step-body">
+              <p>You need: <strong>your own account</strong> (to build the repo, test everything, and help students on the day), and optionally <strong>one test account</strong> if you want a second pair of hands for Friday's run-through.</p>
+              <p>On the real session day, every student creates their <strong>own</strong> GitHub account, following <code>participant-guide.html</code> — exactly as already planned. You are not creating accounts for them. Copilot activates automatically on their own account with zero action from you (more on that in Step 3).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 1 -->
+    <div class="phase" id="p1">
+      <div class="phase-header">
+        <div class="phase-num">1</div>
+        <div>
+          <div class="phase-title">Get an email address, if you need one</div>
+          <div class="phase-sub">Only needed for a second test account — skip if you're only setting up yourself</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">GitHub needs one email per account</div>
+            <div class="step-body">
+              <p>If you're just setting up your own account, you almost certainly already have an email — skip to Step 2.</p>
+              <p>If you want a second test account, you need a second, different email address for it. The quickest way: go to <strong>gmail.com</strong> → <strong>Create account</strong> → follow the prompts. Takes about 3 minutes, no cost.</p>
+              <div class="callout c-blue"><div class="c-label blue">Tip</div>Something like <code>yourname.novapaytest@gmail.com</code> makes it obvious later which account is which.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 2 -->
+    <div class="phase" id="p2">
+      <div class="phase-header">
+        <div class="phase-num">2</div>
+        <div>
+          <div class="phase-title">Create your GitHub account(s)</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Sign up at github.com</div>
+            <div class="step-body">
+              <p>Go to <strong>github.com</strong> → <strong>Sign up</strong> → enter the email, choose a password, choose a username → verify the email when the code arrives.</p>
+              <p>Repeat with the second email if you're setting up a test account too.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 3 -->
+    <div class="phase" id="p3">
+      <div class="phase-header">
+        <div class="phase-num">3</div>
+        <div>
+          <div class="phase-title">Turn on Copilot — per account</div>
+          <div class="phase-sub">No org, no admin approval, no seat assignment — this is entirely self-serve</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">i</div>
+          <div class="step-content">
+            <div class="step-title">Good news first: Free just works, automatically</div>
+            <div class="step-body">
+              <p>The moment a personal GitHub account exists, Copilot's <strong>Free</strong> tier is already active on it — 2,000 code completions and 50 chat messages a month, no card, no toggle to switch on. If you're just testing today, you can genuinely skip straight to Step 4 and come back to this only if you decide you want more headroom.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Upgrade to Pro (recommended for your own account)</div>
+            <div class="step-body">
+              <p>While logged into the account you want to upgrade: click your profile photo (top right) → <strong>Settings</strong> → <strong>Copilot</strong> in the left menu → <strong>Change plan</strong> → choose <strong>Copilot Pro</strong> → confirm payment ($10/month).</p>
+              <div class="callout c-green"><div class="c-label green">What this buys you</div>Unlimited code completions (Free is capped at 2,000/month) and a much larger chat allowance (roughly $15 of credit versus Free's 50-message cap) — comfortable headroom for a full day of heavy use.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Decide for your test account</div>
+            <div class="step-body">
+              <p>Start it on <strong>Free</strong>. If the 50-message chat cap gets hit during Friday's run-through, that's your real-world signal to upgrade — repeat the same steps above on that account.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 4 -->
+    <div class="phase" id="p4">
+      <div class="phase-header">
+        <div class="phase-num">4</div>
+        <div>
+          <div class="phase-title">Build the workshop repo</div>
+          <div class="phase-sub">On your personal account — no organisation involved</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a new public repository</div>
+            <div class="step-body">
+              <p>While logged in as <strong>you</strong> (not the test account): click <strong>+</strong> top right → <strong>New repository</strong> → name it <code>novapay-workshop</code> → set <strong>Public</strong> → tick <strong>Add a README file</strong> → <strong>Create repository</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Upload the two workshop files</div>
+            <div class="step-body">
+              <p><strong>Add file → Upload files</strong> → drag in <code>bank-dashboard.html</code>, <code>starter-template.html</code>, and <code>challenge.js</code> → <strong>Commit changes</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Add the Codespaces config</div>
+            <div class="step-body">
+              <p><strong>Add file → Create new file</strong> → filename exactly:</p>
+              <pre>.devcontainer/devcontainer.json</pre>
+              <p>Paste in the contents of your <code>devcontainer.json</code> file → <strong>Commit new file</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Make it a template repository</div>
+            <div class="step-body">
+              <p>Repo <strong>Settings</strong> → tick <strong>Template repository</strong>. This is what lets each student click "Use this template" to get their own copy.</p>
+              <div class="callout c-green"><div class="c-label green">One step you get to skip</div>On the org/Business path, there's a "set Copilot access to all repositories" policy step here. On personal accounts, there's no such policy to set — Copilot just works in every repo the account touches, automatically. One less thing that can go wrong.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 5 -->
+    <div class="phase" id="p5">
+      <div class="phase-header">
+        <div class="phase-num">5</div>
+        <div>
+          <div class="phase-title">Install Nova</div>
+          <div class="phase-sub">Identical to the org path — this file doesn't care whether an org exists</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create the instructions file</div>
+            <div class="step-body">
+              <p>On the same repo: <strong>Add file → Create new file</strong> → filename exactly:</p>
+              <pre>.github/copilot-instructions.md</pre>
+              <p>Paste in the full contents of <code>copilot-instructions.md</code> from your materials pack → <strong>Commit changes</strong>.</p>
+              <div class="callout c-blue"><div class="c-label blue">Confirmed compatible</div>Repository-level custom instructions like this are supported on GitHub's Free, Pro, and Team plans — this isn't a Business/Enterprise-only feature. Nova works exactly the same regardless of which individual plan is behind each account.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PHASE 6 -->
+    <div class="phase" id="p6">
+      <div class="phase-header">
+        <div class="phase-num">6</div>
+        <div>
+          <div class="phase-title">Test end-to-end</div>
+          <div class="phase-sub">Do this on Friday — ideally with both accounts if you set up two</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Copy the template</div>
+            <div class="step-body">
+              <p>Logged in as whichever account you're testing: go to your repo → <strong>Use this template</strong> → <strong>Create a new repository</strong> → name it something like <code>test-novapay</code>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Open a Codespace and the preview</div>
+            <div class="step-body">
+              <p><strong>Code → Codespaces → Create codespace on main</strong> → wait for it to load → right-click <code>bank-dashboard.html</code> → <strong>Open with Live Server</strong> → confirm the dashboard renders.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Confirm Nova is active</div>
+            <div class="step-body">
+              <p>Open Copilot Chat → type: <code>Who are you?</code> → it should describe itself as a NovaPay mentor, not generic Copilot.</p>
+              <div class="callout c-amber"><div class="c-label amber">If it doesn't</div>Double-check the exact filename from Step 5 — that's the only thing that commonly goes wrong, on either setup path.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">If testing on the Free tier, keep an eye on the chat count</div>
+            <div class="step-body">
+              <p>Have a handful of back-and-forth conversations with Nova across the bug hunt and build phases, roughly matching a real day's usage. If you're nowhere near 50 messages, Free is fine for that account. If you're closing in on it fast, upgrade that account to Pro before the real session.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Clean up</div>
+            <div class="step-body">
+              <p>Test repo's <strong>Settings</strong> → scroll to the bottom → <strong>Delete this repository</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- COMPARE -->
+    <div class="phase" id="compare">
+      <div class="phase-header">
+        <div class="phase-num">✓</div>
+        <div><div class="phase-title">This path vs. the org/Business path</div></div>
+      </div>
+      <table class="compare-table">
+        <thead><tr><th></th><th>Personal accounts (this guide)</th><th>Org + Copilot Business</th></tr></thead>
+        <tbody>
+          <tr><td>Blocked by the current Business pause?</td><td>No</td><td>Yes, right now</td></tr>
+          <tr><td>Monthly cost for you</td><td>$0 (Free) or $10 (Pro)</td><td>$19+ per seat</td></tr>
+          <tr><td>Setup complexity</td><td>Lower — no org, no policy step</td><td>Higher — org, seats, policy</td></tr>
+          <tr><td>Nova works?</td><td>Yes — identical</td><td>Yes — identical</td></tr>
+          <tr><td>Centralised billing/seat management</td><td>No — each account manages itself</td><td>Yes — one panel for all seats</td></tr>
+          <tr><td>Best for</td><td>Solo facilitator, small groups, right now</td><td>Larger orgs with existing Business access</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

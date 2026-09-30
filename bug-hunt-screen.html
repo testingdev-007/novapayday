@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Hunt — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0F1340;
+      --card:    #1A1F52;
+      --border:  rgba(255,255,255,0.1);
+      --accent:  #6C63FF;
+      --green:   #00C896;
+      --amber:   #FFB547;
+      --red:     #FF4757;
+      --white:   #FFFFFF;
+      --muted:   rgba(255,255,255,0.55);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.1em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+    }
+    .logo span { color: var(--white); }
+
+    .badge {
+      background: var(--accent);
+      color: white;
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+
+    /* ── MISSION ── */
+    .mission {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+    }
+
+    .section-eyebrow {
+      font-size: 0.68em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .mission-title {
+      font-size: 2em;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .mission-sub {
+      font-size: 1em;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+
+    .card-eyebrow {
+      font-size: 0.65em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .card-eyebrow.green  { color: var(--green);  }
+    .card-eyebrow.amber  { color: var(--amber);  }
+    .card-eyebrow.accent { color: var(--accent); }
+
+    /* ── STEPS ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.88em;
+      line-height: 1.4;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(108, 99, 255, 0.25);
+      color: var(--accent);
+      font-size: 0.75em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text { color: rgba(255,255,255,0.85); }
+    .step-text strong { color: white; font-weight: 600; }
+
+    /* ── PROMPTS ── */
+    .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prompt {
+      background: rgba(108, 99, 255, 0.12);
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      border-radius: 8px;
+      padding: 9px 13px;
+      font-size: 0.82em;
+      color: rgba(255,255,255,0.85);
+      font-style: italic;
+      line-height: 1.35;
+    }
+
+    /* ── DIFFICULTY ── */
+    .level-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .level {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85em;
+    }
+
+    .level-pip {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .pip-easy   { background: var(--green); }
+    .pip-medium { background: var(--amber); }
+    .pip-hard   { background: var(--red);   }
+    .pip-star   { background: var(--accent); }
+
+    .level-desc { color: var(--muted); font-size: 0.85em; margin-top: 1px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      font-size: 0.75em;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="badge">🐛 Bug Hunt</div>
+  </div>
+
+  <div class="mission">
+    <div class="section-eyebrow">Your mission</div>
+    <div class="mission-title">Something's broken.<br>Find it. Fix it.</div>
+    <div class="mission-sub">
+      The NovaPay dashboard has bugs hidden across the HTML, CSS, and JavaScript.
+      Use Copilot and your own eyes to track them down — and fix every one you can.
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-eyebrow green">How to approach it</div>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Open the preview.</strong> Look at the page. Does anything look obviously wrong?</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Use the page.</strong> Try making a withdrawal. Try the interest calculator. What breaks?</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Read the code.</strong> Open <code>bank-dashboard.html</code>. Read carefully — especially the JavaScript.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Check the console.</strong> Press <strong>F12</strong> → Console. Any red errors?</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Fix and test.</strong> Save your change, refresh the preview, check it worked.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-eyebrow accent">Copilot Chat — try these</div>
+      <div class="prompt-list">
+        <div class="prompt">"Are there any bugs in this code?"</div>
+        <div class="prompt">"I clicked this button and nothing happened — what could cause that?"</div>
+        <div class="prompt">"What does this function do?"</div>
+        <div class="prompt">"Why might a number show up as NaN instead of a value?"</div>
+        <div class="prompt">"How do I check if two IDs used in different places actually match?"</div>
+        <div class="prompt">"Can you explain this CSS rule to me?"</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-eyebrow amber">Difficulty levels</div>
+      <div class="level-list">
+        <div class="level">
+          <div class="level-pip pip-easy"></div>
+          <div>
+            <div>Easy — bugs you can <strong>see</strong></div>
+            <div class="level-desc">Just open the page. Something looks wrong.</div>
+          </div>
+        </div>
+        <div class="level">
+          <div class="level-pip pip-medium"></div>
+          <div>
+            <div>Medium — bugs you <strong>trigger</strong></div>
+            <div class="level-desc">Use the page. Try things. What breaks?</div>
+          </div>
+        </div>
+        <div class="level">
+          <div class="level-pip pip-hard"></div>
+          <div>
+            <div>Hard — bugs you have to <strong>read</strong></div>
+            <div class="level-desc">In the code or the browser console.</div>
+          </div>
+        </div>
+        <div class="level">
+          <div class="level-pip pip-star"></div>
+          <div>
+            <div>Stretch — <strong>missing</strong> logic</div>
+            <div class="level-desc">What <em>should</em> the code do that it doesn't?</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
+        <div class="card-eyebrow accent" style="margin-bottom:8px;">When you find one, note down:</div>
+        <div style="font-size:0.82em; color:var(--muted); line-height:1.7;">
+          ✦ What was wrong<br>
+          ✦ How you found it<br>
+          ✦ What you changed to fix it
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    There are 10 bugs in total &nbsp;·&nbsp; 3 easy &nbsp;·&nbsp; 3 medium &nbsp;·&nbsp; 3 hard &nbsp;·&nbsp; 1 stretch &nbsp;·&nbsp; log each one in your Bug Test Plan
+  </div>
+
+</body>
+</html>

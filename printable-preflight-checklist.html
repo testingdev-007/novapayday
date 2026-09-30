@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Flight Checklist (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--amber:#B45F06;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:14px;line-height:1.5;padding:32px 0 80px}
+.page{max-width:700px;margin:0 auto;background:var(--paper);padding:40px 48px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:700px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:20px;border-bottom:3px solid var(--ink);margin-bottom:20px}
+.doc-logo{font-size:1.1em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.7em;font-weight:900;letter-spacing:-0.03em;margin-top:8px}
+.doc-sub{font-size:0.88em;color:var(--muted);margin-top:4px}
+.block{margin:24px 0;page-break-inside:avoid}
+.block-header{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:12px}
+.block-icon{font-size:1.2em}
+.block-title{font-size:1em;font-weight:800}
+.step{display:flex;gap:12px;padding:6px 0}
+.step-box{width:20px;height:20px;border:2px solid var(--ink);border-radius:4px;flex-shrink:0;margin-top:1px}
+.step-text{font-size:0.9em;line-height:1.5}
+.step-text code{font-family:'JetBrains Mono',monospace;font-size:0.87em;background:var(--shade);border:1px solid var(--border);padding:1px 5px;border-radius:4px}
+.footer-note{text-align:center;font-size:0.82em;color:var(--muted);margin-top:24px;padding-top:16px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:12px}.page{box-shadow:none;padding:16px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this checklist</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Pre-Flight Checklist</div>
+    <div class="doc-sub">Do this the morning of — before a single student walks in</div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="block-icon">🏫</span><span class="block-title">The room</span></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Arrive at least 30 minutes early</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Projector on, connected, and actually showing your laptop screen</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Wifi connected and confirmed fast enough to load a Codespace</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Power for your laptop, plus a backup charger if you have one</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="block-icon">💻</span><span class="block-title">Your own setup</span></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Your repo URL written on the board / slide / somewhere visible all day</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Open a fresh Codespace yourself, right now, and confirm it loads</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Ask Copilot Chat "Who are you?" — confirm Nova responds correctly, not generically</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Confirm <code>challenge.js</code> is in the repo with the buggy function inside</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Confirm Live Server opens the dashboard preview without errors</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="block-icon">🖨️</span><span class="block-title">Printed materials — physically in your hand</span></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Master Script (or Session Day Script)</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Timed Agenda — one glance, whole day</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Troubleshooting Card</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Bug Cheat Sheet</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Student Roster — names filled in if you know them in advance</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Progress Tracker — blank, ready to fill in live</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Prompts Cheat Sheet</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">"If It All Falls Apart" page</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="block-icon">📺</span><span class="block-title">On-screen files ready to open</span></div>
+    <div class="step"><div class="step-box"></div><div class="step-text"><code>bug-hunt-screen.html</code>, <code>level-up-screen.html</code>, <code>brainstorm-screen.html</code>, <code>milestone-screen.html</code> — all open in browser tabs, in order, ready to switch between</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="block-icon">🧘</span><span class="block-title">You</span></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">Water nearby</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">You've already run the tutorials yourself, at least once, before today</div></div>
+    <div class="step"><div class="step-box"></div><div class="step-text">You remember: nothing here can be permanently broken, and every problem you've hit already has a written fix</div></div>
+  </div>
+
+  <div class="footer-note">
+    If everything above is ticked, you are ready. That's not reassurance — it's the actual, literal state of things.
+  </div>
+</div>
+</body>
+</html>

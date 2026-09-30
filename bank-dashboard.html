@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaPay — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F0F2F8;
+      --card:         #FFFFFF;
+      --hero-from:    #0F1340;
+      --hero-mid:     #1A1560;
+      --hero-to:      #2D1B69;
+      --accent:       #6C63FF;
+      --accent-light: #EEEEFF;
+      --text:         #0D0F1C;
+      --muted:        #8B92A5;
+      --border:       #E8ECF2;
+      --debit:        #FF4757;
+      --credit:       #00C896;
+      --shadow:       0 2px 12px rgba(13,15,28,0.08);
+      --r:            16px;
+      --r-sm:         10px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 48px;
+    }
+
+    /* ── HEADER ─────────────────────────────── */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-logo {
+      font-size: 1.2em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+    }
+    .app-logo span { color: var(--text); }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    .icon-btn {
+      width: 36px; height: 36px;
+      border: none; border-radius: 50%;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 0.75em;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      letter-spacing: 0;
+    }
+
+    /* ── MAIN ───────────────────────────────── */
+    .main {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── BALANCE HERO ───────────────────────── */
+    .balance-hero {
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 55%, var(--hero-to) 100%);
+      border-radius: var(--r);
+      padding: 28px 28px 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative blobs */
+    .balance-hero::before {
+      content: '';
+      position: absolute; top: -70px; right: -50px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(108, 99, 255, 0.18);
+      pointer-events: none;
+    }
+    .balance-hero::after {
+      content: '';
+      position: absolute; bottom: -90px; left: 30px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(108, 99, 255, 0.10);
+      pointer-events: none;
+    }
+
+    .balance-eyebrow {
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 10px;
+      position: relative; z-index: 1;
+    }
+
+    /*
+      Balance amount — should be white (#FFFFFF) so it
+      shows up on the dark hero card background.
+    */
+    .balance-amount {
+      font-size: 3em;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #0F1340;
+      margin-bottom: 24px;
+      font-variant-numeric: tabular-nums;
+      position: relative; z-index: 1;
+    }
+
+    .balance-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative; z-index: 1;
+    }
+
+    .account-name {
+      font-size: 0.85em;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .account-pill {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 0.78em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* ── STATS ROW ──────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--r-sm);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.2em;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-value.income { color: var(--credit); }
+    .stat-value.outgo  { color: var(--debit);  }
+
+    /* ── GENERIC CARD ───────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── TRANSACTIONS ───────────────────────── */
+    .tx-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tx-item:last-child { border-bottom: none; }
+
+    .tx-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25em;
+      flex-shrink: 0;
+    }
+
+    .tx-meta { flex: 1; min-width: 0; }
+
+    .tx-name {
+      font-size: 0.92em;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-date {
+      font-size: 0.75em;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .tx-amount {
+      font-size: 0.92em;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+    .tx-amount.debit  { color: var(--debit);  }
+    .tx-amount.credit { color: var(--credit); }
+
+    /* ── FORMS ──────────────────────────────── */
+    .field { margin-bottom: 14px; }
+
+    .field-label {
+      display: block;
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-prefix {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.9em;
+      pointer-events: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px 12px 30px;
+      border: 2px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 0.95em;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      background: white;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: var(--r-sm);
+      font-size: 0.95em;
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: var(--accent);
+      color: white;
+      cursor: default;    /* should be cursor: pointer */
+      transition: opacity 0.15s;
+    }
+
+    .btn-ghost {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    /* ── ALERTS ─────────────────────────────── */
+    .alert {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: var(--r-sm);
+      font-size: 0.88em;
+      font-weight: 500;
+      display: none;
+    }
+    .alert-ok  { background: #E6FAF3; color: #00804E; border: 1px solid #B0EDCF; }
+    .alert-err { background: #FFF0F1; color: #BF1030; border: 1px solid #FFB8C1; }
+
+    /* ── INTEREST RESULT ────────────────────── */
+    .result-box {
+      margin-top: 16px;
+      background: var(--accent-light);
+      border-radius: var(--r-sm);
+      padding: 16px 18px;
+      display: none;
+    }
+    .result-eyebrow {
+      font-size: 0.68em;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+    .result-figure {
+      font-size: 1.8em;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── CALC GRID ──────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-logo">nova<span>pay</span></div>
+    <div class="header-actions">
+      <button class="icon-btn">🔔</button>
+      <button class="icon-btn">⚙️</button>
+      <div class="avatar">AC</div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!--
+      Balance card — shows the user's current account balance.
+      Missing closing tag here causes the layout to collapse.
+    -->
+    <div class="balance-hero">
+      <div class="balance-eyebrow">Current Balance</div>
+      <div class="balance-amount" id="balance-display">£1,250.00</div>
+      <div class="balance-footer">
+        <div class="account-name">Alex Chen · Current Account</div>
+        <div class="account-pill">•••• 4821</div>
+      </div>
+
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Money In</div>
+        <div class="stat-value income">+£2,450.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Money Out</div>
+        <div class="stat-value outgo">−£56.27</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recent Transactions</div>
+
+      <!-- Coffee shop: this is a purchase (money out), not money in -->
+      <div class="tx-item">
+        <div class="tx-icon">☕</div>
+        <div class="tx-meta">
+          <div class="tx-name">Costa Coffee</div>
+          <div class="tx-date">Today, 09:14</div>
+        </div>
+        <div class="tx-amount credit">+£3.80</div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-icon">💷</div>
+        <div class="tx-meta">
+          <div class="tx-name">Salary — Acme Ltd</div>
+          <div class="tx-date">1 Jul, 08:00</div>
+        </div>
+        <div class="tx-amount credit">+£2,450.00</div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-icon">🛒</div>
+        <div class="tx-meta">
+          <div class="tx-name">Tesco Express</div>
+          <div class="tx-date">30 Jun, 18:32</div>
+        </div>
+        <div class="tx-amount debit">−£14.30</div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-icon">🎵</div>
+        <div class="tx-meta">
+          <div class="tx-name">Spotify</div>
+          <div class="tx-date">28 Jun, 00:00</div>
+        </div>
+        <div class="tx-amount debit">−£9.99</div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-icon">📦</div>
+        <div class="tx-meta">
+          <div class="tx-name">Amazon</div>
+          <div class="tx-date">27 Jun, 14:21</div>
+        </div>
+        <div class="tx-amount debit">−£28.99</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Withdraw Funds</div>
+
+      <div class="field">
+        <label class="field-label" for="withdraw-amount">Amount</label>
+        <div class="input-wrap">
+          <span class="input-prefix">£</span>
+          <!-- Amount field — accepts a withdrawal value -->
+          <input type="text" id="withdraw-amount" placeholder="0.00">
+        </div>
+      </div>
+
+      <!-- Withdraw button — calls makeWithdrawal when clicked -->
+      <button class="btn" onlick="makeWithdrawal()">Withdraw</button>
+
+      <div class="alert alert-ok"  id="wd-success"></div>
+      <div class="alert alert-err" id="wd-error"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Interest Calculator</div>
+      <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;">
+        Find out how much your savings could earn over 12 months.
+      </p>
+
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label">Amount</label>
+          <div class="input-wrap">
+            <span class="input-prefix">£</span>
+            <input type="number" id="int-amount" placeholder="1000">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Interest Rate</label>
+          <div class="input-wrap">
+            <span class="input-prefix">%</span>
+            <input type="number" id="int-rate" placeholder="4.5">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-ghost" onclick="calculateInterest()">Calculate</button>
+
+      <div class="result-box" id="int-result-box">
+        <div class="result-eyebrow">Interest earned over 12 months</div>
+        <div class="result-figure" id="int-result-figure"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let balance = 1250;
+
+    function makeWithdrawal() {
+      const successEl = document.getElementById("wd-success");
+      const errorEl   = document.getElementById("wd-error");
+
+      successEl.style.display = "none";
+      errorEl.style.display   = "none";
+
+      const amount = parseFloat(document.getElementById("withdraw-amount").value);
+
+      // Deduct the withdrawal from the current balance
+      balance = balance + amount;
+
+      // Update the balance shown on the hero card
+      document.getElementById("balence-display").textContent =
+        "£" + balance.toFixed(2);
+
+      successEl.style.display  = "block";
+      successEl.textContent    =
+        "Withdrawn £" + amount.toFixed(2) + ". New balance: £" + balance.toFixed(2);
+    }
+
+    function calculateInterest() {
+      const principal = parseFloat(document.getElementById("int-amount").value);
+      const rate      = parseFloat(document.getElementById("int-rate").value);
+
+      // Annual interest = principal × rate × 12 months
+      const interest = principal * rate * 12;
+
+      const box = document.getElementById("int-result-box");
+      box.style.display = "block";
+      document.getElementById("int-result-figure").textContent =
+        "£" + interest.toFixed(2);
+    }
+  </script>
+
+</body>
+</html>

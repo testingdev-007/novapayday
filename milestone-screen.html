@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Milestones — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #111827; --card: #1A2235; --card2: #1E2840;
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --muted: rgba(255,255,255,0.42); --border: rgba(255,255,255,0.08);
+    }
+    html, body { height: 100%; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── HEADER ── */
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .header-logo { font-size: 1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .header-logo span { color: var(--white); }
+    .header-title { font-size: 0.78em; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .timer-mini { font-family: 'JetBrains Mono', monospace; font-size: 1.1em; font-weight: 700; color: var(--amber); min-width: 60px; text-align: right; }
+    .timer-toggle { background: var(--card); border: 1px solid var(--border); color: var(--white); padding: 5px 14px; border-radius: 100px; font-family: inherit; font-size: 0.75em; font-weight: 600; cursor: pointer; }
+
+    /* ── MAIN LAYOUT ── */
+    .body { flex: 1; display: grid; grid-template-columns: 1fr 340px; gap: 0; min-height: 0; }
+
+    /* ── LEFT: MILESTONES ── */
+    .milestones { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+
+    .milestone {
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      position: relative;
+    }
+    .milestone:hover { border-color: rgba(108,99,255,0.3); transform: translateY(-1px); }
+
+    .milestone.upcoming { opacity: 0.5; }
+    .milestone.current { border-color: var(--accent); background: rgba(108,99,255,0.08); opacity: 1; }
+    .milestone.done { border-color: var(--green); background: rgba(0,200,150,0.06); opacity: 1; }
+
+    .ms-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .ms-state { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+    .upcoming .ms-state { background: var(--card2); }
+    .current  .ms-state { background: rgba(108,99,255,0.2); }
+    .done     .ms-state { background: rgba(0,200,150,0.2); }
+
+    .ms-meta { flex: 1; }
+    .ms-target { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; font-weight: 600; color: var(--muted); margin-bottom: 2px; }
+    .current .ms-target { color: var(--accent); }
+    .done    .ms-target { color: var(--green); }
+    .ms-title { font-size: 1em; font-weight: 800; letter-spacing: -0.02em; }
+
+    .ms-badge { font-size: 0.62em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; }
+    .upcoming .ms-badge { background: rgba(255,255,255,0.06); color: var(--muted); }
+    .current  .ms-badge { background: var(--accent); color: white; animation: pulse 2s ease-in-out infinite; }
+    .done     .ms-badge { background: var(--green); color: white; }
+
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    .ms-criteria { display: flex; flex-direction: column; gap: 7px; }
+    .ms-criterion { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83em; line-height: 1.5; }
+    .ms-criterion::before { content: '✓'; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+    .upcoming .ms-criterion { color: var(--muted); }
+    .upcoming .ms-criterion::before { color: rgba(255,255,255,0.2); }
+    .current  .ms-criterion { color: rgba(255,255,255,0.85); }
+    .current  .ms-criterion::before { color: var(--accent); }
+    .done     .ms-criterion { color: rgba(255,255,255,0.7); text-decoration: line-through; }
+    .done     .ms-criterion::before { content: '✓'; color: var(--green); }
+
+    .ms-click-hint { position: absolute; bottom: 10px; right: 14px; font-size: 0.65em; color: rgba(255,255,255,0.2); font-style: italic; }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel { border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+
+    /* YEAR TABS */
+    .year-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .year-tab { flex: 1; padding: 10px 4px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); font-family: inherit; font-size: 0.75em; font-weight: 700; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+    .year-tab:hover { color: var(--white); }
+    .year-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* TIPS PANEL */
+    .tips-panel { flex: 1; overflow-y: auto; padding: 18px; display: none; }
+    .tips-panel.active { display: block; }
+
+    .tips-section { margin-bottom: 18px; }
+    .tips-section-label { font-size: 0.62em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+    .tip-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; margin-bottom: 8px; }
+    .tip-tag { font-size: 0.62em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+    .tip-tag.comment { color: var(--accent); }
+    .tip-tag.chat    { color: var(--green); }
+    .tip-tag.stretch { color: var(--amber); }
+    .tip-text { font-size: 0.8em; line-height: 1.55; color: rgba(255,255,255,0.8); }
+    .tip-code { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 5px; padding: 8px 10px; margin-top: 7px; color: #A89CFF; line-height: 1.6; white-space: pre-wrap; }
+
+    /* STUCK STRIP */
+    .stuck-strip { border-top: 1px solid var(--border); padding: 14px 18px; flex-shrink: 0; background: rgba(255,181,71,0.05); }
+    .stuck-label { font-size: 0.65em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+    .stuck-item { font-size: 0.78em; color: rgba(255,255,255,0.7); line-height: 1.6; display: flex; gap: 8px; margin-bottom: 5px; }
+    .stuck-item::before { content: '→'; color: var(--amber); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-logo">nova<span>pay</span></div>
+    </div>
+    <div class="header-title">Build Phase · Click a milestone to advance it</div>
+    <div class="header-right">
+      <div class="timer-mini" id="clock">1:30:00</div>
+      <button class="timer-toggle" id="clock-btn" onclick="toggleClock()">Start</button>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- LEFT: MILESTONES -->
+    <div class="milestones">
+
+      <div class="milestone upcoming" id="ms1" onclick="advanceMilestone(1)">
+        <div class="ms-header">
+          <div class="ms-state">🏗️</div>
+          <div class="ms-meta">
+            <div class="ms-target">Target: 2:00 after session start</div>
+            <div class="ms-title">Milestone 1 — HTML Structure Done</div>
+          </div>
+          <div class="ms-badge">Upcoming</div>
+        </div>
+        <div class="ms-criteria">
+          <div class="ms-criterion">Page has a heading with the feature name</div>
+          <div class="ms-criterion">All input fields are on the page (even if unstyled)</div>
+          <div class="ms-criterion">A button exists and has an onclick attribute</div>
+          <div class="ms-criterion">There's a place for the result to appear</div>
+          <div class="ms-criterion">The page opens in Live Server without errors</div>
+        </div>
+        <div class="ms-click-hint">click to advance →</div>
+      </div>
+
+      <div class="milestone upcoming" id="ms2" onclick="advanceMilestone(2)">
+        <div class="ms-header">
+          <div class="ms-state">🎨</div>
+          <div class="ms-meta">
+            <div class="ms-target">Target: 2:40 after session start</div>
+            <div class="ms-title">Milestone 2 — Styled + Working</div>
+          </div>
+          <div class="ms-badge">Upcoming</div>
+        </div>
+        <div class="ms-criteria">
+          <div class="ms-criterion">Page looks reasonable — not just plain HTML</div>
+          <div class="ms-criterion">Button click does something visible</div>
+          <div class="ms-criterion">Result area shows a real output from real inputs</div>
+          <div class="ms-criterion">No console errors (check with F12)</div>
+          <div class="ms-criterion">You've tested it with actual numbers</div>
+        </div>
+        <div class="ms-click-hint">click to advance →</div>
+      </div>
+
+      <div class="milestone upcoming" id="ms3" onclick="advanceMilestone(3)">
+        <div class="ms-header">
+          <div class="ms-state">✨</div>
+          <div class="ms-meta">
+            <div class="ms-target">Target: 3:30 after session start</div>
+            <div class="ms-title">Milestone 3 — Polish + Stretch</div>
+          </div>
+          <div class="ms-badge">Upcoming</div>
+        </div>
+        <div class="ms-criteria">
+          <div class="ms-criterion">Input validation — empty fields show a message, not an error</div>
+          <div class="ms-criterion">Edge cases handled (e.g. savings greater than target)</div>
+          <div class="ms-criterion">One stretch feature added (see tips panel →)</div>
+          <div class="ms-criterion">Feature Test Plan filled in — at least 3 test cases logged</div>
+          <div class="ms-criterion">You can explain every line of code you've written</div>
+          <div class="ms-criterion">Demo-ready — you could show this to the room right now</div>
+        </div>
+        <div class="ms-click-hint">click to advance →</div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: TIPS BY YEAR GROUP -->
+    <div class="right-panel">
+
+      <div class="year-tabs">
+        <button class="year-tab active" onclick="showYear('y9')">Y9–10</button>
+        <button class="year-tab" onclick="showYear('y11')">Y11</button>
+        <button class="year-tab" onclick="showYear('y12')">Y12–13</button>
+      </div>
+
+      <!-- Y9-10 TIPS -->
+      <div class="tips-panel active" id="tips-y9">
+        <div class="tips-section">
+          <div class="tips-section-label">Inline comment prompts — type + Tab</div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// function that calculates the percentage of
+// savedAmount out of targetAmount, capped at 100</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// update the progress bar width and text
+// using the percentage value</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// show a congratulations message if
+// percentage is 100 or more</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Copilot Chat prompts</div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"Why isn't my progress bar changing width?"</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"My button click isn't doing anything — what's wrong with this function?"</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"Explain what getElementById does in plain English"</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Stretch goals if you finish early</div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// add a message that tells the user
+// how much more they need to save</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// change the progress bar colour to green
+// when percentage reaches 100</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Y11 TIPS -->
+      <div class="tips-panel" id="tips-y11">
+        <div class="tips-section">
+          <div class="tips-section-label">Inline comment prompts</div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// validate that targetAmount is greater than 0
+// and that savedAmount is not greater than targetAmount
+// show an error message if either check fails</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// animate the progress bar width from 0
+// to the target percentage using CSS transitions</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Copilot Chat prompts</div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"Review this function for edge cases I might have missed"</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"Suggest a way to make this code more readable"</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Stretch goals</div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// save the goal name, target, and saved amount
+// to localStorage so it persists on page refresh</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// add a second goal so users can track
+// multiple savings goals at once</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Y12-13 TIPS -->
+      <div class="tips-panel" id="tips-y12">
+        <div class="tips-section">
+          <div class="tips-section-label">Inline comment prompts</div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// class Goal with constructor taking name,
+// target, saved — methods: getPercentage(),
+// getRemaining(), isComplete()</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag comment">Comment → Tab</div>
+            <div class="tip-code">// given a weekly saving amount, calculate
+// the number of weeks to reach the target
+// from the current saved amount</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Copilot Chat prompts</div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"Are there any bugs or inefficiencies in this code?"</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag chat">Chat</div>
+            <div class="tip-text">"How would you refactor this to be more maintainable?"</div>
+          </div>
+        </div>
+        <div class="tips-section">
+          <div class="tips-section-label">Stretch goals</div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// add a date picker — calculate weekly saving
+// amount needed to reach goal by that date</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// add a "simulate a deposit" button that
+// increases savedAmount and animates the bar</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-tag stretch">Stretch</div>
+            <div class="tip-code">// fetch a live GBP/EUR exchange rate from
+// exchangerate-api.com and display it</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUCK STRIP -->
+      <div class="stuck-strip">
+        <div class="stuck-label">If you're stuck</div>
+        <div class="stuck-item">Ask Copilot Chat: "What problem am I trying to solve right now?"</div>
+        <div class="stuck-item">Narrow scope — get one thing working before adding more</div>
+        <div class="stuck-item">Check the console — F12 → Console tab shows errors</div>
+        <div class="stuck-item">Fill in the Feature Test Plan — trying to break your own feature often finds the next thing to fix</div>
+        <div class="stuck-item">Ask your partner or the person next to you</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // MILESTONE STATE: 0=upcoming, 1=current, 2=done
+    const states = [0, 0, 0];
+
+    function advanceMilestone(num) {
+      const idx = num - 1;
+      states[idx] = (states[idx] + 1) % 3;
+      renderMilestones();
+    }
+
+    function renderMilestones() {
+      [1, 2, 3].forEach(n => {
+        const el = document.getElementById(`ms${n}`);
+        const s = states[n - 1];
+        el.className = 'milestone ' + ['upcoming', 'current', 'done'][s];
+        el.querySelector('.ms-badge').textContent = ['Upcoming', '▶ In Progress', '✓ Done'][s];
+      });
+    }
+
+    // YEAR GROUP TABS
+    function showYear(yr) {
+      document.querySelectorAll('.tips-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`tips-${yr}`).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // COUNTDOWN CLOCK
+    let clockSeconds = 90 * 60; // 90 minutes
+    let clockRunning = false;
+    let clockInterval = null;
+
+    function formatClock(s) {
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      return `${h}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+    }
+
+    function toggleClock() {
+      const btn = document.getElementById('clock-btn');
+      const disp = document.getElementById('clock');
+      if (clockRunning) {
+        clearInterval(clockInterval); clockRunning = false; btn.textContent = 'Resume';
+      } else {
+        clockRunning = true; btn.textContent = 'Pause';
+        clockInterval = setInterval(() => {
+          clockSeconds--;
+          disp.textContent = formatClock(clockSeconds);
+          disp.style.color = clockSeconds < 600 ? 'var(--red)' : clockSeconds < 1200 ? 'var(--amber)' : 'var(--amber)';
+          if (clockSeconds <= 0) { clearInterval(clockInterval); disp.textContent = "Time's up!"; btn.textContent = 'Done'; }
+        }, 1000);
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Find & Fix a Bug — Step by Step</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F2F4FA; --white: #FFFFFF; --border: #E2E6F0;
+      --accent: #6C63FF; --accent-light: #EEEEFF;
+      --green: #00A878; --green-light: #E6F7F2;
+      --amber: #D4830A; --amber-light: #FEF3E2;
+      --red: #D6294A; --red-light: #FDECEF;
+      --text: #0D0F1C; --muted: #6B7280;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; padding-bottom: 60px; }
+
+    .app-header { background: white; border-bottom: 2px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .logo { font-size: 1.15em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--text); }
+    .header-badge { background: var(--green-light); color: var(--green); font-size: 0.72em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; }
+
+    .main { max-width: 760px; margin: 0 auto; padding: 40px 20px; }
+
+    .page-header { text-align: center; margin-bottom: 40px; }
+    .page-title { font-size: 2.1em; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 12px; }
+    .page-desc { font-size: 0.95em; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.65; }
+
+    .section { margin-bottom: 48px; }
+    .section-label { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: white; font-size: 0.75em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; margin-bottom: 16px; }
+    .section-title { font-size: 1.5em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .section-desc { font-size: 0.9em; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+
+    .step { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 14px; }
+    .step-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .step-num { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95em; flex-shrink: 0; color: white; }
+    .step-title { font-weight: 700; font-size: 1.02em; }
+    .step-body { font-size: 0.9em; color: #374151; line-height: 1.65; }
+    .step-body p + p { margin-top: 8px; }
+
+    .click-path { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+    .click { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(108,99,255,0.25); border-radius: 7px; padding: 5px 13px; font-size: 0.84em; font-weight: 600; }
+    .arrow { color: var(--muted); font-size: 0.9em; }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.87em; background: var(--accent-light); color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 600; }
+    pre { background: #1A1D29; color: #E5E7EB; border-radius: 10px; padding: 16px 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.83em; line-height: 1.7; overflow-x: auto; margin: 10px 0; }
+    .pre-del { color: #FF8A93; }
+    .pre-ins { color: #4AE8B2; }
+    .pre-cmt { color: #8B92A5; }
+
+    .see-box { background: var(--green-light); border: 1px solid #B7E8D8; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 0.86em; color: #065F46; line-height: 1.55; }
+    .see-label { font-weight: 700; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+
+    .tip { background: var(--accent-light); border: 1px solid #D4D0FF; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 0.86em; color: #3730A3; line-height: 1.55; }
+    .tip-label { font-weight: 700; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; color: var(--accent); }
+
+    .warn { background: var(--amber-light); border: 1px solid #F6D28A; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 0.86em; color: #78350F; line-height: 1.55; }
+    .warn-label { font-weight: 700; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+
+    .method-grid { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+    .method-item { display: flex; gap: 14px; align-items: flex-start; background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 18px; }
+    .method-icon { font-size: 1.4em; flex-shrink: 0; width: 36px; text-align: center; }
+    .method-title { font-weight: 700; font-size: 0.92em; margin-bottom: 3px; }
+    .method-desc { font-size: 0.83em; color: var(--muted); line-height: 1.5; }
+
+    .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .category-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+    .category-title { font-weight: 700; font-size: 0.9em; margin-bottom: 6px; }
+    .category-desc { font-size: 0.82em; color: var(--muted); line-height: 1.55; }
+
+    .prompt { background: #F5F4FF; border: 1px solid #D4D0FF; border-radius: 8px; padding: 10px 14px; font-size: 0.85em; color: #3730A3; font-style: italic; line-height: 1.4; margin: 6px 0; }
+
+    hr { border: none; border-top: 2px solid var(--border); margin: 40px 0; }
+
+    .final-box { background: var(--accent); color: white; border-radius: 16px; padding: 24px 28px; text-align: center; margin-top: 20px; }
+    .final-title { font-size: 1.1em; font-weight: 800; margin-bottom: 6px; }
+    .final-desc { font-size: 0.88em; color: rgba(255,255,255,0.85); line-height: 1.6; }
+
+    /* ── LEVEL SWITCHER ── */
+    .level-bar {
+      position: sticky; top: 0; z-index: 60;
+      background: white; border-bottom: 2px solid var(--border);
+      padding: 12px 20px; margin: -40px -20px 32px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .level-label { font-size: 0.78em; font-weight: 700; color: var(--muted); margin-right: 4px; }
+    .level-btn {
+      background: var(--bg); border: 1.5px solid var(--border); color: var(--text);
+      font-family: inherit; font-size: 0.82em; font-weight: 700; padding: 7px 16px;
+      border-radius: 100px; cursor: pointer; transition: all 0.15s;
+    }
+    .level-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .level-btn:hover:not(.active) { border-color: var(--accent); }
+
+    /* Stretch/challenge content shown only for certain levels */
+    .stretch-block { display: none; background: var(--red-light); border: 1.5px solid #F3C1CA; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
+    body[data-level="y11"] .stretch-block.for-y11,
+    body[data-level="y1213"] .stretch-block.for-y11,
+    body[data-level="y1213"] .stretch-block.for-y1213 { display: block; }
+    .stretch-label { font-weight: 700; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.05em; color: var(--red); margin-bottom: 4px; }
+
+    /* Reveal box for hiding scaffolding at higher levels */
+    details.reveal-box { margin: 10px 0; }
+    details.reveal-box summary { cursor: pointer; font-weight: 700; font-size: 0.85em; color: var(--accent); padding: 8px 0; list-style: none; }
+    details.reveal-box summary::-webkit-details-marker { display: none; }
+    details.reveal-box summary::before { content: "▸ "; }
+    details.reveal-box[open] summary::before { content: "▾ "; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="header-badge">🐛 Bug Hunt Tutorial</div>
+  </header>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-title">How to Find &amp; Fix a Bug</div>
+      <div class="page-desc">A real, click-by-click walkthrough. We'll use a made-up example first so nothing here spoils the real bugs in the dashboard — then you'll use the exact same method on the actual file.</div>
+    </div>
+
+    <div class="level-bar">
+      <span class="level-label">I'm in:</span>
+      <button class="level-btn active" onclick="setLevel('y9', this)">Y9–Y10</button>
+      <button class="level-btn" onclick="setLevel('y11', this)">Y11</button>
+      <button class="level-btn" onclick="setLevel('y1213', this)">Y12–Y13</button>
+    </div>
+
+    <!-- THE METHOD -->
+    <div class="section">
+      <div class="section-label">The Method</div>
+      <div class="section-title">Four steps, every single time</div>
+      <div class="section-desc">This is the entire loop. Professional developers do exactly this, all day, every day.</div>
+      <div class="method-grid">
+        <div class="method-item">
+          <div class="method-icon">👀</div>
+          <div><div class="method-title">1. Look</div><div class="method-desc">Open the preview. Does anything look visually wrong — missing, invisible, misaligned, the wrong colour?</div></div>
+        </div>
+        <div class="method-item">
+          <div class="method-icon">🖱️</div>
+          <div><div class="method-title">2. Use</div><div class="method-desc">Click every button. Type in every field. Does something not respond, or do the opposite of what it should?</div></div>
+        </div>
+        <div class="method-item">
+          <div class="method-icon">📖</div>
+          <div><div class="method-title">3. Read</div><div class="method-desc">Open the code. Read it slowly, line by line. Typos and small mistakes hide in plain sight.</div></div>
+        </div>
+        <div class="method-item">
+          <div class="method-icon">✅</div>
+          <div><div class="method-title">4. Test</div><div class="method-desc">Make your fix, save, and check the preview again. Did it actually work? Don't assume — look.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- WORKED EXAMPLE -->
+    <div class="section">
+      <div class="section-label" style="background:var(--green)">Worked Example</div>
+      <div class="section-title">Let's fix a bug together first</div>
+      <div class="section-desc">This example is <strong>not</strong> from the real dashboard — it's just here so you can see the exact clicks before you try it for real.</div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">1</div>
+          <div class="step-title">Imagine you see this on a page</div>
+        </div>
+        <div class="step-body">
+          <p>There's a button that's supposed to show a greeting. You click it. Nothing happens. No error, no message — just silence.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">2</div>
+          <div class="step-title">Look → nothing to see here</div>
+        </div>
+        <div class="step-body">
+          <p>The button looks completely normal. This isn't a visual bug — <strong>Look</strong> tells you nothing's obviously wrong, so move to the next step.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">3</div>
+          <div class="step-title">Use → confirmed, it's broken</div>
+        </div>
+        <div class="step-body">
+          <p>You click the button. Nothing happens. That confirms there IS a bug — now you know where to look in the code.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">4</div>
+          <div class="step-title">Read → open the code and look closely</div>
+        </div>
+        <div class="step-body">
+          <p>Click on the file in your file panel to open it. You find this:</p>
+          <pre><span class="pre-cmt">&lt;!-- The button --&gt;</span>
+&lt;button onclick="sayHi()"&gt;Click me&lt;/button&gt;
+
+<span class="pre-cmt">// The function --&gt;</span>
+function <span class="pre-del">sayHu</span>() {
+  alert("Hi!");
+}</pre>
+          <p>Read it slowly. The button calls a function called <code>sayHi()</code>. But the function is actually named <code>sayHu()</code> — one letter different. JavaScript can't find a function that doesn't exist, so it just quietly does nothing.</p>
+          <div class="tip"><div class="tip-label">This is the single most common type of bug</div>A name doesn't match somewhere else. Your eye skips over it because both spellings <em>look</em> like they should be the same word.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">5</div>
+          <div class="step-title">Fix it — the exact clicks</div>
+        </div>
+        <div class="step-body">
+          <p>Click right before the <code>u</code> in <code>sayHu</code>. Press Backspace to delete it. Type <code>i</code> instead. You now have:</p>
+          <pre>function <span class="pre-ins">sayHi</span>() {
+  alert("Hi!");
+}</pre>
+          <p>Press <code>Ctrl+S</code> (Windows) or <code>Cmd+S</code> (Mac) to save.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--accent)">6</div>
+          <div class="step-title">Test it — did it actually work?</div>
+        </div>
+        <div class="step-body">
+          <p>Click over to your Live Server preview tab. Because Live Server watches for saves, the page has already refreshed automatically. Click the button again.</p>
+          <div class="see-box"><div class="see-label">You should see</div>A popup box appears saying "Hi!" — the bug is fixed, and you've confirmed it by actually testing it, not just assuming.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- APPLY TO REAL DASHBOARD -->
+    <div class="section">
+      <div class="section-label" style="background:var(--red)">Now For Real</div>
+      <div class="section-title">Apply this to the actual dashboard</div>
+      <div class="section-desc">Same four steps. We won't tell you what the bugs are — that's the whole exercise — but here's exactly how to run the process.</div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--red)">1</div>
+          <div class="step-title">Look — go through the page top to bottom</div>
+        </div>
+        <div class="step-body">
+          <p>Open your Live Server preview tab for <code>bank-dashboard.html</code>. Scroll from the very top to the very bottom slowly. For each section, ask: <em>does this look right? Is anything missing, invisible, or in the wrong place?</em></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--red)">2</div>
+          <div class="step-title">Use — click and type on absolutely everything</div>
+        </div>
+        <div class="step-body">
+          <p>Click every button on the page. Type a normal number into every input field and see what happens. Then get a bit naughty — try these on purpose:</p>
+          <div class="category-grid">
+            <div class="category-card"><div class="category-title">Leave a field empty</div><div class="category-desc">Click the button without typing anything first</div></div>
+            <div class="category-card"><div class="category-title">Type letters, not numbers</div><div class="category-desc">Into a field that expects an amount</div></div>
+            <div class="category-card"><div class="category-title">Type a negative number</div><div class="category-desc">Like -50, where it wouldn't make sense</div></div>
+            <div class="category-card"><div class="category-title">Type a huge number</div><div class="category-desc">Bigger than the amounts on the page</div></div>
+          </div>
+          <p style="margin-top:10px">Every time something looks wrong or doesn't behave the way you'd expect a real banking app to behave — that's a bug. Write it in your Bug Test Plan straight away, before you forget.</p>
+          <div class="stretch-block for-y11">
+            <div class="stretch-label">Y11+ Stretch</div>
+            Before you fix anything, write down your best guess for <em>why</em> it's broken, in your own words. Check your guess once you've read the code.
+          </div>
+          <div class="stretch-block for-y1213">
+            <div class="stretch-label">Y12–13 Stretch</div>
+            Try to categorise each bug as you find it: is it a <strong>typo</strong>, a <strong>logic error</strong> (the maths or condition is wrong), or a <strong>missing check</strong> (nothing stops bad input)? Naming the category before you fix it is exactly what a real code review looks like.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--red)">3</div>
+          <div class="step-title">Read — open the code and slow down</div>
+        </div>
+        <div class="step-body">
+          <p>Click on <code>bank-dashboard.html</code> in your file panel. Read the HTML first, top to bottom. Then read the CSS. Then read the JavaScript at the bottom, one line at a time.</p>
+          <p>For every line, ask yourself: <em>does this say what I think it says?</em> Compare names carefully — an id used in one place has to be spelled <strong>exactly</strong> the same everywhere else it's used.</p>
+          <div class="warn"><div class="warn-label">Open the console too</div>Press <strong>F12</strong>, click the <strong>Console</strong> tab, then try using the page again. Red text in there is JavaScript telling you exactly where it got confused — genuinely one of the most useful clues you have.</div>
+          <div class="stretch-block for-y1213">
+            <div class="stretch-label">Y12–13 Stretch</div>
+            For one bug, write a proper one-sentence bug report the way a real team would file it: <em>"Expected X to happen when doing Y. Instead, Z happened."</em> This is the actual skill of turning a vague "it's broken" into something someone else could act on.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--red)">4</div>
+          <div class="step-title">Fix it — the same mechanics as the example</div>
+        </div>
+        <div class="step-body">
+          <p>Click into the exact spot in the code that's wrong. Delete what's incorrect, type the correction. Save with <code>Ctrl+S</code> / <code>Cmd+S</code>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div class="step-num" style="background:var(--red)">5</div>
+          <div class="step-title">Test it — prove it, don't assume it</div>
+        </div>
+        <div class="step-body">
+          <p>Switch to the Live Server tab. Do the exact same thing that was broken before — click the same button, type the same value. Does it now behave correctly?</p>
+          <p>If yes — log it in your Bug Test Plan (what was wrong, how you found it, what you changed) and go back to Step 1 for the next bug. If no — you haven't found the real bug yet, or your fix didn't quite work. Go back to Step 3 and read more carefully.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- CATEGORIES -->
+    <div class="section">
+      <div class="section-label" style="background:var(--amber)">Good To Know</div>
+      <div class="section-title">The kinds of bugs you'll likely meet</div>
+      <div class="section-desc">General categories, not specific answers — knowing the shape of a problem helps you spot it faster.</div>
+      <div class="category-grid">
+        <div class="category-card">
+          <div class="category-title">🔤 Typos in names</div>
+          <div class="category-desc">A function, an id, or an attribute spelled slightly differently in two places. Read character by character, not just the shape of the word.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-title">🎨 Colours that hide things</div>
+          <div class="category-desc">Text the same colour as its background is invisible but still there. Try clicking and dragging where you think text should be.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-title">🧮 Maths that's backwards</div>
+          <div class="category-desc">A calculation that does the opposite of what it should, or is scaled wrong. Test with numbers you can check in your head.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-title">🚫 Missing checks</div>
+          <div class="category-desc">Nothing stops you entering something silly (empty, negative, huge). That's what your "Use" step on purpose is for.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- NOVA HELP -->
+    <div class="section">
+      <div class="section-label">Getting Unstuck</div>
+      <div class="section-title">Exactly what to type to Nova</div>
+      <div class="section-desc">If you've done Look, Use, and Read, and you're still stuck — these prompts work well.</div>
+      <div class="prompt">"I clicked this button and nothing happened. Here's the code around it — what's wrong?"</div>
+      <div class="prompt">"The console shows this error: [paste the red text]. What does it mean?"</div>
+      <div class="prompt">"I expected X to happen when I did Y, but Z happened instead. Why?"</div>
+      <div class="tip"><div class="tip-label">Nova will hint, not just answer</div>That's on purpose — it'll point you toward the right area rather than just telling you the fix outright. Keep asking follow-up questions if the first hint doesn't quite land.</div>
+    </div>
+
+    <div class="final-box">
+      <div class="final-title">🎯 That's the whole method</div>
+      <div class="final-desc">Look, Use, Read, Fix, Test. Repeat it for every bug you find. It's the same loop real developers run all day — you're just running it on a smaller scale.</div>
+    </div>
+
+  </main>
+
+  <script>
+    function setLevel(level, btn) {
+      document.body.setAttribute('data-level', level);
+      document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

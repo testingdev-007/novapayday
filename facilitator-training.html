@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facilitator Training — GitHub, Codespaces & Copilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.16);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar { width: 250px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .back-link { display: block; padding: 8px 20px 16px; font-size: 0.78em; color: var(--muted); text-decoration: none; }
+    .back-link:hover { color: white; }
+
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(108,99,255,0.2); color: var(--accent); font-size: 0.7em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-num.done { background: rgba(0,200,150,0.2); color: var(--green); }
+
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 900px; }
+    .page-header { margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 10px; }
+    .page-desc { font-size: 0.9em; color: var(--muted); max-width: 620px; line-height: 1.65; }
+
+    .progress-strip { display: flex; gap: 6px; margin-top: 20px; }
+    .progress-seg { flex: 1; height: 5px; border-radius: 100px; background: var(--card); }
+    .progress-seg.done { background: var(--green); }
+
+    /* MODULE CARD GRID (index view) */
+    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+    .module-card {
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 20px 22px; text-decoration: none; color: white;
+      transition: border-color 0.18s, transform 0.15s;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .module-card:hover { transform: translateY(-2px); border-color: rgba(108,99,255,0.4); }
+    .module-top { display: flex; align-items: center; justify-content: space-between; }
+    .module-icon { font-size: 1.6em; }
+    .module-time { font-size: 0.68em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .module-title { font-weight: 700; font-size: 0.98em; }
+    .module-desc { font-size: 0.8em; color: var(--muted); line-height: 1.5; }
+
+    /* LESSON CONTENT */
+    .section { margin: 36px 0; }
+    .section-title { font-size: 1.25em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 14px; }
+    .section-desc { font-size: 0.87em; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
+
+    p { font-size: 0.9em; line-height: 1.75; margin-bottom: 10px; }
+    ul, ol { margin: 4px 0 14px 20px; }
+    li { font-size: 0.89em; line-height: 1.75; margin-bottom: 5px; }
+    strong { color: var(--white); font-weight: 600; }
+    em { color: rgba(255,255,255,0.7); }
+
+    .lesson-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 16px; }
+    .lesson-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .lesson-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
+    .lesson-title { font-weight: 800; font-size: 1.02em; }
+
+    .try-it-box {
+      background: rgba(0,200,150,0.08); border: 1.5px solid rgba(0,200,150,0.3);
+      border-radius: 12px; padding: 18px 22px; margin: 16px 0;
+    }
+    .try-it-label { display: flex; align-items: center; gap: 8px; font-size: 0.75em; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+    .try-it-box a.hands-on-link { display: inline-flex; align-items: center; gap: 8px; background: var(--green); color: #04231A; text-decoration: none; font-weight: 700; font-size: 0.85em; padding: 9px 18px; border-radius: 100px; margin-top: 6px; }
+    .try-it-box a.hands-on-link:hover { opacity: 0.9; }
+
+    .callout { border-radius: 10px; padding: 14px 18px; margin: 12px 0; font-size: 0.86em; line-height: 1.65; }
+    .c-amber { background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.25); }
+    .c-blue  { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.25); }
+    .c-red   { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.25); }
+    .c-label { font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .c-label.amber { color: var(--amber); } .c-label.blue { color: var(--blue); } .c-label.red { color: var(--red); }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.65; color: rgba(255,255,255,0.75); overflow-x: auto; }
+
+    .quiz-box { background: var(--card); border: 1.5px solid rgba(108,99,255,0.3); border-radius: 12px; padding: 18px 22px; margin-top: 20px; }
+    .quiz-q { font-weight: 700; font-size: 0.9em; margin-bottom: 10px; }
+    .quiz-a { font-size: 0.85em; color: var(--muted); line-height: 1.6; padding-left: 16px; border-left: 2px solid rgba(0,200,150,0.4); }
+
+    .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .nav-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); color: white; text-decoration: none; padding: 10px 20px; border-radius: 100px; font-size: 0.85em; font-weight: 600; }
+    .nav-btn:hover { border-color: var(--accent); }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Facilitator Training</div>
+    </div>
+    <a class="back-link" href="run-the-session.html">← Back to run-the-session hub</a>
+
+    <div class="nav-section">
+      <div class="nav-label">Start here</div>
+      <a class="nav-item" href="#overview"><div class="nav-num">0</div>Course overview</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">The Fundamentals</div>
+      <a class="nav-item" href="#m1"><div class="nav-num">1</div>What GitHub actually is</a>
+      <a class="nav-item" href="#m2"><div class="nav-num">2</div>What a Codespace actually is</a>
+      <a class="nav-item" href="#m3"><div class="nav-num">3</div>What Copilot actually does</a>
+      <a class="nav-item" href="#m4"><div class="nav-num">4</div>What Nova adds, and why</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Do It Yourself</div>
+      <a class="nav-item" href="#m5"><div class="nav-num">5</div>Run the bug tutorial yourself</a>
+      <a class="nav-item" href="#m6"><div class="nav-num">6</div>Run the build tutorial yourself</a>
+    </div>
+    <div class="nav-section" style="margin-top:6px">
+      <div class="nav-label">Teach It</div>
+      <a class="nav-item" href="#m7"><div class="nav-num">7</div>Narrating this live to the room</a>
+      <a class="nav-item" href="#m8"><div class="nav-num">8</div>Common questions you'll get asked</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <!-- OVERVIEW -->
+    <div class="page-header" id="overview">
+      <div class="page-eyebrow">Zero margin for error</div>
+      <div class="page-title">Facilitator Training Course</div>
+      <div class="page-desc">Eight modules. By the end, you will have personally used GitHub, opened a Codespace, chatted with Copilot and Nova, fixed a bug, and built a feature — using the exact same files your students will use on Friday. Nothing here is theoretical.</div>
+      <div class="progress-strip">
+        <div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div>
+        <div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div>
+      </div>
+    </div>
+
+    <div class="module-grid">
+      <a class="module-card" href="#m1"><div class="module-top"><div class="module-icon">🐙</div><div class="module-time">~5 min</div></div><div class="module-title">1. What GitHub actually is</div><div class="module-desc">Repos, commits, and template repos — explained with your actual workshop repo.</div></a>
+      <a class="module-card" href="#m2"><div class="module-top"><div class="module-icon">☁️</div><div class="module-time">~5 min</div></div><div class="module-title">2. What a Codespace actually is</div><div class="module-desc">Why it's not "your computer" — and why that's the whole point.</div></a>
+      <a class="module-card" href="#m3"><div class="module-top"><div class="module-icon">🤖</div><div class="module-time">~6 min</div></div><div class="module-title">3. What Copilot actually does</div><div class="module-desc">Two separate features people conflate: completions and Chat.</div></a>
+      <a class="module-card" href="#m4"><div class="module-top"><div class="module-icon">✨</div><div class="module-time">~6 min</div></div><div class="module-title">4. What Nova adds, and why</div><div class="module-desc">The full objective case — with side-by-side evidence.</div></a>
+      <a class="module-card" href="#m5"><div class="module-top"><div class="module-icon">🐛</div><div class="module-time">~15 min</div></div><div class="module-title">5. Run the bug tutorial yourself</div><div class="module-desc">Hands-on. Same file, same steps, your own account.</div></a>
+      <a class="module-card" href="#m6"><div class="module-top"><div class="module-icon">🏗️</div><div class="module-time">~20 min</div></div><div class="module-title">6. Run the build tutorial yourself</div><div class="module-desc">Build the real Savings Tracker, start to finish, yourself.</div></a>
+      <a class="module-card" href="#m7"><div class="module-top"><div class="module-icon">🎤</div><div class="module-time">~5 min</div></div><div class="module-title">7. Narrating this live</div><div class="module-desc">What to say while a room full of students does this.</div></a>
+      <a class="module-card" href="#m8"><div class="module-top"><div class="module-icon">❓</div><div class="module-time">~5 min</div></div><div class="module-title">8. Common questions</div><div class="module-desc">The things students actually ask, and good answers.</div></a>
+    </div>
+
+    <hr>
+
+    <!-- MODULE 1 -->
+    <div class="section" id="m1">
+      <div class="section-title">Module 1 — What GitHub actually is</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(108,99,255,0.2)">🐙</div><div class="lesson-title">A folder that remembers its own history</div></div>
+        <p>Forget "developer tool" for a second. GitHub is a place to store a folder of files — called a <strong>repository</strong>, or <strong>repo</strong> — where every saved change is kept forever as a numbered <strong>commit</strong>. You can always go back to any earlier version. Nothing is ever truly lost by editing it.</p>
+        <p>Your workshop repo (<code>novapay-workshop</code>) is exactly this: a folder containing <code>bank-dashboard.html</code>, <code>starter-template.html</code>, <code>challenge.js</code>, and two configuration files. That's it. That's the whole "developer" mystique — a folder with a memory.</p>
+        <p><strong>Why a "template" repository specifically?</strong> Ticking "Template repository" in Settings adds one button — <strong>Use this template</strong> — that lets anyone make their own full copy of your repo, under their own account, instantly. That's how every student gets an identical, independent copy of the workshop files without ever touching yours.</p>
+
+        <div class="try-it-box">
+          <div class="try-it-label">🔗 Try it on the real thing</div>
+          <p>Open your actual workshop repo on github.com right now. Click the <strong>commits</strong> link near the top of the file list — you'll see every file you've uploaded, each as its own saved commit, in order. This is the exact repo your students will copy on Friday.</p>
+        </div>
+
+        <div class="quiz-box">
+          <div class="quiz-q">Q: If a student breaks their copy of the repo completely, is your original repo affected?</div>
+          <div class="quiz-a">No. Each student's "Use this template" copy is completely independent. Nothing they do can touch your original.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2 -->
+    <div class="section" id="m2">
+      <div class="section-title">Module 2 — What a Codespace actually is</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(79,195,247,0.2)">☁️</div><div class="lesson-title">Not your computer. A borrowed one.</div></div>
+        <p>When a student clicks <strong>Code → Codespaces → Create codespace on main</strong>, GitHub doesn't download anything to their laptop. Instead, it starts up a real, temporary Linux computer somewhere in a Microsoft data centre, installs VS Code and the extensions your <code>devcontainer.json</code> lists, and streams the whole editor into their browser tab.</p>
+        <p>This is why it works identically on a school Chromebook, an old laptop, or your own machine — the actual computing happens elsewhere. The browser is just a window onto it.</p>
+        <div class="callout c-blue">
+          <div class="c-label blue">Why this matters for you as facilitator</div>
+          If a Codespace misbehaves, deleting it and creating a fresh one costs nothing — you're not "reinstalling" anything, you're just asking for a new borrowed computer. This is why the rescue advice throughout your materials is always "delete it, make a new one" rather than trying to repair it.
+        </div>
+
+        <div class="try-it-box">
+          <div class="try-it-label">🔗 Try it on the real thing</div>
+          <p>Open a Codespace on your own test repo. Once it loads, open a new terminal (<strong>Terminal → New Terminal</strong>) and type <code>whoami</code> then <code>hostname</code>. You'll see this is a real, separate Linux machine — not your laptop.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 3 -->
+    <div class="section" id="m3">
+      <div class="section-title">Module 3 — What Copilot actually does</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(0,200,150,0.2)">🤖</div><div class="lesson-title">Three modes people lump together as one</div></div>
+        <p><strong>Inline completions (Tab-complete)</strong> — you type a comment describing what you want, and Copilot suggests code as grey "ghost text." Press Tab to accept. This is prediction, not conversation — it's reading the surrounding code and guessing the most likely continuation.</p>
+        <p><strong>Ask/Chat mode</strong> — a proper conversation. You ask a question in plain English, it answers, you can ask follow-ups, but it doesn't touch your files directly. This is where Nova's restraint during the Bug Hunt works best — it's designed for conversation, not action.</p>
+        <p><strong>Agent mode</strong> — a different beast entirely. Instead of just talking, it reads and edits files directly, autonomously, across multiple steps, with far less friction. Nova's instructions still load here too — but because Agent mode's whole purpose is to <em>act</em>, it's noticeably more likely to just fix things when asked, even with the same restraint instructions present. Nova's file has an explicit hard rule for this now: one small change, then stop and explain, during the Bug Hunt specifically.</p>
+        <div class="callout c-red">
+          <div class="c-label red">Worth testing yourself before Friday</div>
+          Switch to Agent mode in your own test Codespace and ask it to "fix the bugs in this file" during a mock Bug Hunt. See whether it holds back as intended, or fixes several bugs in one go. Either way, you'll know what to expect from students discovering the mode switch.
+        </div>
+        <div class="callout c-amber">
+          <div class="c-label amber">The one thing worth knowing cold</div>
+          Copilot is confidently wrong a meaningful amount of the time. It's pattern-matching against code it's seen before, not reasoning about your specific problem from scratch. This is the single most important thing to model for students: always test what it gives you, never trust it blindly.
+        </div>
+
+        <div class="try-it-box">
+          <div class="try-it-label">🔗 Try it on the real thing</div>
+          <p>In your test Codespace, open a blank line in any file and type <code>// function that adds tax to a price</code> then wait for the ghost text, then press Tab. Then open Ask mode and ask the same thing as a question instead. Then try Agent mode. Notice how differently all three feel.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 4 -->
+    <div class="section" id="m4">
+      <div class="section-title">Module 4 — What Nova adds, and why</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(255,181,71,0.2)">✨</div><div class="lesson-title">The short version</div></div>
+        <p>Nova is not a separate tool. It's a text file — <code>.github/copilot-instructions.md</code> — that Copilot Chat automatically reads every time it's used in your repo. It changes Copilot's behaviour without changing which product students are using.</p>
+        <p>The full, evidence-based comparison — with real side-by-side examples of Nova vs plain Copilot answering the exact same student question — is its own page:</p>
+        <div class="try-it-box">
+          <div class="try-it-label">📄 Full comparison</div>
+          <a class="hands-on-link" href="nova-vs-copilot.html">Open: Nova vs Plain Copilot — The Objective Case →</a>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- MODULE 5 -->
+    <div class="section" id="m5">
+      <div class="section-title">Module 5 — Run the bug tutorial yourself</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(0,200,150,0.2)">🐛</div><div class="lesson-title">Do this before Friday, not just read about it</div></div>
+        <p>The tutorial your students will follow is real, and you should run it yourself, end to end, in your own test Codespace. This isn't optional reading — actually clicking through it is what removes the margin for error, because you'll have personally seen every screen a student sees.</p>
+        <ol>
+          <li>Open a Codespace on your test repo copy</li>
+          <li>Open the student tutorial and follow it exactly as written, on your own screen</li>
+          <li>Notice the worked fake example first (a typo bug), then the real dashboard afterward</li>
+          <li>Actually find and fix at least 2–3 real bugs in <code>bank-dashboard.html</code> yourself</li>
+        </ol>
+        <div class="try-it-box">
+          <div class="try-it-label">🔗 Do this now</div>
+          <a class="hands-on-link" href="how-to-find-fix-bugs.html">Open: How to Find &amp; Fix a Bug — the actual student tutorial →</a>
+        </div>
+        <div class="callout c-blue">
+          <div class="c-label blue">Why this matters</div>
+          Once you've done this yourself, every question a student asks you during the real Bug Hunt hour will feel familiar rather than new. You'll recognise the exact moment where they're stuck, because you were stuck there too.
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 6 -->
+    <div class="section" id="m6">
+      <div class="section-title">Module 6 — Run the build tutorial yourself</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(255,181,71,0.2)">🏗️</div><div class="lesson-title">Build the actual Savings Tracker, yourself, from empty</div></div>
+        <p>Same principle, bigger task. Open the build tutorial and follow it exactly as written in your own test Codespace — it has you create a genuinely blank file and build everything from nothing: the page skeleton, the NovaPay colours, the header, the input form, then the progress bar and logic. 10 steps in total.</p>
+        <p>By the end you'll have a working progress bar, a working calculation, and a feature you can type real numbers into and watch respond. This is precisely what a student experiences on Friday afternoon.</p>
+        <div class="try-it-box">
+          <div class="try-it-label">🔗 Do this now</div>
+          <a class="hands-on-link" href="how-to-build-your-feature.html">Open: How to Build Your Feature — the actual student tutorial →</a>
+        </div>
+        <div class="callout c-amber">
+          <div class="c-label amber">Pay attention to this moment specifically</div>
+          Step 7 — where you type real numbers in and the progress bar actually animates — is the emotional high point of the whole day for most students. Notice how it feels for you. That's the reaction to watch for and celebrate in the room.
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- MODULE 7 -->
+    <div class="section" id="m7">
+      <div class="section-title">Module 7 — Narrating this live to the room</div>
+      <div class="lesson-card">
+        <div class="lesson-head"><div class="lesson-icon" style="background:rgba(108,99,255,0.2)">🎤</div><div class="lesson-title">You don't need new material — you need confidence</div></div>
+        <p>Everything you say on the day is already scripted in <code>printable-session-day.html</code>. What Modules 1–6 give you is the ability to say those lines <em>from experience</em> rather than reading them cold. That difference is what removes the fear.</p>
+        <ul>
+          <li>When you introduce the bug hunt, you can honestly say "I did this exact tutorial myself" — because you did</li>
+          <li>When someone's stuck on a bug, you'll likely recognise the shape of the problem from your own run-through</li>
+          <li>When the build phase reaches Step 7 and someone's progress bar animates for the first time, you'll know exactly why that moment matters</li>
+        </ul>
+        <div class="callout c-blue">
+          <div class="c-label blue">The one habit worth building</div>
+          When you genuinely don't know an answer, say so and open your own Copilot Chat live, in front of the student, and work it out together. You've now done this enough times in Modules 5–6 that it won't feel like exposure — it'll feel like exactly what you'd do anyway.
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 8 -->
+    <div class="section" id="m8">
+      <div class="section-title">Module 8 — Common questions you'll get asked</div>
+      <div class="lesson-card">
+        <div class="quiz-box">
+          <div class="quiz-q">"Is Copilot going to take my job one day?"</div>
+          <div class="quiz-a">A fair, honest answer: it changes what the job looks like, but someone still has to know what to ask for and whether the answer's right — that's the actual skill being taught today.</div>
+        </div>
+        <div class="quiz-box" style="margin-top:12px">
+          <div class="quiz-q">"Why can't Nova just fix all the bugs for me?"</div>
+          <div class="quiz-a">It's deliberately designed to hint rather than solve during the Bug Hunt — you can say this outright, it's not a secret. The point is finding the bug, not just having it fixed.</div>
+        </div>
+        <div class="quiz-box" style="margin-top:12px">
+          <div class="quiz-q">"Is my code actually running somewhere, or is it fake?"</div>
+          <div class="quiz-a">Completely real — refer back to Module 2. It's a genuine, temporary computer, and Live Server is a genuine local web server running on it.</div>
+        </div>
+        <div class="quiz-box" style="margin-top:12px">
+          <div class="quiz-q">"What happens to my Codespace after today?"</div>
+          <div class="quiz-a">It'll sit idle and eventually get cleaned up automatically after a period of inactivity, but their repo (the actual files and code) stays on their GitHub account permanently, and they can always create a fresh Codespace from it later.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a class="nav-btn" href="run-the-session.html">← Back to the hub</a>
+      <a class="nav-btn primary" href="nova-vs-copilot.html">Next: Nova vs Copilot →</a>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Troubleshooting Card (Printable) — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D; --blue: #1D6FA8;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 13px; line-height: 1.45; padding: 32px 0 80px; }
+    .page { max-width: 780px; margin: 0 auto; background: var(--paper); padding: 40px 48px; box-shadow: 0 0 0 1px var(--border); }
+    .print-btn { max-width: 780px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    .doc-header { text-align: center; padding-bottom: 16px; border-bottom: 3px solid var(--ink); margin-bottom: 4px; }
+    .doc-logo { font-size: 1.05em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.5em; font-weight: 900; letter-spacing: -0.03em; margin-top: 6px; }
+    .doc-sub { font-size: 0.82em; color: var(--muted); margin-top: 3px; }
+
+    /* CATEGORY */
+    .cat { margin: 20px 0 10px; page-break-inside: avoid; }
+    .cat-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .cat-icon { font-size: 1.1em; }
+    .cat-title { font-size: 0.95em; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; }
+
+    /* PROBLEM ROW */
+    .prob-row { display: grid; grid-template-columns: 34% 66%; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); align-items: start; }
+    .prob-if { font-size: 0.83em; font-weight: 700; color: var(--red); }
+    .prob-then { font-size: 0.83em; line-height: 1.5; }
+    .prob-then code { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; background: var(--shade); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; }
+    .prob-then .quote { font-style: italic; color: var(--accent); }
+
+    hr.divider { border: none; border-top: 2px solid var(--ink); margin: 24px 0 4px; }
+
+    .footer-note { text-align: center; font-size: 0.78em; color: var(--muted); margin-top: 28px; padding-top: 14px; border-top: 2px solid var(--ink); line-height: 1.6; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 11px; }
+      .page { box-shadow: none; padding: 14px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print this card</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Troubleshooting Card</div>
+      <div class="doc-sub">One page. If this happens, do this. Nothing to search for.</div>
+    </div>
+
+    <!-- TECHNICAL -->
+    <div class="cat">
+      <div class="cat-header"><span class="cat-icon">💻</span><span class="cat-title" style="color:var(--blue)">Technical — Codespaces &amp; Copilot</span></div>
+
+      <div class="prob-row">
+        <div class="prob-if">Codespace won't load / stuck loading</div>
+        <div class="prob-then">Wait up to 3 minutes on first load — that's normal. Still stuck? Close the tab, go back to their repo, Code → Codespaces → try again. Nuclear option: they use a GitHub Gist or CodePen with the same file as backup.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">"Open with Live Server" isn't showing</div>
+        <div class="prob-then">Extensions still installing. Wait 30 seconds, right-click the file again.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Copilot icon missing or greyed out</div>
+        <div class="prob-then">They're not signed in. Click the account icon bottom-left of VS Code → sign in with GitHub.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Copilot Chat gives generic answers, not "Nova"</div>
+        <div class="prob-then">The <code>.github/copilot-instructions.md</code> file is missing or misnamed in their repo. If it happened to everyone, it's your template — fix and tell them to make a fresh copy. If it's one group only, they may have started before you added Nova.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Level Up challenges "don't work" / no ghost text appears</div>
+        <div class="prob-then">Inline completions only work inside a Codespace, never on the github.com website itself. Confirm they're in their actual Codespace and that <code>challenge.js</code> shows up in their file panel — it's pre-loaded in the repo, so if it's missing they may need to pull the latest changes or their Codespace predates the file being added.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A commit/push from Codespaces just hangs, does nothing</div>
+        <div class="prob-then">Use the terminal instead of the Source Control panel — <code>git add .</code>, <code>git commit -m "x"</code>, <code>git push</code> — the terminal shows the real error where the UI just spins. Still nothing? Reload the browser tab to reconnect, then retry.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A file was created on github.com directly, not in the Codespace</div>
+        <div class="prob-then">The Codespace won't see it automatically. Run <code>git pull</code> in the Codespace terminal to bring it down. If it complains about conflicts, the Codespace has local changes fighting the website version — sort out which version to keep before retrying.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A group wants to undo a bad commit</div>
+        <div class="prob-then">Simplest safe method: on GitHub, open the file → <strong>History</strong> → click the commit before things broke → copy that version's content → paste it back into the current file → commit again. No advanced git needed.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Copilot refuses a request, mentions "SQL injection" or similar out of nowhere</div>
+        <div class="prob-then">Usually means the code was asked about directly in the chat box rather than saved in a real file first. Get them to actually paste and save the code in <code>challenge.js</code> (or the relevant file), then ask Chat about that file — the false-positive tends to clear up once there's a real file behind it.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A page shows a red error / doesn't work at all</div>
+        <div class="prob-then">Press <code>F12</code> → Console tab. Read the red text (or get them to). Paste it into Nova and ask what it means.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Someone breaks their Codespace badly</div>
+        <div class="prob-then">Delete it (github.com/codespaces → delete) and create a fresh one from their own repo. Their saved file usually survives — if not, rebuilding from their paper plan is much faster the second time. Reassure them of that.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Whole internet / Codespaces outage (rare, nuclear)</div>
+        <div class="prob-then">Your laptop + projector becomes the shared computer. Groups take turns directing you — you type only what they say. Genuinely still works, and it's fun.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- HUMAN / ROOM -->
+    <div class="cat">
+      <div class="cat-header"><span class="cat-icon">🧑‍🤝‍🧑</span><span class="cat-title" style="color:var(--amber)">The room — groups and pacing</span></div>
+
+      <div class="prob-row">
+        <div class="prob-if">"It's not working" (vague)</div>
+        <div class="prob-then"><span class="quote">"What did you expect it to do, and what's it doing instead?"</span> Then: "Ask Nova exactly that."</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">"Can you just fix it for me?"</div>
+        <div class="prob-then"><span class="quote">"I can't — but Nova can walk you through it, and I'll sit with you while it does."</span> Then actually sit with them for a minute.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A group can't think of a feature idea</div>
+        <div class="prob-then">Point at the back-pocket gallery on the brainstorm screen. Savings Goal Tracker is the safe default.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A group finishes everything early</div>
+        <div class="prob-then">"Can you break it? Try entering -100. Leave a box blank." Then point them at stretch goals on the milestone screen.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A group is badly behind at the checkpoint</div>
+        <div class="prob-then">"Strip it back — one input, one button, one number on screen. Get that working, then add back." Say it to the room, not just to them, so it doesn't feel singled out.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Whole room is behind, not just one group</div>
+        <div class="prob-then">Cut a milestone entirely and announce it: "New plan — everyone's goal is a working version 2. Stretch goals are for next time." Confidence, not apology.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">One group is way ahead, getting bored</div>
+        <div class="prob-then">"You're now junior mentors — adopt another group for 15 minutes." Explaining is the best way to deepen their own understanding.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Two people fighting over the keyboard</div>
+        <div class="prob-then">Driver/navigator rule — one types, one directs, swap every 10 minutes.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">A live demo breaks in front of everyone</div>
+        <div class="prob-then"><span class="quote">"Congratulations — a live demo failure. That's the most authentic developer experience of the day."</span> Let them show it in the editor instead.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Nova/Copilot gives wrong code and a student trusts it</div>
+        <div class="prob-then">Best teaching moment available: "It's confident and wrong — same as the interest bug this morning. What test would prove it right or wrong?"</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">Nova's hint-based restraint is genuinely too much for one student</div>
+        <div class="prob-then">Each student has their own repo, so this only ever affects one person, not the room. On github.com, rename or delete their <code>.github/copilot-instructions.md</code> → have them rebuild the Codespace (command palette → "Rebuild Container") → Copilot reverts to plain, unrestricted behaviour for that student only. Re-add the file the same way afterward if you want it back.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- YOU -->
+    <div class="cat">
+      <div class="cat-header"><span class="cat-icon">🫶</span><span class="cat-title" style="color:var(--green)">You</span></div>
+
+      <div class="prob-row">
+        <div class="prob-if">You genuinely don't know the answer</div>
+        <div class="prob-then">Open your own Copilot Chat, paste the problem in, work through Nova's answer with the student, out loud. "Let's find out together" is better teaching than knowing.</div>
+      </div>
+
+      <div class="prob-row">
+        <div class="prob-if">You feel like you're falling behind on time</div>
+        <div class="prob-then">Cut scope, not quality. A tiny feature that works beats an ambitious one that doesn't. Nobody remembers what you cut if you sound confident cutting it.</div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Longer version of all of this lives in <strong>build-phase-guide.html</strong> and <strong>facilitator-reference.html</strong> if you want more detail on any one situation. This card is deliberately just the instant answer.
+    </div>
+
+  </div>
+</body>
+</html>

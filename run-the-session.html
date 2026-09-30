@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Today's Session — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929;
+      --border: rgba(255,255,255,0.08);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --muted: rgba(255,255,255,0.5); --text: rgba(255,255,255,0.88);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; padding: 40px 20px 80px; }
+    .wrap { max-width: 640px; margin: 0 auto; }
+
+    .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; font-size: 0.85em; font-weight: 600; margin-bottom: 28px; }
+    .back:hover { color: var(--white); }
+
+    .logo { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 10px; }
+    .logo span { color: var(--white); }
+    .title { font-size: 1.8em; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .subtitle { font-size: 0.9em; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+
+    .calm-note { background: var(--card); border: 1.5px solid rgba(0,200,150,0.25); border-left: 4px solid var(--green); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0 32px; font-size: 0.87em; line-height: 1.65; }
+    .calm-note strong { color: var(--green); }
+
+    .section-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin: 28px 0 12px; }
+    .section-label:first-of-type { margin-top: 0; }
+
+    .step-link {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 16px 22px; text-decoration: none; color: white; margin-bottom: 10px;
+      transition: border-color 0.18s, transform 0.15s;
+    }
+    .step-link:hover { transform: translateY(-2px); }
+
+    .step-icon { font-size: 1.5em; width: 40px; flex-shrink: 0; text-align: center; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 0.96em; font-weight: 700; margin-bottom: 2px; }
+    .step-desc { font-size: 0.79em; color: var(--muted); line-height: 1.5; }
+    .step-time { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; color: var(--muted); flex-shrink: 0; white-space: nowrap; }
+    .step-arrow { font-size: 1.1em; color: var(--muted); flex-shrink: 0; }
+
+    .l-print:hover { border-color: rgba(0,200,150,0.4); }
+    .l-screen:hover { border-color: rgba(108,99,255,0.4); }
+    .l-help:hover { border-color: rgba(255,71,87,0.4); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Back</a>
+    <div class="logo">nova<span>pay</span></div>
+    <div class="title">Running today's session</div>
+    <div class="subtitle">Three things you'll actually reach for today, in the order you'll need them.</div>
+
+    <div class="calm-note">
+      <strong>Print the script.</strong> Everything you need to say and do is already written — you're reading it out and ticking boxes, not thinking on your feet.
+    </div>
+
+    <div class="section-label">Train yourself first — do this before Friday</div>
+
+    <a class="step-link l-screen" href="facilitator-training.html" style="border-color:rgba(108,99,255,0.5)">
+      <div class="step-icon">🎓</div>
+      <div class="step-content">
+        <div class="step-title">Facilitator Training Course</div>
+        <div class="step-desc">8 modules — GitHub, Codespaces, Copilot, and Nova explained, then hands-on: you personally run the bug tutorial and build tutorial yourself. Prefer paper? <a href="printable-facilitator-training.html" style="color:var(--accent);font-weight:700" onclick="event.stopPropagation()">Printable version →</a></div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-screen" href="nova-vs-copilot.html" style="border-color:rgba(108,99,255,0.5)">
+      <div class="step-icon">✨</div>
+      <div class="step-content">
+        <div class="step-title">Nova vs Plain Copilot — the objective case</div>
+        <div class="step-desc">Real side-by-side evidence for why Nova fits this room better, plus its honest limits</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <div class="section-label">Hold this all day — do this first</div>
+
+    <a class="step-link l-print" href="printable-master-script.html" style="border-color:rgba(0,200,150,0.6);border-width:2px">
+      <div class="step-icon">📕</div>
+      <div class="step-content">
+        <div class="step-title">Master Script</div>
+        <div class="step-desc">What, when, how, and help — the whole day, one document. This is the one to stick to like glue.</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-print" href="printable-timed-agenda.html">
+      <div class="step-icon">🗓️</div>
+      <div class="step-content">
+        <div class="step-title">Timed Agenda</div>
+        <div class="step-desc">One page, one glance — every segment and its time, nothing else</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-print" href="printable-timed-agenda-clock.html" style="border-color:rgba(0,200,150,0.5)">
+      <div class="step-icon">⏰</div>
+      <div class="step-content">
+        <div class="step-title">Timed Agenda — Real Clock Times</div>
+        <div class="step-desc">Same agenda, converted to actual times for a 9:30am start — zero mental maths needed</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-print" href="printable-session-day.html" style="opacity:0.75">
+      <div class="step-icon">📋</div>
+      <div class="step-content">
+        <div class="step-title">Session Script (shorter alternative)</div>
+        <div class="step-desc">A lighter version of the Master Script, if you'd rather have less on the page</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <div class="section-label">Day-of toolkit</div>
+
+    <a class="step-link l-help" href="printable-preflight-checklist.html">
+      <div class="step-icon">✈️</div>
+      <div class="step-content">
+        <div class="step-title">Pre-Flight Checklist</div>
+        <div class="step-desc">Do this the morning of, before anyone arrives</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-roster.html">
+      <div class="step-icon">📝</div>
+      <div class="step-content">
+        <div class="step-title">Student Roster</div>
+        <div class="step-desc">Track account, repo, Codespace and Nova status per student</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-progress-tracker.html">
+      <div class="step-icon">📊</div>
+      <div class="step-content">
+        <div class="step-title">Build Progress Tracker</div>
+        <div class="step-desc">Fill in live as you circulate during Feature Creation</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-prompts-cheatsheet.html">
+      <div class="step-icon">💬</div>
+      <div class="step-content">
+        <div class="step-title">Prompts Cheat Sheet</div>
+        <div class="step-desc">Every vetted prompt across the whole day, in one place</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-troubleshooting-card.html">
+      <div class="step-icon">🚑</div>
+      <div class="step-content">
+        <div class="step-title">Troubleshooting card</div>
+        <div class="step-desc">If this breaks, do this — one glance, no searching</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-bug-cheatsheet.html">
+      <div class="step-icon">🔑</div>
+      <div class="step-content">
+        <div class="step-title">Bug cheat sheet</div>
+        <div class="step-desc">All 10 bugs and their fixes, one page</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="printable-when-it-breaks.html" style="border-color:rgba(255,71,87,0.4)">
+      <div class="step-icon">🆘</div>
+      <div class="step-content">
+        <div class="step-title">If It All Falls Apart</div>
+        <div class="step-desc">Total-failure scenarios only — wifi, GitHub outage, way behind schedule</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <div class="section-label">On the projector, in order</div>
+
+    <a class="step-link l-screen" href="bug-hunt-screen.html">
+      <div class="step-icon">🐛</div>
+      <div class="step-content">
+        <div class="step-title">Bug Hunt brief</div>
+        <div class="step-desc">Put up during Hour 1</div>
+      </div>
+      <div class="step-time">0:25</div>
+    </a>
+
+    <a class="step-link l-screen" href="level-up-screen.html">
+      <div class="step-icon">⚡</div>
+      <div class="step-content">
+        <div class="step-title">Level Up slides</div>
+        <div class="step-desc">Facts, concepts, three challenge rounds with timers</div>
+      </div>
+      <div class="step-time">1:00</div>
+    </a>
+
+    <a class="step-link l-screen" href="brainstorm-screen.html">
+      <div class="step-icon">🧠</div>
+      <div class="step-content">
+        <div class="step-title">Brainstorm &amp; Plan</div>
+        <div class="step-desc">Feature ideas, planning template, timer</div>
+      </div>
+      <div class="step-time">1:30</div>
+    </a>
+
+    <a class="step-link l-screen" href="example-feature.html">
+      <div class="step-icon">🏆</div>
+      <div class="step-content">
+        <div class="step-title">Demo the finished example</div>
+        <div class="step-desc">Show what "done" looks like before the build starts</div>
+      </div>
+      <div class="step-time">1:55</div>
+    </a>
+
+    <a class="step-link l-screen" href="milestone-screen.html">
+      <div class="step-icon">🏗️</div>
+      <div class="step-content">
+        <div class="step-title">Build Milestones</div>
+        <div class="step-desc">Click through as groups progress, timer built in</div>
+      </div>
+      <div class="step-time">2:00</div>
+    </a>
+
+    <div class="section-label">Optional — only if you want more detail</div>
+
+    <a class="step-link l-help" href="session-plan.html" style="opacity:0.7">
+      <div class="step-icon">📖</div>
+      <div class="step-content">
+        <div class="step-title">Full 4-hour session plan</div>
+        <div class="step-desc">Longer version of the script, with reasoning behind each choice</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="copilot-bootcamp.html" style="opacity:0.7">
+      <div class="step-icon">⚡</div>
+      <div class="step-content">
+        <div class="step-title">Full Level Up run sheet</div>
+        <div class="step-desc">Scripted lines and timing for the 30-minute bridge block</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="build-phase-guide.html" style="opacity:0.7">
+      <div class="step-icon">🎯</div>
+      <div class="step-content">
+        <div class="step-title">Full build phase guide</div>
+        <div class="step-desc">Extra detail on the 2-hour build, Nova, and rescue playbook</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="facilitator-reference.html" style="opacity:0.7">
+      <div class="step-icon">🔍</div>
+      <div class="step-content">
+        <div class="step-title">Full bug reference</div>
+        <div class="step-desc">Every bug with colour-coded diffs, plus the "fix all bugs" strategy</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+    <a class="step-link l-help" href="bug-answer-key.html" style="opacity:0.7">
+      <div class="step-icon">📔</div>
+      <div class="step-content">
+        <div class="step-title">Bug answer key (web version)</div>
+        <div class="step-desc">Same bugs as your printed cheat sheet, browsable with a sidebar</div>
+      </div>
+      <div class="step-arrow">→</div>
+    </a>
+
+  </div>
+</body>
+</html>

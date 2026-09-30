@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Test Plan — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929; --card2: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.16);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; padding-bottom: 60px; }
+
+    /* HEADER */
+    .app-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .logo { font-size: 1.15em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo span { color: var(--white); }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .print-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: white; padding: 7px 16px; border-radius: 100px; font-family: inherit; font-size: 0.78em; font-weight: 600; cursor: pointer; }
+    .reset-btn { background: none; border: 1px solid rgba(255,71,87,0.4); color: var(--red); padding: 7px 16px; border-radius: 100px; font-family: inherit; font-size: 0.78em; font-weight: 600; cursor: pointer; }
+
+    /* PROGRESS BAR */
+    .progress-wrap { max-width: 900px; margin: 0 auto; padding: 20px 20px 0; }
+    .progress-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .progress-title { font-size: 0.85em; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .progress-count { font-family: 'JetBrains Mono', monospace; font-size: 1.1em; font-weight: 800; color: var(--accent); }
+    .progress-track { height: 10px; background: var(--card2); border-radius: 100px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 100px; transition: width 0.4s ease; }
+
+    /* HERO */
+    .hero { max-width: 900px; margin: 0 auto; padding: 24px 20px 8px; text-align: center; }
+    .hero-title { font-size: 1.8em; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.88em; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+    .target-strip { display: flex; gap: 8px; max-width: 560px; margin: 16px auto 0; justify-content: center; flex-wrap: wrap; }
+    .target-chip { font-size: 0.72em; font-weight: 700; padding: 5px 12px; border-radius: 100px; border: 1px solid; }
+    .t-easy { color: var(--green); border-color: rgba(0,200,150,0.35); background: rgba(0,200,150,0.08); }
+    .t-med  { color: var(--amber); border-color: rgba(255,181,71,0.35); background: rgba(255,181,71,0.08); }
+    .t-hard { color: var(--red); border-color: rgba(255,71,87,0.35); background: rgba(255,71,87,0.08); }
+    .t-str  { color: var(--accent); border-color: rgba(108,99,255,0.35); background: rgba(108,99,255,0.08); }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 28px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* BUG CARD */
+    .bug-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
+    .bug-card.complete { border-color: rgba(0,200,150,0.4); }
+
+    .bug-card-head { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; }
+    .bug-num-box { width: 36px; height: 36px; border-radius: 10px; background: var(--card2); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; color: var(--muted); transition: background 0.2s, color 0.2s; }
+    .bug-card.complete .bug-num-box { background: rgba(0,200,150,0.2); color: var(--green); }
+
+    .bug-head-text { flex: 1; }
+    .bug-head-label { font-size: 0.68em; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .bug-head-status { font-size: 0.85em; font-weight: 600; margin-top: 1px; }
+    .status-empty { color: var(--muted); }
+    .status-partial { color: var(--amber); }
+    .status-done { color: var(--green); }
+
+    .chevron { color: var(--muted); font-size: 0.9em; transition: transform 0.2s; flex-shrink: 0; }
+    .bug-card.open .chevron { transform: rotate(180deg); }
+
+    .bug-card-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .bug-card.open .bug-card-body { max-height: 600px; }
+
+    .bug-form { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    select, textarea {
+      background: var(--card2); border: 1.5px solid var(--border-mid); border-radius: 8px;
+      color: white; font-family: inherit; font-size: 0.88em; padding: 9px 12px; outline: none;
+      transition: border-color 0.15s; resize: vertical;
+    }
+    select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { min-height: 54px; line-height: 1.5; }
+
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .checkbox-row label { font-size: 0.85em; font-weight: 600; cursor: pointer; }
+
+    /* FOOTER SUMMARY */
+    .summary-card { background: var(--card2); border: 1.5px solid rgba(0,200,150,0.3); border-radius: 14px; padding: 22px 24px; text-align: center; margin-top: 8px; }
+    .summary-title { font-size: 1.1em; font-weight: 800; margin-bottom: 6px; }
+    .summary-desc { font-size: 0.85em; color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
+
+    .autosave-note { text-align: center; font-size: 0.75em; color: var(--muted); margin-top: 4px; }
+
+    @media (max-width: 600px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">nova<span>pay</span></div>
+    <div class="header-right">
+      <button class="print-btn" onclick="window.print()">🖨 Print</button>
+      <button class="reset-btn" onclick="resetAll()">Reset all</button>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-head">
+      <div class="progress-title">Bugs logged</div>
+      <div class="progress-count" id="progress-count">0 / 10</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">Bug Test Plan</div>
+    <div class="hero-desc">Log every bug you find — what was wrong, how you found it, what you changed. This is your evidence for the share-out at the end of the hour.</div>
+    <div class="target-strip">
+      <span class="target-chip t-easy">3 easy</span>
+      <span class="target-chip t-med">3 medium</span>
+      <span class="target-chip t-hard">3 hard</span>
+      <span class="target-chip t-str">1 stretch</span>
+    </div>
+  </div>
+
+  <main class="main" id="bug-list"></main>
+
+  <div class="main" style="padding-top:0">
+    <div class="summary-card">
+      <div class="summary-title" id="summary-title">Keep going — you've got this 🐛</div>
+      <div class="summary-desc">When you've logged a bug, click its header again to collapse it and move to the next one. Your answers save automatically in this browser.</div>
+    </div>
+    <div class="autosave-note">✓ Auto-saves as you type — safe to switch tabs or come back later</div>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'novapay-bug-test-plan';
+  const TOTAL = 10;
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function saveData(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  let data = loadData();
+
+  function renderList() {
+    const list = document.getElementById('bug-list');
+    list.innerHTML = '';
+    for (let i = 1; i <= TOTAL; i++) {
+      const entry = data[i] || { type: '', wrong: '', found: '', fix: '', done: false, open: false };
+      const isComplete = entry.done;
+      const hasContent = entry.type || entry.wrong || entry.found || entry.fix;
+
+      const card = document.createElement('div');
+      card.className = 'bug-card' + (isComplete ? ' complete' : '') + (entry.open ? ' open' : '');
+
+      let statusText = 'Not started';
+      let statusClass = 'status-empty';
+      if (isComplete) { statusText = 'Logged ✓'; statusClass = 'status-done'; }
+      else if (hasContent) { statusText = 'In progress...'; statusClass = 'status-partial'; }
+
+      card.innerHTML = `
+        <div class="bug-card-head" onclick="toggleCard(${i})">
+          <div class="bug-num-box">${i}</div>
+          <div class="bug-head-text">
+            <div class="bug-head-label">Bug ${i}</div>
+            <div class="bug-head-status ${statusClass}">${statusText}</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="bug-card-body">
+          <div class="bug-form">
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label">Where did you find it?</label>
+                <select onchange="updateField(${i}, 'type', this.value)">
+                  <option value="" ${entry.type==='' ? 'selected':''}>Choose one...</option>
+                  <option value="HTML" ${entry.type==='HTML' ? 'selected':''}>HTML</option>
+                  <option value="CSS" ${entry.type==='CSS' ? 'selected':''}>CSS</option>
+                  <option value="JavaScript" ${entry.type==='JavaScript' ? 'selected':''}>JavaScript</option>
+                  <option value="Not sure yet" ${entry.type==='Not sure yet' ? 'selected':''}>Not sure yet</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Difficulty (your guess)</label>
+                <select onchange="updateField(${i}, 'difficulty', this.value)">
+                  <option value="">Choose one...</option>
+                  <option value="Easy" ${entry.difficulty==='Easy' ? 'selected':''}>Easy — saw it right away</option>
+                  <option value="Medium" ${entry.difficulty==='Medium' ? 'selected':''}>Medium — found by using it</option>
+                  <option value="Hard" ${entry.difficulty==='Hard' ? 'selected':''}>Hard — needed the code/console</option>
+                  <option value="Stretch" ${entry.difficulty==='Stretch' ? 'selected':''}>Stretch — missing logic</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">What was wrong?</label>
+              <textarea placeholder="e.g. The button didn't do what I expected when I clicked it..." oninput="updateField(${i}, 'wrong', this.value)">${entry.wrong || ''}</textarea>
+            </div>
+            <div class="field">
+              <label class="field-label">How did you find it?</label>
+              <textarea placeholder="e.g. I tried clicking it, then checked the browser console for errors..." oninput="updateField(${i}, 'found', this.value)">${entry.found || ''}</textarea>
+            </div>
+            <div class="field">
+              <label class="field-label">What did you change to fix it?</label>
+              <textarea placeholder="e.g. Fixed a typo in the code so the names matched up..." oninput="updateField(${i}, 'fix', this.value)">${entry.fix || ''}</textarea>
+            </div>
+            <div class="checkbox-row">
+              <input type="checkbox" id="done-${i}" ${isComplete ? 'checked' : ''} onchange="updateField(${i}, 'done', this.checked)">
+              <label for="done-${i}">Fixed and tested — it works now</label>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    }
+    updateProgress();
+  }
+
+  function toggleCard(i) {
+    if (!data[i]) data[i] = { type: '', wrong: '', found: '', fix: '', done: false, open: false };
+    data[i].open = !data[i].open;
+    saveData(data);
+    renderList();
+  }
+
+  function updateField(i, field, value) {
+    if (!data[i]) data[i] = { type: '', wrong: '', found: '', fix: '', done: false, open: true };
+    data[i][field] = value;
+    data[i].open = true;
+    saveData(data);
+    updateProgress();
+    // Only re-render the status text, not the whole list, to avoid losing focus while typing
+    const card = document.querySelectorAll('.bug-card')[i-1];
+    if (card) {
+      const isComplete = data[i].done;
+      const hasContent = data[i].type || data[i].wrong || data[i].found || data[i].fix;
+      card.className = 'bug-card' + (isComplete ? ' complete' : '') + ' open';
+      const statusEl = card.querySelector('.bug-head-status');
+      const numBox = card.querySelector('.bug-num-box');
+      if (isComplete) {
+        statusEl.textContent = 'Logged ✓'; statusEl.className = 'bug-head-status status-done';
+        numBox.style.background = 'rgba(0,200,150,0.2)'; numBox.style.color = 'var(--green)';
+      } else if (hasContent) {
+        statusEl.textContent = 'In progress...'; statusEl.className = 'bug-head-status status-partial';
+        numBox.style.background = ''; numBox.style.color = '';
+      } else {
+        statusEl.textContent = 'Not started'; statusEl.className = 'bug-head-status status-empty';
+        numBox.style.background = ''; numBox.style.color = '';
+      }
+    }
+  }
+
+  function updateProgress() {
+    const doneCount = Object.values(data).filter(d => d.done).length;
+    document.getElementById('progress-count').textContent = `${doneCount} / ${TOTAL}`;
+    document.getElementById('progress-fill').style.width = (doneCount / TOTAL * 100) + '%';
+
+    const summaryTitle = document.getElementById('summary-title');
+    if (doneCount === 0) summaryTitle.textContent = "Let's find some bugs 🐛";
+    else if (doneCount < 5) summaryTitle.textContent = `${doneCount} logged — keep going 🔍`;
+    else if (doneCount < 10) summaryTitle.textContent = `${doneCount} logged — more than halfway! 🚀`;
+    else summaryTitle.textContent = "All 10 logged — nice work! Ready for share-out 🎉";
+  }
+
+  function resetAll() {
+    if (confirm('Clear everything you\\'ve logged? This can\\'t be undone.')) {
+      data = {};
+      saveData(data);
+      renderList();
+    }
+  }
+
+  renderList();
+</script>
+
+</body>
+</html>

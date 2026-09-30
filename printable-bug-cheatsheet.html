@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Cheat Sheet (Printable) — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D; --blue: #1D6FA8;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 13px; line-height: 1.4; padding: 32px 0 80px; }
+    .page { max-width: 820px; margin: 0 auto; background: var(--paper); padding: 40px 48px; box-shadow: 0 0 0 1px var(--border); }
+    .print-btn { max-width: 820px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    .doc-header { text-align: center; padding-bottom: 16px; border-bottom: 3px solid var(--ink); margin-bottom: 14px; }
+    .doc-logo { font-size: 1.05em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.5em; font-weight: 900; letter-spacing: -0.03em; margin-top: 6px; }
+    .doc-sub { font-size: 0.82em; color: var(--muted); margin-top: 3px; }
+
+    /* LEVEL LABEL ROW */
+    .level-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .level-chip { flex: 1; text-align: center; border-radius: 6px; padding: 5px; font-size: 0.72em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+    .lvl-easy   { background: #E9F7F1; color: var(--green); border: 1.5px solid #7FCBAE; }
+    .lvl-medium { background: #FEF6E7; color: var(--amber); border: 1.5px solid #E8B347; }
+    .lvl-hard   { background: #FDECEF; color: var(--red); border: 1.5px solid #F3C1CA; }
+    .lvl-stretch{ background: #F0EEFF; color: var(--accent); border: 1.5px solid #C7C0FF; }
+
+    /* BUG TABLE */
+    .bug-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+    .bug-table th { text-align: left; font-size: 0.68em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); padding: 6px 8px; border-bottom: 2px solid var(--ink); }
+    .bug-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.45; }
+    .bug-table tr.grp-easy    td:first-child { border-left: 4px solid var(--green); }
+    .bug-table tr.grp-medium  td:first-child { border-left: 4px solid var(--amber); }
+    .bug-table tr.grp-hard    td:first-child { border-left: 4px solid var(--red); }
+    .bug-table tr.grp-stretch td:first-child { border-left: 4px solid var(--accent); }
+    .bug-num { font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .bug-table code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: var(--shade); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; }
+    .fix-old { color: var(--red); text-decoration: line-through; }
+    .fix-new { color: var(--green); font-weight: 600; }
+
+    hr.divider { border: none; border-top: 2px solid var(--ink); margin: 20px 0 10px; }
+
+    .strategy-box { background: var(--shade); border: 1.5px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; margin-top: 14px; font-size: 0.83em; line-height: 1.55; }
+    .strategy-box strong { color: var(--accent); }
+
+    .footer-note { text-align: center; font-size: 0.78em; color: var(--muted); margin-top: 20px; padding-top: 14px; border-top: 2px solid var(--ink); line-height: 1.6; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 10.5px; }
+      .page { box-shadow: none; padding: 14px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print this sheet</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Bug Cheat Sheet</div>
+      <div class="doc-sub">All 10 bugs, one page. Keep this in your hand during the Bug Hunt hour.</div>
+    </div>
+
+    <div class="level-row">
+      <div class="level-chip lvl-easy">Easy — visible on the page</div>
+      <div class="level-chip lvl-medium">Medium — found by using it</div>
+      <div class="level-chip lvl-hard">Hard — need the code/console</div>
+      <div class="level-chip lvl-stretch">Stretch — missing logic</div>
+    </div>
+
+    <table class="bug-table">
+      <thead>
+        <tr><th style="width:4%">#</th><th style="width:20%">Bug</th><th style="width:38%">What goes wrong</th><th style="width:38%">The fix</th></tr>
+      </thead>
+      <tbody>
+
+        <tr class="grp-easy">
+          <td class="bug-num">1</td>
+          <td>Missing closing tag</td>
+          <td>Page layout collapses — everything below looks broken/nested wrong</td>
+          <td>Add missing <code>&lt;/div&gt;</code> after the balance footer</td>
+        </tr>
+        <tr class="grp-easy">
+          <td class="bug-num">2</td>
+          <td>Invisible balance</td>
+          <td>Balance text is same colour as its background</td>
+          <td><span class="fix-old">color: #0F1340</span> → <span class="fix-new">color: #FFFFFF</span></td>
+        </tr>
+        <tr class="grp-easy">
+          <td class="bug-num">3</td>
+          <td>Wrong transaction sign</td>
+          <td>Coffee purchase shown as <code>+£3.80</code> (income, green) instead of an expense</td>
+          <td>Change class <code>credit</code> → <code>debit</code>, amount to <code>−£3.80</code></td>
+        </tr>
+
+        <tr class="grp-medium">
+          <td class="bug-num">4</td>
+          <td>Wrong input type</td>
+          <td>Withdrawal field accepts letters — breaks the calculation</td>
+          <td><span class="fix-old">type="text"</span> → <span class="fix-new">type="number"</span></td>
+        </tr>
+        <tr class="grp-medium">
+          <td class="bug-num">5</td>
+          <td>Button typo</td>
+          <td>Withdraw button does nothing at all, no error</td>
+          <td><span class="fix-old">onlick</span> → <span class="fix-new">onclick</span></td>
+        </tr>
+        <tr class="grp-medium">
+          <td class="bug-num">6</td>
+          <td>Wrong operator</td>
+          <td>Withdrawing money <em>increases</em> the balance</td>
+          <td><span class="fix-old">balance + amount</span> → <span class="fix-new">balance - amount</span></td>
+        </tr>
+
+        <tr class="grp-hard">
+          <td class="bug-num">7</td>
+          <td>Element ID typo</td>
+          <td>Console shows <code>TypeError: null</code> — balance never updates on screen</td>
+          <td><span class="fix-old">"balence-display"</span> → <span class="fix-new">"balance-display"</span></td>
+        </tr>
+        <tr class="grp-hard">
+          <td class="bug-num">8</td>
+          <td>NaN on empty input</td>
+          <td>Clicking Withdraw with nothing entered shows <code>£NaN</code></td>
+          <td>Add a check: <code>if (isNaN(amount) || amount &lt;= 0) return;</code></td>
+        </tr>
+        <tr class="grp-hard">
+          <td class="bug-num">9</td>
+          <td>Wrong interest formula</td>
+          <td>5% rate treated as <code>5</code> instead of <code>0.05</code> — answer is 100× too big</td>
+          <td><span class="fix-old">* rate</span> → <span class="fix-new">* (rate / 100)</span></td>
+        </tr>
+
+        <tr class="grp-stretch">
+          <td class="bug-num">10</td>
+          <td>No overdraft check</td>
+          <td>Can withdraw more than the balance — goes negative with no warning</td>
+          <td>Add a check: <code>if (amount &gt; balance) return;</code> before deducting</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="strategy-box">
+      <strong>If someone asks Nova to "fix everything at once":</strong> it won't get all 10 anyway — bugs 8, 9, and 10 are missing logic, not broken code, and Nova is designed to hint rather than dump full fixes during this phase. If it happens, make it a teaching moment: stop the room, look at what it missed together, ask "why do you think it caught some but not others?"
+    </div>
+
+    <div class="footer-note">
+      Full write-up of each bug — including why it matters and the fully corrected code — is in <strong>facilitator-reference.html</strong> and <strong>bug-answer-key.html</strong> if you need more than this sheet gives you.
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Guide (Printable) — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1D29; --muted: #6B7280; --border: #D8DCE6;
+      --accent: #5A50E0; --green: #00875F; --amber: #B45F06; --red: #C0293D;
+      --paper: #FFFFFF; --shade: #F4F5F9;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--shade); color: var(--ink); font-size: 14px; line-height: 1.55; padding: 32px 0 80px; }
+    .page { max-width: 760px; margin: 0 auto; background: var(--paper); padding: 48px 56px; box-shadow: 0 0 0 1px var(--border); }
+
+    .print-btn { max-width: 760px; margin: 0 auto 16px; text-align: right; }
+    .print-btn button { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.85em; cursor: pointer; }
+
+    /* HEADER */
+    .doc-header { text-align: center; padding-bottom: 24px; border-bottom: 3px solid var(--ink); margin-bottom: 28px; }
+    .doc-logo { font-size: 1.1em; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
+    .doc-logo span { color: var(--ink); }
+    .doc-title { font-size: 1.8em; font-weight: 900; letter-spacing: -0.03em; margin-top: 10px; }
+    .doc-sub { font-size: 0.9em; color: var(--muted); margin-top: 6px; }
+
+    /* CALM NOTE */
+    .calm-note {
+      background: var(--shade); border: 1.5px solid var(--border); border-left: 5px solid var(--accent);
+      border-radius: 6px; padding: 16px 20px; margin-bottom: 32px; font-size: 0.9em; line-height: 1.65;
+    }
+    .calm-note strong { color: var(--accent); }
+
+    /* DATE BOX */
+    .date-box { display: flex; gap: 12px; margin-bottom: 32px; }
+    .date-item { flex: 1; border: 2px solid var(--ink); border-radius: 8px; padding: 14px 16px; text-align: center; }
+    .date-item-label { font-size: 0.68em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .date-item-value { font-size: 1.1em; font-weight: 800; }
+    .date-item-fill { border-bottom: 1px solid var(--muted); min-height: 20px; margin-top: 4px; }
+
+    /* PART HEADER */
+    .part { margin: 40px 0 20px; page-break-inside: avoid; }
+    .part-header { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); margin-bottom: 16px; }
+    .part-num { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95em; flex-shrink: 0; }
+    .part-title { font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; }
+    .part-sub { font-size: 0.8em; color: var(--muted); }
+
+    /* CHECK STEP */
+    .step { display: flex; gap: 12px; padding: 10px 0; page-break-inside: avoid; }
+    .step-box { width: 20px; height: 20px; border: 2px solid var(--ink); border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+    .step-text { font-size: 0.92em; line-height: 1.6; }
+    .step-text strong { color: var(--ink); }
+    .step-text code { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; background: var(--shade); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; }
+    .step-note { font-size: 0.82em; color: var(--muted); margin-top: 3px; padding-left: 2px; }
+    .step-warn { font-size: 0.82em; color: var(--red); font-weight: 600; margin-top: 4px; padding: 6px 10px; background: #FDECEF; border-radius: 5px; border: 1px solid #F3C1CA; }
+
+    /* PASTE BOX */
+    .paste-box { background: var(--shade); border: 1.5px dashed var(--muted); border-radius: 6px; padding: 12px 16px; margin: 8px 0 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.82em; }
+
+    /* CALLOUT */
+    .callout { border-radius: 6px; padding: 14px 18px; margin: 14px 0; font-size: 0.86em; line-height: 1.6; border: 1.5px solid; }
+    .c-amber { background: #FEF6E7; border-color: #E8B347; color: #7A4E05; }
+    .c-green { background: #E9F7F1; border-color: #7FCBAE; color: #0A5C40; }
+
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+    /* FOOTER */
+    .footer-note { text-align: center; font-size: 0.85em; color: var(--muted); margin-top: 40px; padding-top: 20px; border-top: 2px solid var(--ink); line-height: 1.7; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 12px; }
+      .page { box-shadow: none; padding: 20px 10px; max-width: 100%; }
+      .print-btn { display: none; }
+      .part { page-break-before: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-btn"><button onclick="window.print()">🖨 Print this guide</button></div>
+
+  <div class="page">
+
+    <div class="doc-header">
+      <div class="doc-logo">nova<span>pay</span></div>
+      <div class="doc-title">Setup Guide</div>
+      <div class="doc-sub">Print this out. Tick each box as you go. That's the whole job.</div>
+    </div>
+
+    <div class="calm-note">
+      <strong>Before you start:</strong> you don't need to understand GitHub, Copilot, or Codespaces to finish this list. You just need to click the things this page tells you to click, in order. If a step doesn't make sense, that's normal — do it anyway, it'll make sense once it's done. Nothing here is fragile; you can't break anything permanently.
+    </div>
+
+    <div class="date-box">
+      <div class="date-item">
+        <div class="date-item-label">Target 1 — Org &amp; seats</div>
+        <div class="date-item-value">Thu 30 Jul</div>
+      </div>
+      <div class="date-item">
+        <div class="date-item-label">Target 2 — Run-through</div>
+        <div class="date-item-value">Fri 31 Jul</div>
+      </div>
+    </div>
+
+    <!-- PART 1 -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">1</div>
+        <div>
+          <div class="part-title">Your GitHub account</div>
+          <div class="part-sub">Skip if you already have one</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Go to <strong>github.com</strong> → click <strong>Sign up</strong> → enter email, password, username</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Check your email for a verification code → enter it</div></div>
+    </div>
+
+    <!-- PART 2 -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">2</div>
+        <div>
+          <div class="part-title">Create the organisation</div>
+          <div class="part-sub">This is separate from your personal account — it sits alongside it</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Click the <strong>+</strong> icon top right → <strong>New organisation</strong></div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Choose the <strong>Free</strong> plan</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Give it a short, simple name — write it here so you don't forget: <span style="display:inline-block;border-bottom:1px solid var(--muted);min-width:220px">&nbsp;</span></div></div>
+    </div>
+
+    <!-- PART 3 -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">3</div>
+        <div>
+          <div class="part-title">Turn on Copilot, buy 2 seats</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Go to your organisation page → <strong>Settings</strong> tab → find <strong>Copilot</strong> in the left menu</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Click <strong>Enable GitHub Copilot</strong> → choose <strong>Business</strong> → set seats to <strong>2</strong></div></div>
+      <div class="step">
+        <div class="step-box"></div>
+        <div class="step-text">
+          Find the <strong>Policies</strong> section → set Copilot access to <strong>All repositories</strong>
+          <div class="step-warn">⚠ Don't skip this. If it's set to "org repos only," Copilot silently won't work later — with no error message to tell you why.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 4 -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">4</div>
+        <div>
+          <div class="part-title">Build the workshop repo</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Click <strong>+</strong> → <strong>New repository</strong> → owner = your personal account (not the org) → name it <code>novapay-workshop</code> → set <strong>Public</strong> → tick <strong>Add a README</strong></div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Click <strong>Add file → Upload files</strong> → drag in <code>bank-dashboard.html</code>, <code>starter-template.html</code>, and <code>challenge.js</code> → <strong>Commit changes</strong></div></div>
+      <div class="step">
+        <div class="step-box"></div>
+        <div class="step-text">
+          Click <strong>Add file → Create new file</strong> → in the filename box, type exactly:
+          <div class="paste-box">.devcontainer/devcontainer.json</div>
+          Then paste in the contents of your <code>devcontainer.json</code> file → <strong>Commit new file</strong>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Go to repo <strong>Settings</strong> → tick <strong>Template repository</strong></div></div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PART 5: NOVA -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">5</div>
+        <div>
+          <div class="part-title">Install Nova (your AI mentor)</div>
+          <div class="part-sub">One file, one paste — nothing to install on your computer</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">On the same repo, click <strong>Add file → Create new file</strong></div></div>
+      <div class="step">
+        <div class="step-box"></div>
+        <div class="step-text">
+          In the filename box, type <strong>exactly this</strong> — copy it if you can, don't retype from memory:
+          <div class="paste-box">.github/copilot-instructions.md</div>
+          <div class="step-warn">⚠ This filename is the one thing in the whole setup that must be perfect. One typo and Nova simply never switches on — with no error to warn you.</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Open <code>copilot-instructions.md</code> from your materials pack → select all (Ctrl/Cmd+A) → copy → paste the whole thing into the big text box on GitHub</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Scroll down → click <strong>Commit changes</strong></div></div>
+    </div>
+
+    <!-- PART 6 -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">6</div>
+        <div>
+          <div class="part-title">Give yourself a Copilot seat</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Org → Settings → Copilot → <strong>Seat management</strong> → <strong>Add users</strong> → select yourself</div></div>
+    </div>
+
+    <div class="callout c-green">
+      <strong>That's Target 1 done.</strong> Org exists, Copilot's on, 2 seats bought, repo built with all 3 files (<code>bank-dashboard.html</code>, <code>starter-template.html</code>, <code>challenge.js</code>) plus Nova installed, your seat assigned. Nothing left to click until Friday.
+    </div>
+
+    <hr class="divider">
+
+    <!-- PART 7: TEST -->
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">7</div>
+        <div>
+          <div class="part-title">Test the whole thing yourself</div>
+          <div class="part-sub">This is the step that actually proves it works — do this on Friday</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Go to your repo → click <strong>Use this template</strong> → <strong>Create a new repository</strong> → name it <code>test-novapay</code></div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">On the new repo, click <strong>Code</strong> → <strong>Codespaces</strong> tab → <strong>Create codespace on main</strong> → wait (1–2 minutes first time)</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Right-click <code>bank-dashboard.html</code> in the file list → <strong>Open with Live Server</strong> → confirm the banking dashboard actually appears</div></div>
+      <div class="step">
+        <div class="step-box"></div>
+        <div class="step-text">
+          Click the Copilot icon on the left sidebar → in the chat box, type exactly:
+          <div class="paste-box">Who are you?</div>
+          It should describe itself as a NovaPay mentor — not a generic "I'm GitHub Copilot."
+          <div class="step-warn">⚠ Generic answer instead of "Nova"? Go back to Part 5 and check the filename character by character.</div>
+        </div>
+      </div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Ask it something like "why isn't the balance showing?" — it should nudge you with a hint, not just hand you the fixed code straight away</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Open <code>starter-template.html</code> — confirm it opens and looks sensible</div></div>
+      <div class="step"><div class="step-box"></div><div class="step-text">Go to the test repo's <strong>Settings</strong> → scroll to the bottom → <strong>Delete this repository</strong></div></div>
+    </div>
+
+    <div class="callout c-green">
+      <strong>That's Target 2 done.</strong> You've now personally seen every part of the participant journey work. You are ready.
+    </div>
+
+    <hr class="divider">
+
+    <div class="part">
+      <div class="part-header">
+        <div class="part-num">!</div>
+        <div><div class="part-title">One date-sensitive thing</div></div>
+      </div>
+      <div class="callout c-amber">
+        If you want a real second person (not just yourself) in Friday's test, they need to accept an org invite before you can give them a seat. <strong>Send that invite today or tomorrow</strong> — email replies aren't instant, and Thursday is too late to be sure.
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Every step above is also written up with pictures-in-words detail in <strong>facilitator-setup-guide.html</strong>, if you want more explanation on any single step. This page is the condensed version to tick through with a pen.
+    </div>
+
+  </div>
+</body>
+</html>

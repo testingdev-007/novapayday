@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launch Timeline — NovaPay Workshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --card: #131929; --card2: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757; --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; padding-bottom: 64px; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 32px; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 56px 32px 8px; }
+    .hero-title { font-size: 2.3em; font-weight: 900; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 12px; }
+    .hero-desc { font-size: 0.95em; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+    .date-check {
+      max-width: 560px; margin: 22px auto 0;
+      background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.3);
+      border-radius: 10px; padding: 12px 18px; font-size: 0.83em; color: var(--amber);
+      text-align: left; line-height: 1.6;
+    }
+    .date-check strong { color: var(--white); }
+
+    /* TIMELINE STRIP */
+    .timeline-strip { display: flex; align-items: center; max-width: 640px; margin: 40px auto 0; }
+    .tl-node { flex: 1; text-align: center; }
+    .tl-dot { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3em; margin: 0 auto 8px; border: 2px solid var(--border); }
+    .tl-date { font-size: 0.78em; font-weight: 800; }
+    .tl-label { font-size: 0.72em; color: var(--muted); margin-top: 2px; }
+    .tl-line { flex: 0.6; height: 2px; background: var(--border); margin-top: -30px; }
+
+    /* SECTION */
+    .section { margin: 56px 0; }
+    .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+    .section-badge { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0; }
+    .section-title { font-size: 1.3em; font-weight: 800; letter-spacing: -0.03em; }
+    .section-date { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; color: var(--muted); margin-top: 2px; }
+    .section-desc { font-size: 0.86em; color: var(--muted); margin: 14px 0 24px; max-width: 620px; line-height: 1.6; }
+
+    /* STEP CARD */
+    .step { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 22px; margin-bottom: 10px; display: flex; gap: 16px; align-items: flex-start; }
+    .step-check { width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--border-mid); flex-shrink: 0; margin-top: 2px; }
+    .step-body { flex: 1; }
+    .step-title { font-weight: 700; font-size: 0.95em; margin-bottom: 4px; }
+    .step-detail { font-size: 0.83em; color: var(--muted); line-height: 1.6; }
+    .step-detail code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    .step-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 0.78em; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .step-warn { margin-top: 8px; background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.25); border-radius: 7px; padding: 8px 12px; font-size: 0.78em; color: #FF8A93; }
+
+    .step.critical { border-color: rgba(255,181,71,0.35); }
+    .step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; font-weight: 700; color: var(--accent); background: rgba(108,99,255,0.15); border-radius: 6px; padding: 3px 8px; flex-shrink: 0; }
+
+    /* CALLOUT */
+    .callout { border-radius: 10px; padding: 16px 20px; font-size: 0.86em; line-height: 1.65; margin: 18px 0; }
+    .c-amber { background: rgba(255,181,71,0.08); border: 1px solid rgba(255,181,71,0.22); }
+    .c-green { background: rgba(0,200,150,0.08); border: 1px solid rgba(0,200,150,0.22); }
+    .c-red   { background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.22); }
+    .c-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    .c-label.amber { color: var(--amber); } .c-label.green { color: var(--green); } .c-label.red { color: var(--red); }
+
+    hr { border: none; border-top: 1px solid var(--border); }
+
+    a.gohome { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: white; text-decoration: none; padding: 12px 26px; border-radius: 100px; font-weight: 700; font-size: 0.9em; }
+    .close-wrap { text-align: center; margin-top: 48px; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-title">Launch Timeline</div>
+  <div class="hero-desc">Two dates, everything mechanical, nothing left to build. Follow this in order and you'll be fully live for the real session.</div>
+  <div class="date-check">
+    <strong>Date assumption:</strong> "next Thu" / "next Friday" read as <strong>Thursday 30 July</strong> and <strong>Friday 31 July</strong> — the Thu/Fri of next week from today (Mon 20 July). If you meant this week instead (Thu 23 / Fri 24), just shift everything below back by a week — the steps themselves don't change.
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- TIMELINE STRIP -->
+  <div class="timeline-strip">
+    <div class="tl-node">
+      <div class="tl-dot" style="background:rgba(108,99,255,0.15);border-color:var(--accent)">🏢</div>
+      <div class="tl-date">Thu 30 Jul</div>
+      <div class="tl-label">Org + 2 seats</div>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-node">
+      <div class="tl-dot" style="background:rgba(0,200,150,0.15);border-color:var(--green)">🧪</div>
+      <div class="tl-date">Fri 31 Jul</div>
+      <div class="tl-label">Full run-through</div>
+    </div>
+  </div>
+
+  <hr style="margin:48px 0">
+
+  <!-- TARGET 1 -->
+  <div class="section" id="target1">
+    <div class="section-head">
+      <div class="section-badge" style="background:rgba(108,99,255,0.15)">🏢</div>
+      <div>
+        <div class="section-title">Target 1 — Org and 2 seats live</div>
+        <div class="section-date">Deadline: Thursday 30 July</div>
+      </div>
+    </div>
+    <div class="section-desc">Pure GitHub admin — every step is a specific button to click. Full detail for each is in <code>facilitator-setup-guide.html</code>; this is the condensed order to work through.</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create your GitHub account</div>
+        <div class="step-detail">Skip entirely if you already have one — just make sure you're signed in.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Create the organisation</div>
+        <div class="step-detail">GitHub → <code>+</code> icon → New organisation → Free plan. This is separate from your personal account and sits alongside it.</div>
+      </div>
+    </div>
+
+    <div class="step critical">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Enable Copilot Business, buy 2 seats</div>
+        <div class="step-detail">Org → Settings → Copilot → Enable → choose Business → 2 seats. This is the only recurring cost — see the cost breakdown below.</div>
+      </div>
+    </div>
+
+    <div class="step critical">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Set the repo policy to "all repositories"</div>
+        <div class="step-detail">Same Copilot settings page → Policies → set Copilot access to <strong>all repositories</strong>, not just org-owned ones.</div>
+        <div class="step-warn">⚠ Miss this and Copilot will silently not work once participants are in their own personal repo copies. Easiest step to accidentally skip.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Create the template repo, upload 3 files</div>
+        <div class="step-detail">New public repo → upload <code>bank-dashboard.html</code>, <code>starter-template.html</code>, <code>challenge.js</code>, and <code>.devcontainer/devcontainer.json</code> (the last one needs its own folder — see the setup guide for the exact filename trick). Then tick <strong>Template repository</strong> in Settings.</div>
+      </div>
+    </div>
+
+    <div class="step critical">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Install Nova</div>
+        <div class="step-detail">Add file → Create new file → filename exactly <code>.github/copilot-instructions.md</code> → paste in the full contents of <code>copilot-instructions.md</code> → Commit.</div>
+        <div class="step-warn">⚠ The filename must be exact, including the leading dot and the slash. A typo here means Nova never activates and Copilot just behaves generically — with no error message telling you why.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-title">Assign one seat to yourself</div>
+        <div class="step-detail">Org → Settings → Copilot → Seat management → Add users → yourself. Leave the second seat unassigned for now — you don't need a real second person until Friday.</div>
+      </div>
+    </div>
+
+    <div class="callout c-green">
+      <div class="c-label green">By end of Thursday</div>
+      Org exists · 2 seats purchased · 1 assigned to you · repo built with all 3 files · Nova installed and committed · policy set to all repos.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- TARGET 2 -->
+  <div class="section" id="target2">
+    <div class="section-head">
+      <div class="section-badge" style="background:rgba(0,200,150,0.15)">🧪</div>
+      <div>
+        <div class="section-title">Target 2 — Full run-through</div>
+        <div class="section-date">Deadline: Friday 31 July</div>
+      </div>
+    </div>
+    <div class="section-desc">Walk the entire participant path yourself, end to end, using your own seat. This is the step that actually proves everything works — not just that the files exist.</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create a test copy from your template</div>
+        <div class="step-detail">Your repo page → <strong>Use this template</strong> → Create a new repository → call it something like <code>test-novapay</code>.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Open a Codespace on it</div>
+        <div class="step-detail">Code → Codespaces tab → Create codespace on main. Time how long it takes to load — worth knowing for the real day.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Open the dashboard in Live Server</div>
+        <div class="step-detail">Right-click <code>bank-dashboard.html</code> → Open with Live Server → confirm the buggy NovaPay dashboard actually renders in a preview tab.</div>
+      </div>
+    </div>
+
+    <div class="step critical">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Confirm Nova is actually active</div>
+        <div class="step-detail">Open Copilot Chat → type exactly: <code>Who are you?</code></div>
+        <div class="step-warn">⚠ If it gives a generic "I'm GitHub Copilot" answer instead of describing itself as a NovaPay mentor, Nova isn't active — go back and re-check the exact filename from Target 1, Step 6.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Try fixing one bug via Chat</div>
+        <div class="step-detail">Ask Nova something like "why isn't the balance showing?" — confirm it nudges with a hint rather than just handing over the fixed line straight away (that's the Bug Hunt restriction working as designed).</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Check the starter template is there</div>
+        <div class="step-detail">Open <code>starter-template.html</code> in the file list — confirm it opens and the TODO comments are intact.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-title">If your second person is ready — test them too</div>
+        <div class="step-detail">Have them repeat steps 1–6 independently at the same time, on their own seat, to confirm two people can use the repo simultaneously without conflict.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <div class="step-title">Delete the test repo</div>
+        <div class="step-detail">Settings → scroll to the bottom → Delete this repository. Keeps things tidy — your real template repo is untouched.</div>
+      </div>
+    </div>
+
+    <div class="callout c-green">
+      <div class="c-label green">By end of Friday</div>
+      You've personally walked the full participant journey once and confirmed Nova responds in character. That's the single check that matters most — everything else on the day flows from Nova actually working.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- RISK FLAG -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-badge" style="background:rgba(255,71,87,0.15)">⏰</div>
+      <div>
+        <div class="section-title">The one thing at genuine risk</div>
+      </div>
+    </div>
+    <div class="callout c-red">
+      <div class="c-label red">Org invites need acceptance before a seat can be assigned</div>
+      If you want a real second person (not just yourself) in Friday's run-through, they need to accept your org invite before you can give them a seat — and that round-trip depends on how quickly they check email. <strong>Send that invite today or tomorrow</strong>, not Thursday, so there's no risk of Friday's test being solo-only by accident.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- COST RECAP -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-badge" style="background:rgba(255,181,71,0.15)">💷</div>
+      <div>
+        <div class="section-title">Cost recap for this window</div>
+      </div>
+    </div>
+    <div class="callout c-amber">
+      <div class="c-label amber">What you're actually paying this month</div>
+      2 seats × $19 = <strong>$38 for the month containing Thursday's setup and Friday's test.</strong> Shared AI Credits pool of $38 across both seats — comfortably enough for one test day's worth of chat, even bug-related and design discussion, since inline Tab-completions don't touch the pool at all. Scale seats up only when you add real participant numbers ahead of the actual session.
+    </div>
+  </div>
+
+  <div class="close-wrap">
+    <a class="gohome" href="index.html">← Back to the full hub</a>
+  </div>
+
+</div>
+</body>
+</html>

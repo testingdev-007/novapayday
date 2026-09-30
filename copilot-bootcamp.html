@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Level Up — Facilitator Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F1A; --surface: #131929; --card: #1A2235;
+      --border: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14);
+      --accent: #6C63FF; --green: #00C896; --amber: #FFB547; --red: #FF4757;
+      --blue: #4FC3F7;
+      --white: #FFFFFF; --text: rgba(255,255,255,0.88); --muted: rgba(255,255,255,0.45);
+      --code-bg: #0D1117;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar { width: 230px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 28px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .logo-mark { font-size: 1.1em; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); }
+    .logo-mark span { color: var(--white); }
+    .logo-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .nav-section { padding: 0 12px; margin-bottom: 6px; }
+    .nav-label { font-size: 0.6em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.8em; font-weight: 500; transition: background 0.15s; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .content { flex: 1; min-width: 0; padding: 48px 56px; max-width: 840px; }
+    .page-header { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .page-title { font-size: 2em; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 10px; }
+    .page-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .meta-pill { background: rgba(108,99,255,0.15); color: #A89CFF; border: 1px solid rgba(108,99,255,0.25); border-radius: 100px; padding: 4px 12px; font-size: 0.74em; font-weight: 600; }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; gap: 3px; margin-bottom: 48px; }
+    .tl-item { display: flex; gap: 0; }
+    .tl-time { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; font-weight: 600; color: var(--accent); width: 90px; flex-shrink: 0; padding: 12px 0; }
+    .tl-line { width: 2px; background: var(--border); flex-shrink: 0; position: relative; margin: 0 16px; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; position: absolute; left: -4px; top: 16px; }
+    .tl-body { padding: 10px 0 10px; flex: 1; }
+    .tl-label { font-size: 0.88em; font-weight: 700; margin-bottom: 2px; }
+    .tl-desc { font-size: 0.8em; color: var(--muted); }
+
+    /* SEGMENT BLOCKS */
+    .segment-block { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+    .seg-header { display: flex; align-items: center; gap: 12px; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+    .seg-time { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; font-weight: 600; color: var(--accent); }
+    .seg-title { font-size: 1em; font-weight: 700; flex: 1; }
+    .seg-dur { font-size: 0.72em; color: var(--muted); background: rgba(255,255,255,0.05); padding: 3px 10px; border-radius: 100px; }
+    .seg-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+
+    p { font-size: 0.88em; line-height: 1.7; }
+    ul, ol { margin: 6px 0 0 18px; }
+    li { font-size: 0.87em; line-height: 1.7; }
+    strong { color: var(--white); font-weight: 600; }
+    em { color: rgba(255,255,255,0.7); font-style: italic; }
+
+    .say { background: rgba(108,99,255,0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.87em; font-style: italic; line-height: 1.6; color: rgba(255,255,255,0.82); }
+    .say-label { font-size: 0.65em; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); font-style: normal; margin-bottom: 6px; }
+
+    .tip { border-radius: 8px; padding: 11px 15px; font-size: 0.83em; line-height: 1.6; }
+    .tip-green { background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.2); color: rgba(255,255,255,0.8); }
+    .tip-amber { background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.2); color: rgba(255,255,255,0.8); }
+    .tip-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .tip-label.green { color: var(--green); }
+    .tip-label.amber { color: var(--amber); }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(108,99,255,0.15); color: #A89CFF; padding: 2px 6px; border-radius: 4px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; line-height: 1.65; color: rgba(255,255,255,0.75); overflow-x: auto; }
+
+    .round-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+    .round-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .round-num { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 800; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+    .round-title { font-weight: 700; font-size: 0.92em; }
+    .round-body { font-size: 0.85em; line-height: 1.65; color: var(--text); }
+    .round-body p + p { margin-top: 8px; }
+
+    .badge { display: inline-block; font-size: 0.68em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; margin-left: 8px; }
+    .badge-blue { background: rgba(79,195,247,0.15); color: var(--blue); }
+    .badge-green { background: rgba(0,200,150,0.15); color: var(--green); }
+    .badge-amber { background: rgba(255,181,71,0.15); color: var(--amber); }
+
+    .facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .fact { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.18); border-radius: 8px; padding: 12px 14px; font-size: 0.83em; line-height: 1.5; }
+    .fact-num { font-size: 1.3em; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; margin-bottom: 2px; }
+
+    .rules { display: flex; flex-direction: column; gap: 10px; }
+    .rule { display: flex; gap: 12px; align-items: flex-start; }
+    .rule-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: white; font-size: 0.8em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .rule-text { font-size: 0.88em; line-height: 1.6; }
+    .rule-text strong { color: var(--white); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+    .section-title { font-size: 1.15em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+
+    @media print { .sidebar { display: none; } .content { padding: 24px; max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">nova<span>pay</span></div>
+      <div class="logo-sub">Level Up — Guide</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Run order</div>
+      <a class="nav-item" href="#timing"><div class="nav-dot" style="background:var(--accent)"></div>Timing overview</a>
+      <a class="nav-item" href="#reveal"><div class="nav-dot" style="background:var(--blue)"></div>1:05 The reveal</a>
+      <a class="nav-item" href="#concepts"><div class="nav-dot" style="background:var(--blue)"></div>1:08 GitHub & Codespaces</a>
+      <a class="nav-item" href="#rounds"><div class="nav-dot" style="background:var(--amber)"></div>1:13 Challenge rounds</a>
+      <a class="nav-item" href="#r1"><div class="nav-dot" style="background:var(--red)"></div>Round 1 · Fix the Bug</a>
+      <a class="nav-item" href="#r1recap"><div class="nav-dot" style="background:var(--red)"></div>Round 1 recap</a>
+      <a class="nav-item" href="#r2"><div class="nav-dot" style="background:var(--green)"></div>Round 2 · Comment Race</a>
+      <a class="nav-item" href="#r3"><div class="nav-dot" style="background:var(--amber)"></div>Round 3 · Best Prompt</a>
+      <a class="nav-item" href="#rules"><div class="nav-dot" style="background:var(--accent)"></div>1:29 Golden rules</a>
+      <a class="nav-item" href="#bridge"><div class="nav-dot" style="background:var(--muted)"></div>1:32 Bridge</a>
+    </div>
+    <div class="nav-section" style="margin-top:8px">
+      <div class="nav-label">On screen</div>
+      <a class="nav-item" href="level-up-screen.html" style="color:var(--accent)"><div class="nav-dot" style="background:var(--accent)"></div>Open slide deck →</a>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <div class="page-header">
+      <div class="page-eyebrow">Between bug fix + build · 30 minutes</div>
+      <div class="page-title">Level Up ⚡</div>
+      <div class="page-meta">
+        <span class="meta-pill">1:05–1:35</span>
+        <span class="meta-pill">3 challenge rounds</span>
+        <span class="meta-pill">Facilitator-led</span>
+      </div>
+    </div>
+
+    <!-- TIMING -->
+    <div id="timing">
+      <div class="section-title">How it fits into the day</div>
+      <p style="font-size:0.88em;color:var(--muted);margin-bottom:20px">Level Up sits between the Bug Hunt and the comfort break. Times below match the full day exactly.</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-time">1:00–1:05</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--green)"></div></div>
+          <div class="tl-body"><div class="tl-label">Bug hunt share-out</div><div class="tl-desc">2–3 people share findings</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">1:05–1:35</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--accent)"></div></div>
+          <div class="tl-body"><div class="tl-label" style="color:var(--accent)">⚡ Level Up — this block</div><div class="tl-desc">The reveal · GitHub & Codespaces · 3 challenge rounds · golden rules</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">1:35–1:50</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--green)"></div></div>
+          <div class="tl-body"><div class="tl-label">☕ Comfort Break</div><div class="tl-desc">15 min</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">1:50–2:10</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div>
+          <div class="tl-body"><div class="tl-label">Feature Tutorial</div><div class="tl-desc">Everyone builds the Savings Tracker together, from scratch</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">2:10–2:25</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div>
+          <div class="tl-body"><div class="tl-label">Brainstorm</div><div class="tl-desc">15 min — their own idea</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">2:25–2:35</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div>
+          <div class="tl-body"><div class="tl-label">Plan</div><div class="tl-desc">10 min</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">2:35–3:05</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--green)"></div></div>
+          <div class="tl-body"><div class="tl-label">🍽️ Lunch</div><div class="tl-desc">30 min, accessibility activities happen during this time — sits before any building starts</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">3:05–3:10</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--accent)"></div></div>
+          <div class="tl-body"><div class="tl-label">♿ Accessibility Discussion</div><div class="tl-desc">5 min — incorporate learnings before building starts</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">3:10–4:35</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div>
+          <div class="tl-body"><div class="tl-label">Feature Creation</div><div class="tl-desc">85 min, single continuous block — structure, logic, styling, and testing all happen here</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">4:35–4:50</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div>
+          <div class="tl-body"><div class="tl-label">Show &amp; Tell</div><div class="tl-desc">15 min</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">4:50–5:00</div>
+          <div class="tl-line"><div class="tl-dot" style="background:var(--muted)"></div></div>
+          <div class="tl-body"><div class="tl-label">Feedback</div><div class="tl-desc">10 min, close</div></div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- REVEAL -->
+    <div class="segment-block" id="reveal">
+      <div class="seg-header">
+        <span class="seg-time">1:05–1:08</span>
+        <span class="seg-title">The Reveal</span>
+        <span class="seg-dur">3 min</span>
+      </div>
+      <div class="seg-body">
+        <p>They've just spent 30 minutes using Copilot without necessarily knowing what it is. Open with the mind-blowing version of the truth.</p>
+        <div class="say">
+          <div class="say-label">Say this</div>
+          "You just used GitHub Copilot to debug a real banking app. Here's what was actually happening. Copilot was trained on billions of lines of public code — essentially, it has read more code than any human ever could. When you asked it about a bug, it wasn't looking it up. It was pattern-matching against everything it has ever seen. And it still got some things wrong. That's important."
+        </div>
+        <p>Then hit them with the fast facts — put <strong>Slide 1</strong> on screen from <code>level-up-screen.html</code>:</p>
+        <div class="facts-grid">
+          <div class="fact"><div class="fact-num">100M+</div>developers have code on GitHub</div>
+          <div class="fact"><div class="fact-num">1B+</div>lines of code Copilot was trained on</div>
+          <div class="fact"><div class="fact-num">Right now</div>your Codespace is a real Linux computer running in a Microsoft data centre</div>
+          <div class="fact"><div class="fact-num">Still wrong</div>Copilot confidently produces incorrect code around 30% of the time</div>
+        </div>
+        <div class="tip tip-green"><div class="tip-label green">Energy note</div>Keep this punchy. Read the facts fast. The point is to make them feel like they've been doing something real — because they have.</div>
+      </div>
+    </div>
+
+    <!-- CONCEPTS -->
+    <div class="segment-block" id="concepts">
+      <div class="seg-header">
+        <span class="seg-time">1:08–1:13</span>
+        <span class="seg-title">GitHub &amp; Codespaces in 5 Minutes</span>
+        <span class="seg-dur">5 min</span>
+      </div>
+      <div class="seg-body">
+        <p>Three concepts, fast. Do this live on your screen — don't use slides, just show the real thing.</p>
+        <div class="round-card" style="border-color:rgba(108,99,255,0.3)">
+          <div class="round-header">
+            <div class="round-num" style="background:rgba(108,99,255,0.2);color:var(--accent)">1</div>
+            <div class="round-title">GitHub = your project folder + a time machine <span class="badge badge-blue">~90 sec</span></div>
+          </div>
+          <div class="round-body">
+            <p>Go to the repo page on GitHub. Click the commit history. Show one commit.</p>
+            <div class="say"><div class="say-label">Say</div>"Every time someone saves a meaningful change, GitHub records it. That's a commit. You can go back to any point in history. Professional developers use this constantly — it means you can never permanently break anything."</div>
+          </div>
+        </div>
+        <div class="round-card" style="border-color:rgba(79,195,247,0.3)">
+          <div class="round-header">
+            <div class="round-num" style="background:rgba(79,195,247,0.2);color:var(--blue)">2</div>
+            <div class="round-title">Codespaces = a real computer in the cloud <span class="badge badge-blue">~90 sec</span></div>
+          </div>
+          <div class="round-body">
+            <p>Ask someone: <em>"Is VS Code running on your laptop right now?"</em> Wait for the answer. Then:</p>
+            <div class="say"><div class="say-label">Say</div>"It's not. It's running on a server in a Microsoft data centre somewhere in Europe. You're controlling it through your browser. The code you wrote is sitting on a computer you've never seen. That's a Codespace."</div>
+          </div>
+        </div>
+        <div class="round-card" style="border-color:rgba(0,200,150,0.3)">
+          <div class="round-header">
+            <div class="round-num" style="background:rgba(0,200,150,0.2);color:var(--green)">3</div>
+            <div class="round-title">Copilot = autocomplete that read the internet <span class="badge badge-blue">~1 min</span></div>
+          </div>
+          <div class="round-body">
+            <p>Open a blank file. Type a comment. Watch Copilot suggest. Press Tab.</p>
+            <div class="say"><div class="say-label">Say</div>"This is the bit we're going to practise now. Writing good comments is how you drive Copilot. The better you describe what you want, the better the code you get back. That's what the next 15 minutes is about."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHALLENGE ROUNDS -->
+    <div class="segment-block" id="rounds">
+      <div class="seg-header">
+        <span class="seg-time">1:13–1:29</span>
+        <span class="seg-title">Three Challenge Rounds</span>
+        <span class="seg-dur">16 min</span>
+      </div>
+      <div class="seg-body">
+        <p>Three rounds. Pairs compete. You keep the energy up. Use the <code>level-up-screen.html</code> slide deck — it has built-in countdown timers. Click to advance between rounds.</p>
+        <div class="tip tip-amber"><div class="tip-label amber">Setup — nothing to create</div><code>challenge.js</code> is already in everyone's repo with a buggy function pre-loaded — no file creation needed, just open it in the file panel.</div>
+      </div>
+    </div>
+
+    <!-- ROUND 1: FIX THE BUG -->
+    <div class="segment-block" id="r1">
+      <div class="seg-header">
+        <span class="seg-time">1:13–1:20</span>
+        <span class="seg-title">Round 1 — Fix the Bug</span>
+        <span class="seg-dur">7 min</span>
+      </div>
+      <div class="seg-body">
+        <div class="say">
+          <div class="say-label">Say this to intro the round</div>
+          "Round one. Open <code>challenge.js</code> — there's already a function in there. It looks right. It isn't. Ask Copilot Chat to review and fix it, then prove your fix actually works. First working, proven fix wins."
+        </div>
+        <p><strong>Already sitting in everyone's <code>challenge.js</code>:</strong></p>
+        <pre>function calculateMonthlyPayment(principal, annualRate, years) {
+  const monthlyRate = annualRate / 12;
+  const months = years * 12;
+  const payment = principal * monthlyRate * Math.pow(1 + monthlyRate, months)
+                / (Math.pow(1 + monthlyRate, months) - 1);
+  return payment.toFixed(2);
+}</pre>
+        <p><strong>The bug:</strong> <code>annualRate / 12</code> should be <code>annualRate / 100 / 12</code>. The rate is passed as a percentage (e.g. <code>5</code> for 5%) but treated as a decimal. Same category as Bug 9 from the dashboard.</p>
+        <p><strong>Good Copilot Chat prompt to suggest if they're stuck:</strong></p>
+        <pre>"Can you review this function for bugs? 
+Pay attention to how the interest rate is being used."</pre>
+        <div class="tip tip-green">
+          <div class="tip-label green">Make the fix visible, not just readable</div>
+          Add <code>console.log(calculateMonthlyPayment(1000, 5, 1));</code> underneath, save, run <code>node challenge.js</code> in the terminal. A sensible monthly figure confirms the fix; still way too high means it isn't fixed yet.
+        </div>
+        <div class="tip tip-amber">
+          <div class="tip-label amber">If Copilot seems reluctant or flags something odd</div>
+          Much less likely now the function is already in a real file — but if it happens, confirm the function is genuinely saved in <code>challenge.js</code> (not just pasted into the chat message) before asking Chat about it.
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUND 1 RECAP -->
+    <div class="segment-block" id="r1recap">
+      <div class="seg-header">
+        <span class="seg-time">1:20–1:23</span>
+        <span class="seg-title">Round 1 recap</span>
+        <span class="seg-dur">3 min</span>
+      </div>
+      <div class="seg-body">
+        <div class="say">
+          <div class="say-label">Say this</div>
+          "Copilot wrote that bug. Then Copilot found and fixed it. That's not a contradiction — it's how the tool is most useful. Write fast, then review carefully. Use it in both directions."
+        </div>
+        <p>This also reinforces Bug 9 from the dashboard — same class of error. Watch for the "oh, that's the same thing!" moment.</p>
+      </div>
+    </div>
+
+    <!-- ROUND 2: COMMENT RACE -->
+    <div class="segment-block" id="r2">
+      <div class="seg-header">
+        <span class="seg-time">1:23–1:26</span>
+        <span class="seg-title">Round 2 — Comment Race</span>
+        <span class="seg-dur">3 min</span>
+      </div>
+      <div class="seg-body">
+        <div class="say">
+          <div class="say-label">Say this to intro the round</div>
+          "Round two. Same file, add this below the fixed function. Type this comment, use Copilot's inline suggestion to complete the code. First pair with a working, proven function wins."
+        </div>
+        <p><strong>Add to the same <code>challenge.js</code>:</strong></p>
+        <pre>// function that converts an amount in pounds to euros
+// use a rate of 1.17, rounded to 2 decimal places</pre>
+        <p><strong>What to look for:</strong></p>
+        <ul>
+          <li>Copilot suggests the function body — Tab to accept</li>
+          <li>Add <code>console.log(convertToEuros(100));</code> underneath, save</li>
+          <li>Run <code>node challenge.js</code> again — the new result prints too</li>
+        </ul>
+        <div class="tip tip-green">
+          <div class="tip-label green">If Copilot doesn't suggest automatically</div>
+          Tell them to press <code>Alt+\</code> (Windows) or <code>Option+\</code> (Mac) to trigger a suggestion manually.
+        </div>
+        <div class="say">
+          <div class="say-label">After the round</div>
+          "You didn't write a single line of code. You described what you wanted, and Copilot wrote it. Vague comment, vague code."
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUND 3: BEST PROMPT -->
+    <div class="segment-block" id="r3">
+      <div class="seg-header">
+        <span class="seg-time">1:26–1:29</span>
+        <span class="seg-title">Round 3 — Best Prompt</span>
+        <span class="seg-dur">3 min</span>
+      </div>
+      <div class="seg-body">
+        <div class="say">
+          <div class="say-label">Say this</div>
+          "Round three. No winner by speed this time — winner by quality. One message in Copilot Chat. Just one. Get it to write a function that takes a name and a balance, and returns a personalised greeting."
+        </div>
+        <pre>One Copilot Chat message. Get it to write a function that:
+  → takes a person's name and their account balance
+  → returns a greeting like: "Hi Sarah! Your balance is £250.00"
+  → formats the balance with a £ sign and 2 decimal places
+
+Best result wins. You get ONE message.</pre>
+        <p><strong>After 3 minutes:</strong> add it to the same <code>challenge.js</code>, add <code>console.log(theirFunctionName("Sarah", 250));</code>, save, run <code>node challenge.js</code> to see the real greeting print. Ask 3–4 pairs to read their prompt out loud, then show the printed result. Group votes on the best one.</p>
+        <div class="say">
+          <div class="say-label">After the round</div>
+          "The difference between a great result and a mediocre one came down to how specific the prompt was. This is called prompt engineering."
+        </div>
+      </div>
+    </div>
+
+    <!-- GOLDEN RULES -->
+    <div class="segment-block" id="rules">
+      <div class="seg-header">
+        <span class="seg-time">1:29–1:32</span>
+        <span class="seg-title">The Three Golden Rules</span>
+        <span class="seg-dur">3 min</span>
+      </div>
+      <div class="seg-body">
+        <p>Put <strong>Slide 9</strong> on screen. Read them out. Keep it quick.</p>
+        <div class="rules">
+          <div class="rule">
+            <div class="rule-num">1</div>
+            <div class="rule-text"><strong>Be specific.</strong> The quality of the code Copilot gives you is directly proportional to how clearly you describe what you want. Vague in, vague out.</div>
+          </div>
+          <div class="rule">
+            <div class="rule-num">2</div>
+            <div class="rule-text"><strong>Always test it.</strong> Copilot is confident and wrong surprisingly often. Every function it writes, you run it. You check the result. You own the code.</div>
+          </div>
+          <div class="rule">
+            <div class="rule-num">3</div>
+            <div class="rule-text"><strong>Ask it to explain.</strong> If Copilot writes something you don't understand, ask it to explain. You can't fix code you don't understand. Never ship code you can't explain.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRIDGE -->
+    <div class="segment-block" id="bridge">
+      <div class="seg-header">
+        <span class="seg-time">1:32–1:35</span>
+        <span class="seg-title">Bridge to the Break</span>
+        <span class="seg-dur">2 min</span>
+      </div>
+      <div class="seg-body">
+        <div class="say">
+          <div class="say-label">Say this</div>
+          "In the last hour you fixed a broken banking app. In the last 30 minutes you've written code from scratch, engineered prompts, and caught a bug that Copilot itself created. You now have every tool you need. Take a short break — when we're back, we build something real."
+        </div>
+        <p>Send them into the comfort break (1:35–1:50). After the break, the feature tutorial (1:50–2:10) runs before the brainstorm — put the session plan's brainstorm prompt on screen once that's done.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

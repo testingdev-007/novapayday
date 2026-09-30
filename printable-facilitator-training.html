@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilitator Training Manual (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;
+  --accent:#5A50E0;--green:#00875F;--blue:#1D6FA8;--amber:#B45F06;--red:#C0293D;
+  --paper:#FFFFFF;--shade:#F4F5F9;
+  --green-bg:#E9F7F1;--blue-bg:#EAF3FA;--amber-bg:#FEF6E7;--red-bg:#FDECEF;--accent-bg:#EEECFB;
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;line-height:1.5;padding:32px 0 80px}
+.page{max-width:820px;margin:0 auto;background:var(--paper);padding:44px 50px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:820px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+
+.doc-header{text-align:center;padding-bottom:20px;border-bottom:3px solid var(--ink);margin-bottom:6px}
+.doc-logo{font-size:1.15em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.9em;font-weight:900;letter-spacing:-0.03em;margin-top:8px}
+.doc-sub{font-size:0.9em;color:var(--muted);margin-top:4px}
+
+.calm-note{background:var(--shade);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:6px;padding:14px 18px;margin:20px 0 28px;font-size:0.88em;line-height:1.6}
+.calm-note strong{color:var(--accent)}
+
+.toc{background:var(--shade);border:1.5px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:28px;font-size:0.83em;columns:2;column-gap:24px}
+.toc-title{font-weight:800;font-size:0.85em;margin-bottom:8px;column-span:all}
+.toc div{padding:2px 0}
+
+.part{margin:34px 0 6px;page-break-before:always}
+.part:first-of-type{page-break-before:auto}
+.part-header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--ink);color:white;border-radius:8px;margin-bottom:16px}
+.part-num{font-size:0.72em;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:100px}
+.part-title{font-size:1.1em;font-weight:800}
+
+.mod{margin-bottom:22px;page-break-inside:avoid}
+.mod-title{font-size:1.02em;font-weight:800;margin-bottom:6px;color:var(--ink)}
+.mod-title span{color:var(--accent)}
+p.b{font-size:0.89em;line-height:1.65;margin-bottom:8px}
+.row-label{font-size:0.66em;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 3px}
+
+.callout{border-radius:6px;padding:10px 14px;margin:8px 0;font-size:0.85em;line-height:1.55;border:1.5px solid}
+.c-blue{background:var(--blue-bg);border-color:#9CC5E0}
+.c-green{background:var(--green-bg);border-color:#7FCBAE}
+.c-amber{background:var(--amber-bg);border-color:#E8B347}
+.c-red{background:var(--red-bg);border-color:#F3C1CA}
+.c-label{font-size:0.68em;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px}
+
+.quiz{background:var(--shade);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin:6px 0;font-size:0.85em}
+.quiz-q{font-weight:700;margin-bottom:3px}
+.quiz-a{color:var(--muted);padding-left:10px;border-left:2px solid var(--accent)}
+
+code.inline{font-family:'JetBrains Mono',monospace;font-size:0.87em;background:var(--shade);border:1px solid var(--border);padding:1px 5px;border-radius:4px}
+pre{background:#1A1D29;color:#E5E7EB;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:0.82em;line-height:1.6;margin:8px 0;white-space:pre-wrap}
+
+.type-this{background:#1A1D29;border-radius:8px;padding:10px 14px;margin:6px 0}
+.type-this-label{font-size:0.65em;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#8B92A5;margin-bottom:5px}
+.type-this code{display:block;background:none;color:#A89CFF;padding:0;font-size:0.85em;line-height:1.6;white-space:pre-wrap}
+
+.tut-step{border:1.5px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;page-break-inside:avoid}
+.tut-head{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--shade);border-bottom:1px solid var(--border);font-weight:800;font-size:0.85em}
+.tut-num{width:22px;height:22px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-size:0.75em;flex-shrink:0}
+.tut-body{padding:9px 12px}
+
+.answer-table{width:100%;border-collapse:collapse;font-size:0.8em;margin:6px 0}
+.answer-table th{text-align:left;font-size:0.65em;font-weight:800;text-transform:uppercase;color:var(--muted);padding:4px 6px;border-bottom:1.5px solid var(--ink)}
+.answer-table td{padding:5px 6px;border-bottom:1px solid var(--border)}
+
+hr.section-divider{border:none;border-top:2px solid var(--ink);margin:24px 0 18px}
+.footer-note{text-align:center;font-size:0.8em;color:var(--muted);margin-top:24px;padding-top:16px;border-top:2px solid var(--ink);line-height:1.6}
+
+@media print{
+  body{background:white;padding:0;font-size:10.5px}
+  .page{box-shadow:none;padding:18px 12px;max-width:100%}
+  .print-btn{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="print-btn"><button onclick="window.print()">🖨 Print the Training Manual</button></div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Facilitator Training Manual</div>
+    <div class="doc-sub">Every module, plus both full tutorials, in one document you can read without a screen</div>
+  </div>
+
+  <div class="calm-note">
+    <strong>This is the paper twin of your training course and both student tutorials.</strong> Read it cover to cover once before Friday, ideally with a Codespace open so you can actually try the hands-on bits as you go. Everything here is the same content as the interactive versions — nothing's been simplified away.
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div>Part 1 — The Fundamentals (GitHub, Codespaces, Copilot, Nova)</div>
+    <div>Part 2 — Nova vs Plain Copilot, condensed</div>
+    <div>Part 3 — Full Bug Tutorial (do this yourself)</div>
+    <div>Part 4 — Full Build Tutorial (do this yourself)</div>
+    <div>Part 5 — Narrating Live &amp; Common Questions</div>
+  </div>
+
+  <!-- ══════════════════ PART 1 ══════════════════ -->
+  <div class="part">
+    <div class="part-header"><span class="part-num">Part 1</span><span class="part-title">The Fundamentals</span></div>
+
+    <div class="mod">
+      <div class="mod-title">1 — <span>What GitHub actually is</span></div>
+      <p class="b">A repository ("repo") is a folder of files where every saved change is kept forever as a numbered commit. You can always go back to any earlier version — nothing is truly lost by editing it.</p>
+      <p class="b">Your workshop repo contains <code class="inline">bank-dashboard.html</code>, <code class="inline">starter-template.html</code>, <code class="inline">challenge.js</code>, and two configuration files. That's it — a folder with a memory.</p>
+      <p class="b">Ticking "Template repository" in Settings adds a <strong>Use this template</strong> button, letting anyone make their own full copy under their own account instantly. That's how every student gets an identical, independent copy without ever touching yours.</p>
+      <div class="callout c-blue"><div class="c-label" style="color:var(--blue)">Try it</div>Open your repo, click "commits" near the top of the file list — every upload you've made is there, in order.</div>
+      <div class="quiz"><div class="quiz-q">Q: If a student breaks their copy completely, is your original affected?</div><div class="quiz-a">No. Each copy is completely independent.</div></div>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">2 — <span>What a Codespace actually is</span></div>
+      <p class="b">Not your computer — a borrowed one. Clicking "Create codespace" starts a real, temporary Linux machine in a data centre, installs VS Code and your <code class="inline">devcontainer.json</code> extensions, and streams the editor into the browser. The browser is just a window onto it.</p>
+      <div class="callout c-blue"><div class="c-label" style="color:var(--blue)">Why this matters</div>If a Codespace misbehaves, delete it and make a new one — you're not "reinstalling," just asking for a fresh borrowed computer.</div>
+      <div class="callout c-green"><div class="c-label green">Try it</div>Open a Codespace, open a terminal, type <code class="inline">whoami</code> then <code class="inline">hostname</code> — confirms it's a real, separate machine.</div>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">3 — <span>What Copilot actually does — three modes</span></div>
+      <p class="b"><strong>Inline completions (Tab-complete)</strong> — type a comment, Copilot suggests code as ghost text, press Tab to accept. Prediction, not conversation.</p>
+      <p class="b"><strong>Ask/Chat mode</strong> — a proper conversation. Doesn't touch files directly. This is where Nova's Bug Hunt restraint works best — it's built for conversation, not action.</p>
+      <p class="b"><strong>Agent mode</strong> — reads and edits files directly, autonomously, multi-step. Nova's instructions still load here, but because Agent mode's whole purpose is to <em>act</em>, it's more likely to just fix things when asked. Nova has an explicit hard rule for this: one real fix, then stop and explain, during the Bug Hunt specifically.</p>
+      <div class="callout c-amber"><div class="c-label amber">The one thing worth knowing cold</div>Copilot is confidently wrong a meaningful amount of the time. Always test what it gives you.</div>
+      <div class="callout c-red"><div class="c-label red">Worth testing before Friday</div>Switch to Agent mode yourself, ask it to "fix the bugs in this file" during a mock Bug Hunt. See if it holds back as intended.</div>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">4 — <span>What Nova adds, and why</span></div>
+      <p class="b">Nova is not a separate tool — it's <code class="inline">.github/copilot-instructions.md</code>, a text file Copilot Chat reads automatically in your repo. It changes behaviour without changing which product students use.</p>
+      <p class="b">See Part 2 below for the full, evidence-based comparison against plain Copilot.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PART 2 ══════════════════ -->
+  <div class="part">
+    <div class="part-header"><span class="part-num">Part 2</span><span class="part-title">Nova vs Plain Copilot — condensed</span></div>
+
+    <div class="mod">
+      <p class="b"><strong>Same tool, one extra file.</strong> Plain Copilot answers from general training with no idea it's talking to a 13-year-old mid-exercise. Nova reads the same repo's instructions file and adjusts.</p>
+
+      <div class="row-label">Evidence — Bug Hunt: "Are there any bugs in this code?"</div>
+      <div class="callout c-red"><div class="c-label red">Plain Copilot</div>Lists several or all bugs directly — no reason not to.</div>
+      <div class="callout c-green"><div class="c-label green">Nova</div>"Yes, several! Look at the page first — does anything look wrong? Then use it — click things, type things. What breaks?"</div>
+
+      <div class="row-label">Evidence — off-topic request</div>
+      <div class="callout c-red"><div class="c-label red">Plain Copilot</div>Just tries to help with whatever's asked.</div>
+      <div class="callout c-green"><div class="c-label green">Nova</div>"Let's get back to your feature — what part are you working on right now?"</div>
+
+      <div class="row-label">Honest limits</div>
+      <p class="b">It's an instruction, not a lock — a persistent student could still get more out of it than intended. It doesn't learn during the day — every chat starts fresh from the same file. It doesn't make Copilot more technically correct, only more appropriately toned.</p>
+
+      <div class="callout c-blue"><div class="c-label" style="color:var(--blue)">The honest verdict</div>Nova is genuinely better for this room — not more powerful, more <em>appropriate</em>. It protects the Bug Hunt, gets out of the way during Build, talks to students like students. Not a guarantee against misuse — for a supervised one-day workshop, that's the right bar, and it clears it.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PART 3: FULL BUG TUTORIAL ══════════════════ -->
+  <div class="part">
+    <div class="part-header"><span class="part-num">Part 3</span><span class="part-title">Full Bug Tutorial — do this yourself</span></div>
+
+    <div class="calm-note" style="margin-top:0">
+      <strong>Do this in a real Codespace, not just on paper.</strong> This is the exact tutorial students follow. Actually run it before Friday.
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">The method — four steps, every time</div>
+      <p class="b"><strong>1. Look</strong> — open the preview. Does anything look visually wrong?<br><strong>2. Use</strong> — click every button, type in every field. Does something not respond?<br><strong>3. Read</strong> — open the code, read it slowly, line by line.<br><strong>4. Test</strong> — make your fix, save, check the preview again. Don't assume — look.</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">Worked example (not a real dashboard bug)</div>
+      <p class="b">A button is supposed to show a greeting. Click it — nothing happens, no error.</p>
+      <div class="tut-step">
+        <div class="tut-head"><div class="tut-num">1</div>Look → nothing obviously wrong</div>
+        <div class="tut-body">The button looks normal. Not a visual bug — move on.</div>
+      </div>
+      <div class="tut-step">
+        <div class="tut-head"><div class="tut-num">2</div>Use → confirmed broken</div>
+        <div class="tut-body">Click it — nothing happens. Now you know where to look.</div>
+      </div>
+      <div class="tut-step">
+        <div class="tut-head"><div class="tut-num">3</div>Read → find it</div>
+        <div class="tut-body">
+          <pre>&lt;button onclick="sayHi()"&gt;Click me&lt;/button&gt;
+
+function sayHu() {   ← should be sayHi
+  alert("Hi!");
+}</pre>
+          One letter different. JavaScript can't find a function that doesn't exist, so it silently does nothing.
+        </div>
+      </div>
+      <div class="tut-step">
+        <div class="tut-head"><div class="tut-num">4</div>Fix + test</div>
+        <div class="tut-body">Click before the <code class="inline">u</code>, delete it, type <code class="inline">i</code>. Save (<code class="inline">Ctrl+S</code>). Switch to Live Server, click the button — a popup says "Hi!"</div>
+      </div>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">Now for real — the actual dashboard</div>
+      <p class="b">Same four steps, no answers given here on purpose — this is exactly what students see.</p>
+      <div class="row-label">Look</div><p class="b">Scroll the real preview top to bottom slowly. Anything missing, invisible, or misplaced?</p>
+      <div class="row-label">Use</div><p class="b">Click every button, type in every field. Then deliberately: leave a field empty, type letters where numbers go, type a negative number, type a huge number.</p>
+      <div class="row-label">Read</div><p class="b">Open the file, read HTML then CSS then JS, one line at a time. Press F12, check the Console tab for red errors while using the page.</p>
+      <div class="row-label">Fix + Test</div><p class="b">Click the exact spot, correct it, save, switch to Live Server, redo the same action that was broken. Log it in the Bug Test Plan either way.</p>
+
+      <div class="row-label">The 10 real answers (facilitator only — never shown to students)</div>
+      <table class="answer-table">
+        <tr><th>#</th><th>Bug</th><th>Fix</th></tr>
+        <tr><td>1</td><td>Missing closing tag</td><td>Add <code class="inline">&lt;/div&gt;</code> after balance footer</td></tr>
+        <tr><td>2</td><td>Invisible balance</td><td><code class="inline">color: #0F1340</code> → <code class="inline">#FFFFFF</code></td></tr>
+        <tr><td>3</td><td>Wrong transaction sign</td><td>Coffee: <code class="inline">credit</code> → <code class="inline">debit</code></td></tr>
+        <tr><td>4</td><td>Wrong input type</td><td><code class="inline">type="text"</code> → <code class="inline">"number"</code></td></tr>
+        <tr><td>5</td><td>Button typo</td><td><code class="inline">onlick</code> → <code class="inline">onclick</code></td></tr>
+        <tr><td>6</td><td>Wrong operator</td><td><code class="inline">balance + amount</code> → <code class="inline">- amount</code></td></tr>
+        <tr><td>7</td><td>Element ID typo</td><td><code class="inline">"balence-display"</code> → <code class="inline">"balance-display"</code></td></tr>
+        <tr><td>8</td><td>NaN on empty input</td><td>Add <code class="inline">isNaN()</code> check</td></tr>
+        <tr><td>9</td><td>Wrong interest formula</td><td><code class="inline">* rate</code> → <code class="inline">* (rate/100)</code></td></tr>
+        <tr><td>10</td><td>No overdraft check</td><td>Add <code class="inline">if (amount &gt; balance)</code> guard</td></tr>
+      </table>
+
+      <div class="callout c-amber"><div class="c-label amber">Categories worth knowing</div>Typos in names (read character by character) · colours that hide things · maths that's backwards · missing checks against silly input.</div>
+      <div class="callout c-blue"><div class="c-label" style="color:var(--blue)">Getting unstuck</div>"I clicked this button and nothing happened — what could cause that?" · "The console shows this error: [paste it]. What does it mean?" · "I expected X, but Z happened instead. Why?"</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PART 4: FULL BUILD TUTORIAL ══════════════════ -->
+  <div class="part">
+    <div class="part-header"><span class="part-num">Part 4</span><span class="part-title">Full Build Tutorial — do this yourself</span></div>
+
+    <div class="calm-note" style="margin-top:0">
+      <strong>Build the Savings Tracker for real, from a blank file.</strong> Same 10 steps students follow.
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">Setup</div>
+      <p class="b">New File → name it <code class="inline">practice-feature.html</code> — genuinely empty. Open with Live Server too.</p>
+    </div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">1</div>Basic page skeleton</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type</div><code>&lt;!-- a basic HTML5 page with a title
+"NovaPay — Savings Goal Tracker" --&gt;</code></div>
+      Tab to accept, save. Blank page, correct tab title — nothing visible yet, that's right.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">2</div>Colour system</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (inside &lt;head&gt;, a &lt;style&gt; block)</div><code>/* a NovaPay colour palette using CSS variables:
+purple accent, green success colour, light grey
+background, dark text, plus a card style with
+rounded corners and a soft shadow */</code></div>
+      Save. Still nothing visible — the variables exist, nothing uses them yet.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">3</div>NovaPay header bar</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (inside &lt;body&gt;)</div><code>&lt;!-- a sticky header bar with the NovaPay logo
+on the left, using the accent colour --&gt;</code></div>
+      Save, check Live Server — a header bar appears, styled from Step 2.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">4</div>Input card</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (below the header)</div><code>&lt;!-- a card with three inputs: goal name (text),
+target amount (number), amount saved so far
+(number), and a button labelled "Update my goal" --&gt;</code></div>
+      Save — a styled card with 3 inputs and a button appears. Clicking does nothing yet.
+    </div></div>
+
+    <div class="callout c-green" style="margin:10px 0"><div class="c-label green">Foundation check</div>Styled page, header, input form — built from nothing. Everything from here reuses this.</div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">5</div>Progress bar CSS</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (in &lt;style&gt;)</div><code>/* progress bar container and fill styles,
+using the colour variables from before */</code></div>
+      Save. Nothing visible yet — no HTML uses it.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">6</div>Result message CSS</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type</div><code>/* styles for a result card showing
+a large amount remaining and a status message */</code></div>
+      Save.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">7</div>Progress bar HTML</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (below input card)</div><code>&lt;!-- savings goal progress card with a
+labelled progress bar and percentage --&gt;</code></div>
+      Save, check Live Server — a progress bar card appears (0%).
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">8</div>Result card HTML</div><div class="tut-body">
+      <div class="type-this"><div class="type-this-label">Type (below that)</div><code>&lt;!-- result card showing amount left to save
+and a congratulations message if goal met --&gt;</code></div>
+      Save — a second card appears.
+    </div></div>
+
+    <div class="callout c-green" style="margin:10px 0"><div class="c-label green">Milestone check</div>Header, inputs, button, progress bar, result area — all visible, none working yet. On track.</div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">9</div>The logic</div><div class="tut-body">
+      Add a <code class="inline">&lt;script&gt;</code> tag before <code class="inline">&lt;/body&gt;</code>.
+      <div class="type-this"><div class="type-this-label">Type</div><code>// function calculateProgress(savedAmount,
+//   targetAmount) that returns the percentage
+//   saved, capped at 100, rounded to 1 decimal</code></div>
+      <div class="type-this"><div class="type-this-label">Then type</div><code>// function updateDisplay(goalName, targetAmount,
+//   savedAmount, percentage) that updates the
+//   progress bar width, percentage text,
+//   amount remaining, and shows a
+//   congratulations message if goal is met</code></div>
+      Save both. Still nothing visible — neither function is called yet.
+    </div></div>
+
+    <div class="tut-step"><div class="tut-head"><div class="tut-num">10</div>Wire it together — the big moment</div><div class="tut-body">
+      <pre>function updateGoal() {
+  // YOUR CODE GOES HERE
+}</pre>
+      <div class="type-this"><div class="type-this-label">Replace the comment with</div><code>// read goalName, targetAmount and savedAmount
+// from the inputs, validate them, calculate
+// progress, and update the display</code></div>
+      Save. Switch to Live Server, fill in real numbers (e.g. "New trainers", 80, 50), click the button.
+      <div class="callout c-green" style="margin-top:8px"><div class="c-label green">Should see</div>Progress bar animates to ~62%, result card shows "£30.00 left to save."</div>
+      <div class="callout c-red"><div class="c-label red">If nothing happens</div>F12 → Console → look for red text → ask Nova with the exact error.</div>
+    </div></div>
+
+    <div class="mod">
+      <div class="mod-title">Testing &amp; starting your own idea</div>
+      <p class="b">Try: empty fields, a savings amount bigger than the target, a negative number. Log results in the Feature Test Plan.</p>
+      <p class="b"><strong>Starting your own feature:</strong> New File → name it for your idea → copy the <code class="inline">&lt;style&gt;</code> section and header from <code class="inline">practice-feature.html</code> (the file you just built) → build with the same method. Reusing your own earlier work is normal developer practice, not cheating.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PART 5 ══════════════════ -->
+  <div class="part">
+    <div class="part-header"><span class="part-num">Part 5</span><span class="part-title">Narrating Live &amp; Common Questions</span></div>
+
+    <div class="mod">
+      <div class="mod-title">Narrating this live</div>
+      <p class="b">You don't need new material — you need confidence. The full script is in the Master Script; what this manual gives you is the ability to say those lines from experience, not cold. You can honestly say "I did this exact tutorial myself" — because you did.</p>
+      <div class="callout c-blue"><div class="c-label" style="color:var(--blue)">The one habit worth building</div>When you genuinely don't know an answer, say so and open your own Copilot Chat live, in front of the student, and work it out together.</div>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">Common questions you'll get asked</div>
+      <div class="quiz"><div class="quiz-q">"Is Copilot going to take my job one day?"</div><div class="quiz-a">It changes what the job looks like — someone still has to know what to ask for and whether the answer's right. That's the skill being taught today.</div></div>
+      <div class="quiz" style="margin-top:8px"><div class="quiz-q">"Why can't Nova just fix all the bugs for me?"</div><div class="quiz-a">Deliberate — it hints rather than solves during Bug Hunt. Finding the bug is the point, not just having it fixed.</div></div>
+      <div class="quiz" style="margin-top:8px"><div class="quiz-q">"Is my code actually running somewhere, or is it fake?"</div><div class="quiz-a">Completely real — see Part 1, Module 2. A genuine, temporary computer.</div></div>
+      <div class="quiz" style="margin-top:8px"><div class="quiz-q">"What happens to my Codespace after today?"</div><div class="quiz-a">It sits idle and gets cleaned up eventually, but the repo — the actual files — stays on their GitHub account permanently.</div></div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="footer-note">
+    Same content as <strong>facilitator-training.html</strong>, <strong>how-to-find-fix-bugs.html</strong>, and <strong>how-to-build-your-feature.html</strong> — this is just the version you can read without a screen.
+  </div>
+
+</div>
+</body>
+</html>

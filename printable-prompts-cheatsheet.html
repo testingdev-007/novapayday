@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompts Cheat Sheet (Printable) — NovaPay Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1A1D29;--muted:#6B7280;--border:#D8DCE6;--accent:#5A50E0;--green:#00875F;--amber:#B45F06;--red:#C0293D;--paper:#FFFFFF;--shade:#F4F5F9}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--shade);color:var(--ink);font-size:13px;line-height:1.4;padding:32px 0 80px}
+.page{max-width:820px;margin:0 auto;background:var(--paper);padding:40px 48px;box-shadow:0 0 0 1px var(--border)}
+.print-btn{max-width:820px;margin:0 auto 16px;text-align:right}
+.print-btn button{background:var(--accent);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:inherit;font-weight:700;font-size:0.85em;cursor:pointer}
+.doc-header{text-align:center;padding-bottom:16px;border-bottom:3px solid var(--ink);margin-bottom:16px}
+.doc-logo{font-size:1.05em;font-weight:900;letter-spacing:-0.03em;color:var(--accent)}
+.doc-logo span{color:var(--ink)}
+.doc-title{font-size:1.5em;font-weight:900;letter-spacing:-0.03em;margin-top:6px}
+.doc-sub{font-size:0.82em;color:var(--muted);margin-top:3px}
+.phase{margin:20px 0;page-break-inside:avoid}
+.phase-header{display:flex;align-items:center;gap:8px;padding-bottom:6px;border-bottom:2px solid var(--ink);margin-bottom:10px}
+.phase-title{font-size:0.95em;font-weight:800}
+.prompt-item{background:var(--shade);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:0.86em;font-style:italic}
+.prompt-note{font-size:0.76em;color:var(--muted);font-style:normal;margin-top:2px}
+.footer-note{text-align:center;font-size:0.78em;color:var(--muted);margin-top:20px;padding-top:14px;border-top:2px solid var(--ink);line-height:1.6}
+@media print{body{background:white;padding:0;font-size:11px}.page{box-shadow:none;padding:14px 10px;max-width:100%}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="print-btn"><button onclick="window.print()">🖨 Print this sheet</button></div>
+<div class="page">
+  <div class="doc-header">
+    <div class="doc-logo">nova<span>pay</span></div>
+    <div class="doc-title">Prompts Cheat Sheet</div>
+    <div class="doc-sub">Every vetted prompt across the whole day, in one place — none of these give away a real bug</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:var(--green)">🐛</span><span class="phase-title">Bug Hunt — hand these out if a group is stuck</span></div>
+    <div class="prompt-item">"Are there any bugs in this code?"</div>
+    <div class="prompt-item">"I clicked this button and nothing happened — what could cause that?"</div>
+    <div class="prompt-item">"What does this function do?"</div>
+    <div class="prompt-item">"Why might a number show up as NaN instead of a value?"</div>
+    <div class="prompt-item">"How do I check if two IDs used in different places actually match?"</div>
+    <div class="prompt-item">"Can you explain this CSS rule to me?"</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:#4FC3F7">⚡</span><span class="phase-title">Level Up — Round 1, Fix the Bug</span></div>
+    <div class="prompt-item">"Can you review this function for bugs? Pay attention to how the interest rate is being used."</div>
+    <div class="prompt-note">If stuck after that: "Is the 5% rate being treated as 5, or as 0.05?"</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:var(--amber)">🏗️</span><span class="phase-title">Feature Creation — Y9–Y10</span></div>
+    <div class="prompt-item">"Why isn't my progress bar changing width?"</div>
+    <div class="prompt-item">"My button click isn't doing anything — what's wrong with this function?"</div>
+    <div class="prompt-item">"Explain what getElementById does in plain English"</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:var(--amber)">🏗️</span><span class="phase-title">Feature Creation — Y11</span></div>
+    <div class="prompt-item">"Review this function for edge cases I might have missed"</div>
+    <div class="prompt-item">"Suggest a way to make this code more readable"</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:var(--amber)">🏗️</span><span class="phase-title">Feature Creation — Y12–13</span></div>
+    <div class="prompt-item">"Are there any bugs or inefficiencies in this code?"</div>
+    <div class="prompt-item">"How would you refactor this to be more maintainable?"</div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><span style="color:var(--red)">✅</span><span class="phase-title">Anytime — universally useful</span></div>
+    <div class="prompt-item">"What problem am I trying to solve right now?"</div>
+    <div class="prompt-item">"I expected X to happen when I did Y, but Z happened instead. Why?"</div>
+    <div class="prompt-item">"The console shows this error: [paste it]. What does it mean?"</div>
+  </div>
+
+  <div class="footer-note">
+    All of these are generic technique prompts — none of them describe a specific real bug's symptom. Safe to hand out freely.
+  </div>
+</div>
+</body>
+</html>
